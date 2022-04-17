@@ -27,10 +27,9 @@ Processing Systems **31**, (2018).
 """
 from collections import Counter
 import gc
-from multiprocessing import Value
-from multiprocessing.shared_memory import SharedMemory, ShareableList
+from multiprocessing.shared_memory import SharedMemory
 from time import sleep
-from numba import njit, uint8, uint16, uint32, uint64, float64, types
+from numba import njit, uint8, uint32, uint64, types
 import numpy as np
 from pathlib import Path
 from typing import List, Tuple, Union
