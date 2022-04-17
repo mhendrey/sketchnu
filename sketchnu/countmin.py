@@ -131,7 +131,7 @@ def _counter2value(counter, num_reserved, base):
     """
     Numba function to convert a log counter to its corresponding value. Used by both
     CountMinLog16 and CountMinLog8. For log8, the values just get cast to uint16.
-    
+
     Parameters
     ----------
     counter : np.uint16
@@ -437,10 +437,21 @@ def _merge_linear(
 class CountMinLinear:
     """
     Count-min sketch that uses 32-bit linear counters with conservative updating. A
-    given element's count maxs out at 2\*\*32 - 1
+    given element's maximum count is 2\*\*32 - 1
 
-    Main Attributes
-    ---------------
+    Parameters
+    ----------
+    width : int
+        Width of the count-min sketch. Must be non-negative
+    depth : int, optional
+        Depth of the count-min sketch. Must be non-negative. Default is 8
+    shared_memory : bool, optional
+        If True, then CountMinLinear is placed in shared memory. Needed if
+        performing multiprocessing as sketchnu.helpers.parallel_add() does.
+        Default is False.
+
+    Attributes
+    ----------
     width : np.uint64
         Width of the 2-d array of counters of the count-min sketch
     depth : np.uint64
@@ -471,7 +482,7 @@ class CountMinLinear:
             If True, then CountMinLinear is placed in shared memory. Needed if
             performing multiprocessing as sketchnu.helpers.parallel_add() does.
             Default is False.
-        
+
         Returns
         -------
         CountMinLinear
@@ -529,7 +540,7 @@ class CountMinLinear:
         ----------
         key : bytes
             Element to be added to the sketch
-        
+
         Returns
         -------
         None
@@ -574,7 +585,7 @@ class CountMinLinear:
             Element to be shingled before adding to the sketch
         ngram : int
             ngram size
-        
+
         Returns
         -------
         None
@@ -627,7 +638,7 @@ class CountMinLinear:
         ----------
         other : CountMinLinear
             Another CountMinLinear with the same width and depth.
-        
+
         Returns
         -------
         None
@@ -658,12 +669,12 @@ class CountMinLinear:
     def save(self, filename: Union[str, Path]) -> None:
         """
         Save the sketch to `filename`
-        
+
         Parameters
         ----------
         filename: str | Path
             File to save the sketch to disk. This will be a .npz file.
-        
+
         Returns
         -------
         None
@@ -688,7 +699,7 @@ class CountMinLinear:
             File path to the saved .npz file
         shared_memory : bool, optional
             If True, load into shared memory. Default is False.
-        
+
         Returns
         -------
         CountMinLinear
@@ -715,7 +726,7 @@ class CountMinLinear:
         ----------
         existing_shm_name : str
             Name of an existing shared memory block to attach this sketch to
-        
+
         Returns
         -------
         None
@@ -967,7 +978,7 @@ def _merge_log16(
     base : float64
     n_added_records : np.ndarray, dtype=uint64, shape=(2,)
     other_n_added_records : np.ndarray, dtype=uint64, shape=(2,)
-    
+
     Returns
     -------
     None
@@ -1032,7 +1043,7 @@ class CountMinLog16(CountMinLinear):
             If True, then CountMinLinear is placed in shared memory. Needed if
             performing multiprocessing as sketchnu.helpers.parallel_add() does.
             Default is False.
-        
+
         Returns
         -------
         CountMinLog16
@@ -1190,7 +1201,7 @@ class CountMinLog16(CountMinLinear):
             or self.num_reserved != other.num_reserved
         ):
             raise TypeError(
-                "self and other have different width | depth | type | max_count | num_reserved"
+                "self and other have different width|depth|type|max_count|num_reserved"
             )
 
         _merge_log16(
@@ -1645,7 +1656,7 @@ class CountMinLog8(CountMinLog16):
             or self.num_reserved != other.num_reserved
         ):
             raise TypeError(
-                "self and other have different width | depth | type | max_count | num_reserved"
+                "self and other have different width|depth|type|max_count|num_reserved"
             )
 
         _merge_log8(
