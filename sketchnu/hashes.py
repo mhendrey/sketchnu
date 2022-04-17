@@ -8,19 +8,21 @@ from numba import njit, uint8, uint32, uint64, types
 import numpy as np
 
 ########## FastHash ##########
-@njit(uint64(uint64,uint64, uint64))
+@njit(uint64(uint64, uint64, uint64))
 def _xor_shiftl(v, t, l):
     return v ^ (t << l)
 
+
 @njit(uint64(uint64))
 def _fhmix64(h):
-    h ^= (h >> 23)
-    h *= uint64(0x2127599bf4325c37)
-    h ^= (h >> 47)
+    h ^= h >> 23
+    h *= uint64(0x2127599BF4325C37)
+    h ^= h >> 47
 
     return h
 
-@njit(uint64(types.Bytes(types.uint8, 1, 'C'), uint64))
+
+@njit(uint64(types.Bytes(types.uint8, 1, "C"), uint64))
 def fasthash64(key, seed):
     """
     Calculate the unsigned 64-bit integer FastHash value of `key` with the
@@ -39,16 +41,16 @@ def fasthash64(key, seed):
         Unsigned 64-bit integer hash value of `key`
 
     """
-    m = uint64(0x880355f21e6d1965)
+    m = uint64(0x880355F21E6D1965)
 
     key_len = uint64(len(key))
-    nblocks = key_len // 8   # How many 8-byte blocks are there
+    nblocks = key_len // 8  # How many 8-byte blocks are there
 
     h = seed ^ (key_len * m)
 
     if nblocks > 0:
         # Cast complete 64-bit chunks into blocks array
-        blocks = np.frombuffer(key[:nblocks*8], np.uint64)
+        blocks = np.frombuffer(key[: nblocks * 8], np.uint64)
         # Process the 64-bit blocks
         for v in blocks:
             h ^= _fhmix64(v)
@@ -58,7 +60,7 @@ def fasthash64(key, seed):
     # How many bytes remain after 8-byte block processing
     switch_case = key_len & 7
     if switch_case == 7:
-        tail = key[nblocks*8:]
+        tail = key[nblocks * 8 :]
         v = uint64(0)
         v = _xor_shiftl(v, tail[6], 48)
         v = _xor_shiftl(v, tail[5], 40)
@@ -70,7 +72,7 @@ def fasthash64(key, seed):
         h ^= _fhmix64(v)
         h *= m
     elif switch_case == 6:
-        tail = key[nblocks*8:]
+        tail = key[nblocks * 8 :]
         v = uint64(0)
         v = _xor_shiftl(v, tail[5], 40)
         v = _xor_shiftl(v, tail[4], 32)
@@ -81,7 +83,7 @@ def fasthash64(key, seed):
         h ^= _fhmix64(v)
         h *= m
     elif switch_case == 5:
-        tail = key[nblocks*8:]
+        tail = key[nblocks * 8 :]
         v = uint64(0)
         v = _xor_shiftl(v, tail[4], 32)
         v = _xor_shiftl(v, tail[3], 24)
@@ -91,7 +93,7 @@ def fasthash64(key, seed):
         h ^= _fhmix64(v)
         h *= m
     elif switch_case == 4:
-        tail = key[nblocks*8:]
+        tail = key[nblocks * 8 :]
         v = uint64(0)
         v = _xor_shiftl(v, tail[3], 24)
         v = _xor_shiftl(v, tail[2], 16)
@@ -100,7 +102,7 @@ def fasthash64(key, seed):
         h ^= _fhmix64(v)
         h *= m
     elif switch_case == 3:
-        tail = key[nblocks*8:]
+        tail = key[nblocks * 8 :]
         v = uint64(0)
         v = _xor_shiftl(v, tail[2], 16)
         v = _xor_shiftl(v, tail[1], 8)
@@ -108,14 +110,14 @@ def fasthash64(key, seed):
         h ^= _fhmix64(v)
         h *= m
     elif switch_case == 2:
-        tail = key[nblocks*8:]
+        tail = key[nblocks * 8 :]
         v = uint64(0)
         v = _xor_shiftl(v, tail[1], 8)
         v ^= uint64(tail[0])
         h ^= _fhmix64(v)
         h *= m
     elif switch_case == 1:
-        tail = key[nblocks*8:]
+        tail = key[nblocks * 8 :]
         v = uint64(0)
         v ^= uint64(tail[0])
         h ^= _fhmix64(v)
@@ -123,7 +125,8 @@ def fasthash64(key, seed):
 
     return _fhmix64(h)
 
-@njit(uint32(types.Bytes(uint8, 1, 'C'), uint64))
+
+@njit(uint32(types.Bytes(uint8, 1, "C"), uint64))
 def fasthash32(key, seed):
     """
     Calculate the unsigned 32-bit integer FastHash value of `key` with the
@@ -144,6 +147,8 @@ def fasthash32(key, seed):
     """
     h = fasthash64(key, seed)
     return uint32(h - (h >> 32))
+
+
 ########## End FastHash ##########
 
 
@@ -152,17 +157,21 @@ def fasthash32(key, seed):
 def _xor32(x, y):
     return x ^ y
 
+
 @njit(uint32(uint32, uint32))
 def _shift32r(x, y):
     return x >> y
+
 
 @njit(uint32(uint32, uint32))
 def _shift32l(x, y):
     return x << y
 
+
 @njit(uint32(uint32, uint32))
 def _rotl32(x, r):
-    return _shift32l(x, r) | _shift32r(x, 32-r)
+    return _shift32l(x, r) | _shift32r(x, 32 - r)
+
 
 @njit(uint32(uint32))
 def _fmix32(h):
@@ -170,14 +179,15 @@ def _fmix32(h):
     Force all bits of a hash block to avalance.
     """
     h = _xor32(h, _shift32r(h, 16))
-    h *= uint32(0x85ebca6b)
+    h *= uint32(0x85EBCA6B)
     h = _xor32(h, _shift32r(h, 13))
-    h *= uint32(0xc2b2ae35)
+    h *= uint32(0xC2B2AE35)
     h = _xor32(h, _shift32r(h, 16))
 
     return h
 
-@njit(uint32(types.Bytes(uint8, 1, 'C'), uint32))
+
+@njit(uint32(types.Bytes(uint8, 1, "C"), uint32))
 def murmur3(key, seed):
     """
     Calculate the unsigned 32-bit integer MurmurHash3 value of `key` with the
@@ -200,14 +210,14 @@ def murmur3(key, seed):
     nblocks = key_len // 4  # How many 4-byte blocks are there
 
     # Cast whole 4-byte blocks to uint32
-    blocks = np.frombuffer(key[:nblocks*4], np.uint32)
+    blocks = np.frombuffer(key[: nblocks * 4], np.uint32)
     # Leave any remaining as uint8
-    tail = key[nblocks*4:]
+    tail = key[nblocks * 4 :]
 
     h = seed
-    c1 = uint32(0xcc9e2d51)
-    c2 = uint32(0x1b873593)
-    c3 = uint32(0xe6546b64)
+    c1 = uint32(0xCC9E2D51)
+    c2 = uint32(0x1B873593)
+    c3 = uint32(0xE6546B64)
 
     for i in range(nblocks):
         k1 = blocks[i]
@@ -245,6 +255,8 @@ def murmur3(key, seed):
 
     h = _xor32(h, key_len)
     h = _fmix32(h)
-    
+
     return h
+
+
 ########## End Murmur3 ##########

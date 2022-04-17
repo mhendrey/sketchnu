@@ -236,6 +236,7 @@ class HeavyHitters:
         second is used by helpers.parallel_add() to keep track of the number of records
         that have been processed.
     """
+
     def __init__(
         self,
         width: int,
@@ -272,7 +273,11 @@ class HeavyHitters:
             raise ValueError(f"{width=:}. Must be an integer greater than 0")
         if depth <= 0 or not isinstance(depth, int_types):
             raise ValueError(f"{depth=:}. Must be an integer greater than 0")
-        if max_key_len <= 0 or not isinstance(max_key_len, int_types) or max_key_len > 255:
+        if (
+            max_key_len <= 0
+            or not isinstance(max_key_len, int_types)
+            or max_key_len > 255
+        ):
             raise ValueError(f"{max_key_len=:}. Must be an integer [1, 255]")
         if threshold < 0 or not isinstance(threshold, int_types):
             raise ValueError(f"{threshold=:}. Must be a non-negative integer")

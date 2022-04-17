@@ -45,16 +45,27 @@ from sketchnu.hyperloglog import HyperLogLog_nu
 
 # Empirically determined threshold provided by the paper authors
 # at http://goo.gl/iU8Ig).
-sub_algorithm_threshold = np.array([80, 220, 400, 900, 1800, 3100, 6500, 11500,
-                                    20000, 50000], dtype=np.int64)
+sub_algorithm_threshold = np.array(
+    [80, 220, 400, 900, 1800, 3100, 6500, 11500, 20000, 50000], dtype=np.int64
+)
+
 
 def parse_cmd_line():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--n_trials', type=int, default=5000,
-        help='Number of trials to run for each (p,v) pair. Default is 5000')
-    parser.add_argument('--n_measurements', type=int, default=200,
-        help='Number of measurements to do for each precision. Default is 200')
+    parser.add_argument(
+        "--n_trials",
+        type=int,
+        default=5000,
+        help="Number of trials to run for each (p,v) pair. Default is 5000",
+    )
+    parser.add_argument(
+        "--n_measurements",
+        type=int,
+        default=200,
+        help="Number of measurements to do for each precision. Default is 200",
+    )
     return parser.parse_args()
+
 
 @njit(nogil=True)
 def one_trial(keys, p, seed, lower, upper, n_measurements):
@@ -100,14 +111,15 @@ def one_trial(keys, p, seed, lower, upper, n_measurements):
     ptr = 0
     for n in range(upper):
         hll.add(keys[n])
-        true_count = n+1
+        true_count = n + 1
         if true_count == measurement_points[ptr]:
             estimate = hll._estimation_function()
             raw_estimate[ptr] = estimate
             bias[ptr] = estimate - true_count
             ptr = ptr + 1
-        
+
     return raw_estimate, bias
+
 
 @njit(nogil=True, parallel=True)
 def one_precision(keys, p, n_trials, lower, upper, n_measurements):
@@ -147,10 +159,12 @@ def one_precision(keys, p, n_trials, lower, upper, n_measurements):
     biases = np.zeros((n_trials, n_measurements), float64)
 
     for i in prange(n_trials):
-        raw_estimates[i], biases[i] = one_trial(keys, p, i, lower, upper,
-                                                n_measurements)
+        raw_estimates[i], biases[i] = one_trial(
+            keys, p, i, lower, upper, n_measurements
+        )
 
     return raw_estimates, biases
+
 
 def main():
     args = parse_cmd_line()
@@ -164,62 +178,63 @@ def main():
     start = datetime.now()
     for p in range(7, 17):
         start_p = datetime.now()
-        print(f'{start_p}: Starting precision {p}')
+        print(f"{start_p}: Starting precision {p}")
 
         # These limits are from the HyperLogLog++ paper
-        lower = sub_algorithm_threshold[p-7]
-        upper = 5 * 2**p
+        lower = sub_algorithm_threshold[p - 7]
+        upper = 5 * 2 ** p
 
         # Make random 16-byte keys. Make sure no duplicates.
-        keys = [bytes(r) for r in np.random.randint(0,256, (upper, 16), np.uint8)]
+        keys = [bytes(r) for r in np.random.randint(0, 256, (upper, 16), np.uint8)]
         while len(keys) != len(set(keys)):
-            keys = [bytes(r) for r in np.random.randint(0,256, (2**p, 16), np.uint8)]
+            keys = [bytes(r) for r in np.random.randint(0, 256, (2 ** p, 16), np.uint8)]
         keys = List(keys)
 
         # Run the experiments for this precision level
         # Each experiment uses a different seed value
         raw, bias = one_precision(keys, p, n_trials, lower, upper, n_measurements)
-        raw_estimate[p-7] = raw.mean(0)
-        bias_data[p-7] = bias.mean(0)
+        raw_estimate[p - 7] = raw.mean(0)
+        bias_data[p - 7] = bias.mean(0)
         end_p = datetime.now()
-        print(f'{end_p}: Finished precision {p} in {end_p-start_p}')
+        print(f"{end_p}: Finished precision {p} in {end_p-start_p}")
 
     end = datetime.now()
-    speed = n_trials / (end-start).total_seconds()
-    print(f'{end}: Took {end-start} at {speed:.3f} trials / second')
+    speed = n_trials / (end - start).total_seconds()
+    print(f"{end}: Took {end-start} at {speed:.3f} trials / second")
 
     # Write results to a file that can easily be imported
-    with open('hll_constants.py','w') as f:
-        f.write('import numpy as np\n')
+    with open("hll_constants.py", "w") as f:
+        f.write("import numpy as np\n")
 
-        f.write('\nsub_algorithm_threshold = np.array([\n')
-        f.write('    ')
-        f.write(', '.join([str(i) for i in sub_algorithm_threshold]))
-        f.write('\n], dtype=np.int64)\n')
+        f.write("\nsub_algorithm_threshold = np.array([\n")
+        f.write("    ")
+        f.write(", ".join([str(i) for i in sub_algorithm_threshold]))
+        f.write("\n], dtype=np.int64)\n")
 
-        f.write('\nraw_estimate = np.array([\n')
+        f.write("\nraw_estimate = np.array([\n")
         for i in range(7, 16):
-            f.write(f'    # Precision {i}\n')
-            f.write('    [')
-            f.write(', '.join([f'{x:.5f}' for x in raw_estimate[i-7,:]]))
-            f.write('],\n')
-        f.write(f'    # Precision 16\n')
-        f.write('    [')
-        f.write(', '.join([f'{x:.5f}' for x in raw_estimate[-1,:]]))
-        f.write(']\n')
-        f.write('])\n')
+            f.write(f"    # Precision {i}\n")
+            f.write("    [")
+            f.write(", ".join([f"{x:.5f}" for x in raw_estimate[i - 7, :]]))
+            f.write("],\n")
+        f.write(f"    # Precision 16\n")
+        f.write("    [")
+        f.write(", ".join([f"{x:.5f}" for x in raw_estimate[-1, :]]))
+        f.write("]\n")
+        f.write("])\n")
 
-        f.write('\nbias_data = np.array([\n')
+        f.write("\nbias_data = np.array([\n")
         for i in range(7, 16):
-            f.write(f'    # Precision {i}\n')
-            f.write('    [')
-            f.write(', '.join([f'{x:.5f}' for x in bias_data[i-7,:]]))
-            f.write('],\n')
-        f.write(f'    # Precision 16\n')
-        f.write('    [')
-        f.write(', '.join([f'{x:.5f}' for x in bias_data[-1,:]]))
-        f.write(']\n')
-        f.write('])\n')
+            f.write(f"    # Precision {i}\n")
+            f.write("    [")
+            f.write(", ".join([f"{x:.5f}" for x in bias_data[i - 7, :]]))
+            f.write("],\n")
+        f.write(f"    # Precision 16\n")
+        f.write("    [")
+        f.write(", ".join([f"{x:.5f}" for x in bias_data[-1, :]]))
+        f.write("]\n")
+        f.write("])\n")
+
 
 if __name__ == "__main__":
     main()

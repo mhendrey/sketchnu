@@ -4,6 +4,7 @@ from sketchnu.hashes import fasthash32, murmur3
 from sketchnu.countmin import CountMin
 from sketchnu.hyperloglog import HyperLogLog
 
+
 def test_fasthash():
     """
     Compare the fasthash32 against the smhasher C++ version. Since the
@@ -16,7 +17,7 @@ def test_fasthash():
     https://github.com/rurban/smhasher/blob/master/fasthash.h
 
     """
-    key = b'0123456789abcdef'
+    key = b"0123456789abcdef"
 
     assert fasthash32(key, 0) == 128551002
     assert fasthash32(key, 5) == 571860520
@@ -38,14 +39,15 @@ def test_fasthash():
     assert fasthash32(key[:2], 28) == 3486011618
     assert fasthash32(key[:1], 29) == 3407281718
 
-    hv1 = fasthash32(b'test', 0)
+    hv1 = fasthash32(b"test", 0)
     assert hv1 == 2542785854
 
-    hv2 = fasthash32(b'abc', 1)
+    hv2 = fasthash32(b"abc", 1)
     assert hv2 == 558486214
 
-    hv3 = fasthash32(b'123', 2)
+    hv3 = fasthash32(b"123", 2)
     assert hv3 == 3103508967
+
 
 def test_murmur3():
     """
@@ -58,17 +60,23 @@ def test_murmur3():
     https://github.com/rurban/smhasher/blob/master/MurmurHash3.h
 
     """
-    hv1 = murmur3(b'test', 0)
+    hv1 = murmur3(b"test", 0)
     assert hv1 == 3127628307
 
-    hv2 = murmur3(b'abc', 1)
+    hv2 = murmur3(b"abc", 1)
     assert hv2 == 2859854335
 
-    hv3 = murmur3(b'123', 2)
+    hv3 = murmur3(b"123", 2)
     assert hv3 == 1498078391
 
-def test_cms_linear(n_keys:int=1024, c_min:int=1, c_max:int=1024,
-                    width:int=1024, depth:int=8):
+
+def test_cms_linear(
+    n_keys: int = 1024,
+    c_min: int = 1,
+    c_max: int = 1024,
+    width: int = 1024,
+    depth: int = 8,
+):
     """
     Test that the count-min sketch error quarantees hold. We first assert that
     all estimates are greater than or equal to the true count.  Then we assert
@@ -96,12 +104,12 @@ def test_cms_linear(n_keys:int=1024, c_min:int=1, c_max:int=1024,
 
     """
     # Generate n_keys random 16-byte keys
-    keys = [bytes(r) for r in np.random.randint(0,256, (n_keys, 16), np.uint8)]
+    keys = [bytes(r) for r in np.random.randint(0, 256, (n_keys, 16), np.uint8)]
     # Generate the number of times we will insert each of the keys
     # Equally spaced between c_min and c_max
     n_times = np.linspace(c_min, c_max, n_keys, dtype=np.int64)
 
-    cms = CountMin('linear', width, depth)
+    cms = CountMin("linear", width, depth)
     for n, key in zip(n_times, keys):
         for i in range(n):
             cms.add(key)
@@ -113,12 +121,20 @@ def test_cms_linear(n_keys:int=1024, c_min:int=1, c_max:int=1024,
     max_error = cms.n_added() * np.exp(1) / width
     n_over_max = error[error > max_error].shape[0]
 
-    assert error.min() >= 0.0, f'Minimum error, {error.min():.3f} is negative'
-    assert (n_over_max / n_keys) < np.exp(-depth), f'Exceeded the limit too often, {n_over_max}'
+    assert error.min() >= 0.0, f"Minimum error, {error.min():.3f} is negative"
+    assert (n_over_max / n_keys) < np.exp(
+        -depth
+    ), f"Exceeded the limit too often, {n_over_max}"
 
-def test_cms_log8_update(n_keys:int=500, c_min:int=15, c_mid:int=5000,
-                         c_max:int=100000, max_count:int=2**32-1,
-                         num_reserved:int=15):
+
+def test_cms_log8_update(
+    n_keys: int = 500,
+    c_min: int = 15,
+    c_mid: int = 5000,
+    c_max: int = 100000,
+    max_count: int = 2 ** 32 - 1,
+    num_reserved: int = 15,
+):
     """
     Uses a t-test to test the null hypothesis that the mean of the
     difference between the true count and estimated count is 0. Uses a
@@ -166,29 +182,39 @@ def test_cms_log8_update(n_keys:int=500, c_min:int=15, c_mid:int=5000,
 
     """
     # Generate n_keys random 16-byte keys
-    keys = [bytes(r) for r in np.random.randint(0,256, (n_keys, 16), np.uint8)]
+    keys = [bytes(r) for r in np.random.randint(0, 256, (n_keys, 16), np.uint8)]
     # Extremely small chance that duplicate keys are created
     keys = list(set(keys))
     n_keys = len(keys)
 
     w = n_keys * c_max * 3
-    cms = CountMin('log8', w, max_count=max_count, num_reserved=num_reserved)
+    cms = CountMin("log8", w, max_count=max_count, num_reserved=num_reserved)
     error = np.zeros(n_keys)
 
     for n in range(c_max):
         cms.update(keys)
-        if (n+1) in [c_min, c_mid, c_max]:
+        if (n + 1) in [c_min, c_mid, c_max]:
             for i, key in enumerate(keys):
-                error[i] = cms.query(key) - (n+1)
+                error[i] = cms.query(key) - (n + 1)
             if error.std() == 0.0:
-                assert error.mean() == 0.0, f'After {n+1} inserts std=0, but mean = {error.mean():.3f}'
+                assert (
+                    error.mean() == 0.0
+                ), f"After {n+1} inserts std=0, but mean = {error.mean():.3f}"
             else:
                 t_value = np.abs(error.mean()) / (error.std() / np.sqrt(n_keys))
                 # 99% Confidence Level
-                assert t_value < 2.576, f'After {n+1} inserts: t-value {t_value:.4} is above 2.576'
+                assert (
+                    t_value < 2.576
+                ), f"After {n+1} inserts: t-value {t_value:.4} is above 2.576"
 
-def test_cms_log8_merge(n_keys:int=100, cms_updates=5000, other_updates=300,
-                        max_count:int=2**32-1, num_reserved:int=None):
+
+def test_cms_log8_merge(
+    n_keys: int = 100,
+    cms_updates=5000,
+    other_updates=300,
+    max_count: int = 2 ** 32 - 1,
+    num_reserved: int = None,
+):
     """
     Uses a t-test to test the null hypothesis that the mean of the
     difference between the true count and estimated count is 0. Uses a
@@ -232,12 +258,12 @@ def test_cms_log8_merge(n_keys:int=100, cms_updates=5000, other_updates=300,
     # Random 16-byte keys
     keys = [bytes(r) for r in np.random.randint(0, 256, (n_keys, 16), np.uint8)]
 
-    l_cms = keys*cms_updates
-    l_other = keys*other_updates
+    l_cms = keys * cms_updates
+    l_other = keys * other_updates
     N = len(l_cms) + len(l_other)
 
-    cms = CountMin('log8', 3*N, max_count=max_count, num_reserved=num_reserved)
-    other = CountMin('log8', 3*N, max_count=max_count, num_reserved=num_reserved)
+    cms = CountMin("log8", 3 * N, max_count=max_count, num_reserved=num_reserved)
+    other = CountMin("log8", 3 * N, max_count=max_count, num_reserved=num_reserved)
 
     cms.update(l_cms)
     other.update(l_other)
@@ -246,19 +272,25 @@ def test_cms_log8_merge(n_keys:int=100, cms_updates=5000, other_updates=300,
     error = np.zeros(n_keys)
     for i in range(n_keys):
         error[i] = cms.query(keys[i]) - (cms_updates + other_updates)
-    
+
     # If we happen to have stayed in the linear regime
     # then if we have zero std, we should also have zero mean.
     if error.std() == 0.0:
-        assert error.mean() == 0.0, f'std = 0, but mean !=0, {error.mean():.3f}'
+        assert error.mean() == 0.0, f"std = 0, but mean !=0, {error.mean():.3f}"
     else:
         t_value = np.abs(error.mean()) / (error.std() / np.sqrt(n_keys))
         # 99% Confidence Level
-        assert t_value < 2.576, f't-value {t_value:.4} is above 2.576'
+        assert t_value < 2.576, f"t-value {t_value:.4} is above 2.576"
 
-def test_cms_log16_update(n_keys:int=500, c_min:int=1023, c_mid:int=5000,
-                          c_max:int=100000, max_count:int=2**32-1,
-                          num_reserved:int=1023):
+
+def test_cms_log16_update(
+    n_keys: int = 500,
+    c_min: int = 1023,
+    c_mid: int = 5000,
+    c_max: int = 100000,
+    max_count: int = 2 ** 32 - 1,
+    num_reserved: int = 1023,
+):
     """
     Uses a t-test to test the null hypothesis that the mean of the
     difference between the true count and estimated count is 0. Uses a
@@ -302,29 +334,39 @@ def test_cms_log16_update(n_keys:int=500, c_min:int=1023, c_mid:int=5000,
         Passed to CountMinLog() to specify the num_reserved. Default is 1023.
     """
     # Generate n_keys random 16-byte keys
-    keys = [bytes(r) for r in np.random.randint(0,256, (n_keys, 16), np.uint8)]
+    keys = [bytes(r) for r in np.random.randint(0, 256, (n_keys, 16), np.uint8)]
     # Extremely small chance that duplicate keys are created
     keys = list(set(keys))
     n_keys = len(keys)
 
     w = n_keys * c_max * 3
-    cms = CountMin('log16', w, max_count=max_count, num_reserved=num_reserved)
+    cms = CountMin("log16", w, max_count=max_count, num_reserved=num_reserved)
     error = np.zeros(n_keys)
 
     for n in range(c_max):
         cms.update(keys)
-        if (n+1) in [c_min, c_mid, c_max]:
+        if (n + 1) in [c_min, c_mid, c_max]:
             for i, key in enumerate(keys):
-                error[i] = cms.query(key) - (n+1)
+                error[i] = cms.query(key) - (n + 1)
             if error.std() == 0.0:
-                assert error.mean() == 0.0, f'After {n+1} inserts std=0, but mean = {error.mean():.3f}'
+                assert (
+                    error.mean() == 0.0
+                ), f"After {n+1} inserts std=0, but mean = {error.mean():.3f}"
             else:
                 t_value = np.abs(error.mean()) / (error.std() / np.sqrt(n_keys))
                 # 99% Confidence Level
-                assert t_value < 2.576, f'After {n+1} inserts: t-value {t_value:.4} is above 2.576'
+                assert (
+                    t_value < 2.576
+                ), f"After {n+1} inserts: t-value {t_value:.4} is above 2.576"
 
-def test_cms_log16_merge(n_keys:int=100, cms_updates=5000, other_updates=300,
-                         max_count:int=2**32-1, num_reserved:int=50):
+
+def test_cms_log16_merge(
+    n_keys: int = 100,
+    cms_updates=5000,
+    other_updates=300,
+    max_count: int = 2 ** 32 - 1,
+    num_reserved: int = 50,
+):
     """
     Uses a t-test to test the null hypothesis that the mean of the
     difference between the true count and estimated count is 0. Uses a
@@ -365,12 +407,12 @@ def test_cms_log16_merge(n_keys:int=100, cms_updates=5000, other_updates=300,
     # Random 16-byte keys
     keys = [bytes(r) for r in np.random.randint(0, 256, (n_keys, 16), np.uint8)]
 
-    l_cms = keys*cms_updates
-    l_other = keys*other_updates
+    l_cms = keys * cms_updates
+    l_other = keys * other_updates
     N = len(l_cms) + len(l_other)
 
-    cms = CountMin('log16', 3*N, max_count=max_count, num_reserved=num_reserved)
-    other = CountMin('log16', 3*N, max_count=max_count, num_reserved=num_reserved)
+    cms = CountMin("log16", 3 * N, max_count=max_count, num_reserved=num_reserved)
+    other = CountMin("log16", 3 * N, max_count=max_count, num_reserved=num_reserved)
 
     cms.update(l_cms)
     other.update(l_other)
@@ -379,17 +421,18 @@ def test_cms_log16_merge(n_keys:int=100, cms_updates=5000, other_updates=300,
     error = np.zeros(n_keys)
     for i in range(n_keys):
         error[i] = cms.query(keys[i]) - (cms_updates + other_updates)
-    
+
     # If we happen to have stayed in the linear regime
     # then if we have zero std, we should also have zero mean.
     if error.std() == 0.0:
-        assert error.mean() == 0.0, f'std = 0, but mean !=0, {error.mean():.3f}'
+        assert error.mean() == 0.0, f"std = 0, but mean !=0, {error.mean():.3f}"
     else:
         t_value = np.abs(error.mean()) / (error.std() / np.sqrt(n_keys))
         # 99% Confidence Level
-        assert t_value < 2.576, f't-value {t_value:.4} is above 2.576'
+        assert t_value < 2.576, f"t-value {t_value:.4} is above 2.576"
 
-def test_hll_update(p:int=10, n_keys:int=100000, n_trials:int=100):
+
+def test_hll_update(p: int = 10, n_keys: int = 100000, n_trials: int = 100):
     """
     Uses a t-test to test the null hypothesis that the mean of the
     difference between the true count and estimated count is 0. Uses a
@@ -430,16 +473,18 @@ def test_hll_update(p:int=10, n_keys:int=100000, n_trials:int=100):
         hll = HyperLogLog(p, n)
         hll.update(keys)
         error[n] = n_keys - hll.query()
-    
+
     if error.std() == 0.0:
-        assert error.mean() == 0.0, f'std = 0, but mean !=0, {error.mean():.3f}'
+        assert error.mean() == 0.0, f"std = 0, but mean !=0, {error.mean():.3f}"
     else:
         t_value = np.abs(error.mean() / (error.std() / np.sqrt(n_trials)))
         # 99% confidence level
-        assert t_value < 2.576, f't-value {t_value:.4} is above 2.576'
+        assert t_value < 2.576, f"t-value {t_value:.4} is above 2.576"
 
-def test_hll_merge(p:int=10, n_keys1:int=100000, n_keys2:int=25000,
-                   n_trials:int=100):
+
+def test_hll_merge(
+    p: int = 10, n_keys1: int = 100000, n_keys2: int = 25000, n_trials: int = 100
+):
     """
     Uses a t-test to test the null hypothesis that the mean of the
     difference between the true count and estimated count is 0. Uses a
@@ -470,11 +515,11 @@ def test_hll_merge(p:int=10, n_keys1:int=100000, n_keys2:int=25000,
 
     """
     # Create random 16-byte keys
-    keys1 = [bytes(r) for r in np.random.randint(0,256, (n_keys1, 16), dtype=np.uint8)]
+    keys1 = [bytes(r) for r in np.random.randint(0, 256, (n_keys1, 16), dtype=np.uint8)]
     keys1 = list(set(keys1))
     n_keys1 = len(keys1)
 
-    keys2 = [bytes(r) for r in np.random.randint(0,256, (n_keys2, 15), dtype=np.uint8)]
+    keys2 = [bytes(r) for r in np.random.randint(0, 256, (n_keys2, 15), dtype=np.uint8)]
     keys2 = keys2 + keys1
     keys2 = list(set(keys2))
     n_keys2 = len(keys2)
@@ -491,8 +536,8 @@ def test_hll_merge(p:int=10, n_keys1:int=100000, n_keys2:int=25000,
         error[n] = hll1.query() - n_true
 
     if error.std() == 0.0:
-        assert error.mean() == 0.0, f'std = 0, but mean !=0, {error.mean():.3f}'
+        assert error.mean() == 0.0, f"std = 0, but mean !=0, {error.mean():.3f}"
     else:
         t_value = np.abs(error.mean() / (error.std() / np.sqrt(n_trials)))
         # 99% confidence level
-        assert t_value < 2.576, f't-value {t_value:.4} is above 2.576'
+        assert t_value < 2.576, f"t-value {t_value:.4} is above 2.576"
