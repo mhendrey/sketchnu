@@ -1,3 +1,7 @@
+"""
+Copyright (C) 2022 Matthew Hendrey
+Licensed under GNU General Public License Version 3. See LICENSE file for full details.
+"""
 import numpy as np
 
 from sketchnu.hashes import fasthash32, murmur3

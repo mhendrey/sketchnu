@@ -1,4 +1,7 @@
 """
+Copyright (C) 2022 Matthew Hendrey
+Licensed under GNU General Public License Version 3. See LICENSE file for full details.
+
 Helper functions to aid in parallelizating the creation of sketches using Python's
 :code:`multiprocessing`. Also includes :code:`setup_logger` to log statements to both
 the console and a log file.

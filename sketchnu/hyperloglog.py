@@ -1,4 +1,7 @@
 """
+Copyright (C) 2022 Matthew Hendrey
+Licensed under GNU General Public License Version 3. See LICENSE file for full details.
+
 Too many problems with the experimental Numba class. Converting this
 to a series of Numba functions and a Python class.
 

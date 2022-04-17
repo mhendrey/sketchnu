@@ -1,3 +1,7 @@
+"""
+Copyright (C) 2022 Matthew Hendrey
+Licensed under GNU General Public License Version 3. See LICENSE file for full details.
+"""
 __version__ = "1.1.0"
 
 from sketchnu.countmin import (

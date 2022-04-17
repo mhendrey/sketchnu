@@ -1,4 +1,7 @@
 """
+Copyright (C) 2022 Matthew Hendrey
+Licensed under GNU General Public License Version 3. See LICENSE file for full details.
+
 Numba implementations of the **non-cryptographic** hashing functions
 FastHash (32 & 64-bit) and MurmurHash3 (32-bit). The 64-bit FastHash is used
 in both the HyperLogLog and count-min sketch code.

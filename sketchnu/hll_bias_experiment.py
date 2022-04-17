@@ -1,4 +1,7 @@
 """
+Copyright (C) 2022 Matthew Hendrey
+Licensed under GNU General Public License Version 3. See LICENSE file for full details.
+
 Code to replicate determining the bias corrections to low cardinality in the
 hyperloglog algorithm.  The paper references doing 200 data points with
 5000 experiments at each, for each of the different precision levels which for
