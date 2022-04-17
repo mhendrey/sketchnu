@@ -1013,6 +1013,55 @@ def _merge_log16(
 
 
 class CountMinLog16(CountMinLinear):
+    """
+    Count-min sketch that uses 16-bit log counters with conservative updating.
+
+    Parameters
+    ----------
+    width : int
+        Width of the count-min sketch. Must be non-negative.
+    depth : int, optional
+        Depth of the count-min sketch. Must be non-negative. Default is 8.
+    max_count : int, optional
+        The maximum value we want to count up to for any given key. Default is
+        2\*\*32 -1 (4,294,967,295).
+    num_reserved : int, optional
+        Perform linear counting for values [0, num_reserved]. After that use log
+        counters. This gives more precise estimates for the number of times a key
+        is seen for counts <= num_reserved. Default is 1023. This must be less than
+        65,535 (2\*\*16 - 1).
+    shared_memory : bool, optional
+        If True, then CountMinLinear is placed in shared memory. Needed if
+        performing multiprocessing as sketchnu.helpers.parallel_add() does.
+        Default is False.
+
+    Attributes
+    ----------
+    width : np.uint64
+        Width of the 2-d array of counters of the count-min sketch
+    depth : np.uint64
+        Depth of the 2-d array of counters of the count-min sketch
+    max_count : int, optional
+        The maximum value we want to count up to for any given key. Default is
+        2\*\*32 -1 (4,294,967,295).
+    num_reserved : int, optional
+        Perform linear counting for values [0, num_reserved]. After that use log
+        counters. This gives more precise estimates for the number of times a key
+        is seen for counts <= num_reserved. Default is 1023. This must be less than
+        65,535 (2\*\*16 - 1).
+    shared_memory : bool
+        Whether `cms` and `n_added_records` are attached to a shared memory block
+    cms : np.uint32[:,:]
+        2-d array of the counters. Shape = (depth, width)
+    n_added_records : np.uint64[:]
+        1-d array that holds two special counters. The first is the number of elements
+        that have been added to the sketch. Useful for calculating error limits. The
+        second is used by helpers.parallel_add() to keep track of the number of records
+        that have been processed. Useful if you want to calculate a TF-IDF.
+    base : np.float64
+        Calculated base for the log counters. Depends affected by max_count and
+        num_reserved.
+    """
     def __init__(
         self,
         width: int,
@@ -1468,6 +1517,55 @@ def _merge_log8(
 
 
 class CountMinLog8(CountMinLog16):
+    """
+    Count-min sketch that uses 16-bit log counters with conservative updating.
+
+    Parameters
+    ----------
+    width : int
+        Width of the count-min sketch. Must be non-negative.
+    depth : int, optional
+        Depth of the count-min sketch. Must be non-negative. Default is 8.
+    max_count : int, optional
+        The maximum value we want to count up to for any given key. Default is
+        2\*\*32 -1 (4,294,967,295).
+    num_reserved : int, optional
+        Perform linear counting for values [0, num_reserved]. After that use log
+        counters. This gives more precise estimates for the number of times a key
+        is seen for counts <= num_reserved. Default is 15. This must be less than
+        255 (2\*\*8 - 1).
+    shared_memory : bool, optional
+        If True, then CountMinLinear is placed in shared memory. Needed if
+        performing multiprocessing as sketchnu.helpers.parallel_add() does.
+        Default is False.
+
+    Attributes
+    ----------
+    width : np.uint64
+        Width of the 2-d array of counters of the count-min sketch
+    depth : np.uint64
+        Depth of the 2-d array of counters of the count-min sketch
+    max_count : int, optional
+        The maximum value we want to count up to for any given key. Default is
+        2\*\*32 -1 (4,294,967,295).
+    num_reserved : int, optional
+        Perform linear counting for values [0, num_reserved]. After that use log
+        counters. This gives more precise estimates for the number of times a key
+        is seen for counts <= num_reserved. Default is 15. This must be less than
+        255 (2\*\*8 - 1).
+    shared_memory : bool
+        Whether `cms` and `n_added_records` are attached to a shared memory block
+    cms : np.uint32[:,:]
+        2-d array of the counters. Shape = (depth, width)
+    n_added_records : np.uint64[:]
+        1-d array that holds two special counters. The first is the number of elements
+        that have been added to the sketch. Useful for calculating error limits. The
+        second is used by helpers.parallel_add() to keep track of the number of records
+        that have been processed. Useful if you want to calculate a TF-IDF.
+    base : np.float64
+        Calculated base for the log counters. Depends affected by max_count and
+        num_reserved.
+    """
     def __init__(
         self,
         width: int,

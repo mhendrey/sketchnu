@@ -258,6 +258,36 @@ def _merge(registers, other_registers, m):
 
 
 class HyperLogLog:
+    """
+    Implementation of the HyperLogLog++ algorithm which uses a 64-bit hash function and
+    corrects bias when cardinality is low.
+
+    Parameters
+    ----------
+    p : int
+        Precision specifies the number of registers (2\*\*p). The larger the p,
+        the more accurate the estimated cardinality. Must be between [7, 16]
+    seed : int, optional
+        Seed passed to the fasthash64 function. Default is 0
+    shared_memory : bool, optional
+        If True, then HyperLogLog is placed in shared memory. Needed if
+        performing multiprocessing as sketchnu.helpers.parallel_add() does.
+        Default is False.
+    
+    Attributes
+    ----------
+    p : int
+        Precision of the HyperLogLog. Must be between [7, 16]
+    seed : int
+        Seed passed to hash function
+    m : int
+        Number of registers. Equal to 2\*\*p
+    shared_memory : bool, optional
+        If True, then HyperLogLog is placed in shared memory. Needed if
+        performing multiprocessing as sketchnu.helpers.parallel_add() does.
+        Default is False.
+
+    """
     def __init__(self, p: int = 16, seed: int = 0, shared_memory: bool = False):
         """
         Instantiate a HyperLogLog. This is an implementation of the HyperLogLog++

@@ -227,10 +227,27 @@ def _max_count(lhh, lhh_count, width, depth, max_key_len, key, key_len):
 
 class HeavyHitters:
     """
-    Sketch to identify the most frequent keys added into the sketch.
+    Sketch to identify the most frequent keys added into the sketch. Assumes that keys
+    have a fat-tailed distribution in the data stream.
 
-    Main Attributes
-    ---------------
+    Parameters
+    ----------
+    width : int
+        Width of the heavy hitters sketch. Must be non-negative
+    depth : int, optional
+        Depth of the heavy hitters sketch. Must be non-negative. Default is 4
+    max_key_len : int, optional
+        Maximum number of bytes any given key may have. Must be less than 256.
+        Default is 16
+    threshold : int, optional
+        Default threshold value to use when generating candidate set of heavy
+        hitters. Default is 0
+    shared_memory : bool, optional
+        If True, then sketch is placed in shared memory. Needed if performing
+        multiprocessing as sketchnu.helpers.parallel_add() does. Default is False
+
+    Attributes
+    ----------
     width : np.uint64
         Width of the 2-d array of counters of the sketch
     depth : np.uint64
