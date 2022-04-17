@@ -381,7 +381,7 @@ class HyperLogLog:
 
     def update_ngram(self, keys: bytes, ngram: int) -> None:
         """
-        Given a list of keys, split each into ngrams of size `ngram, and then
+        Given a list of keys, split each into ngrams of size `ngram`, and then
         add them to the sketch.
 
         Note

@@ -5,14 +5,14 @@ Sketchnu is licensed under the GNU General Public License (GPL) v3.0. This licen
 guarantees that end users have the freedom to use, modify and share the software. The
 *Free Software Foundation*, which published the GPL, explains that
 
-    1. *"The licenses for most software and other practical works are designed to take away
-       your freedom to share and change the works. By contrast, the GNU General Public License
-       is intended to guarantee your freedom to share and change all versions of a program--to
-       make sure it remains free software for all its users."*
+    * *"The licenses for most software and other practical works are designed to take away
+      your freedom to share and change the works. By contrast, the GNU General Public License
+      is intended to guarantee your freedom to share and change all versions of a program--to
+      make sure it remains free software for all its users."*
 
-    2. *"Developers that use the GNU GPL protect your rights with two steps: (1)*
-       **assert copyright** *on the software, and (2)* **offer you this License** *giving you
-       legal permission to copy, distribute and/or modify it".*
+    * *"Developers that use the GNU GPL protect your rights with two steps: (1)*
+      **assert copyright** *on the software, and (2)* **offer you this License** *giving you
+      legal permission to copy, distribute and/or modify it".*
 
 You can find a copy of the lincense in the LICENSE file
 
@@ -53,8 +53,8 @@ Copyright
 The GPL license requires that all code includes a copyright notice. The purpose
 of the copyright notice is to **protect the rights of developers** by:
 
-    1. Giving them credit for their work
-    2. Preventing their code from being distributed under a different license without
-       their knowledge/permission
-    3. Giving them the power to enforce the terms of the license (*e.g. take someone
-       to court if they violate the license*)
+    * Giving them credit for their work
+    * Preventing their code from being distributed under a different license without
+      their knowledge/permission
+    * Giving them the power to enforce the terms of the license (*e.g. take someone
+      to court if they violate the license*)
