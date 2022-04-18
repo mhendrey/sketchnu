@@ -1518,7 +1518,7 @@ def _merge_log8(
 
 class CountMinLog8(CountMinLog16):
     """
-    Count-min sketch that uses 16-bit log counters with conservative updating.
+    Count-min sketch that uses 8-bit log counters with conservative updating.
 
     Parameters
     ----------
