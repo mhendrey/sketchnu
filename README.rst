@@ -13,7 +13,7 @@ items in a stream).
 Documentation
 =============
 Documentation for the API and theoretical foundations of the algorithms can be
-found at hxxp://some.webaddress
+found at https://mhendrey.github.io/sketchnu
 
 Installation
 ============
