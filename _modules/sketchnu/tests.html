@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>sketchnu.tests &mdash; sketchnu 1.1.0 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../index.html" class="icon icon-home"> sketchnu<img src="../../_static/logo.png" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                1.1.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../hyperloglog.html">HyperLogLog++</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../hyperloglog.html#the-basics">The Basics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../hyperloglog.html#usage">Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../hyperloglog.html#the-details">The Details</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../hyperloglog.html#testing">Testing</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../countmin.html">Count-Min Sketch</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../countmin.html#the-basics">The Basics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../countmin.html#usage">Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../countmin.html#the-details">The Details</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../countmin.html#testing">Testing</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../helpers.html">Helper Functions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../helpers.html#usage">Usage</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../hashes.html">Hash Functions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../hashes.html#fasthash">FastHash</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../hashes.html#usage">Usage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../hashes.html#testing">Testing</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../hashes.html#murmurhash3">MurmurHash3</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../hashes.html#id1">Usage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../hashes.html#id2">Testing</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../sketchnu.html">sketchnu.hyperloglog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../sketchnu.html#module-sketchnu.countmin">sketchnu.countmin</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../sketchnu.html#module-sketchnu.helpers">sketchnu.helpers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../sketchnu.html#module-sketchnu.hashes">sketchnu.hashes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../sketchnu.html#module-sketchnu.tests">sketchnu.tests</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Admin</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../license.html">License</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../license.html#license-requirements">License Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../license.html#license-notices">License notices</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../license.html#copyright">Copyright</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../help.html">Help</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">sketchnu</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+      <li>sketchnu.tests</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for sketchnu.tests</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Sketchnu has Numba implementations of sketch algorithms and other useful functions </span>
+<span class="sd">that utilize hash functions.</span>
+
+<span class="sd">Copyright (C) 2022 Matthew Hendrey</span>
+
+<span class="sd">This program is free software: you can redistribute it and/or modify</span>
+<span class="sd">it under the terms of the GNU General Public License as published by</span>
+<span class="sd">the Free Software Foundation, either version 3 of the License, or</span>
+<span class="sd">(at your option) any later version.</span>
+
+<span class="sd">This program is distributed in the hope that it will be useful,</span>
+<span class="sd">but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<span class="sd">MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
+<span class="sd">GNU General Public License for more details.</span>
+
+<span class="sd">You should have received a copy of the GNU General Public License</span>
+<span class="sd">along with this program.  If not, see &lt;https://www.gnu.org/licenses/&gt;.</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">from</span> <span class="nn">sketchnu.hashes</span> <span class="kn">import</span> <span class="n">fasthash32</span><span class="p">,</span> <span class="n">murmur3</span>
+<span class="kn">from</span> <span class="nn">sketchnu.countmin</span> <span class="kn">import</span> <span class="n">CountMin</span>
+<span class="kn">from</span> <span class="nn">sketchnu.hyperloglog</span> <span class="kn">import</span> <span class="n">HyperLogLog</span>
+
+
+<div class="viewcode-block" id="test_fasthash"><a class="viewcode-back" href="../../sketchnu.html#sketchnu.tests.test_fasthash">[docs]</a><span class="k">def</span> <span class="nf">test_fasthash</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Compare the fasthash32 against the smhasher C++ version. Since the</span>
+<span class="sd">    fasthash32() calls fasthash64() and then does some bit mixing, by testing</span>
+<span class="sd">    the fasthash32() we are also testing the fasthash64().</span>
+
+<span class="sd">    Values we assert against are from running the C++ version with the given</span>
+<span class="sd">    keys and seeds. C++ code was taken from</span>
+<span class="sd">    https://github.com/rurban/smhasher/blob/master/fasthash.cpp</span>
+<span class="sd">    https://github.com/rurban/smhasher/blob/master/fasthash.h</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">key</span> <span class="o">=</span> <span class="sa">b</span><span class="s2">&quot;0123456789abcdef&quot;</span>
+
+    <span class="k">assert</span> <span class="n">fasthash32</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">==</span> <span class="mi">128551002</span>
+    <span class="k">assert</span> <span class="n">fasthash32</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span> <span class="o">==</span> <span class="mi">571860520</span>
+
+    <span class="c1"># Now check the different lengths</span>
+    <span class="k">assert</span> <span class="n">fasthash32</span><span class="p">(</span><span class="n">key</span><span class="p">[:</span><span class="mi">15</span><span class="p">],</span> <span class="mi">3</span><span class="p">)</span> <span class="o">==</span> <span class="mi">4264631007</span>
+    <span class="k">assert</span> <span class="n">fasthash32</span><span class="p">(</span><span class="n">key</span><span class="p">[:</span><span class="mi">14</span><span class="p">],</span> <span class="mi">4</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3611610185</span>
+    <span class="k">assert</span> <span class="n">fasthash32</span><span class="p">(</span><span class="n">key</span><span class="p">[:</span><span class="mi">13</span><span class="p">],</span> <span class="mi">5</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2978977373</span>
+    <span class="k">assert</span> <span class="n">fasthash32</span><span class="p">(</span><span class="n">key</span><span class="p">[:</span><span class="mi">12</span><span class="p">],</span> <span class="mi">6</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2071843509</span>
+    <span class="k">assert</span> <span class="n">fasthash32</span><span class="p">(</span><span class="n">key</span><span class="p">[:</span><span class="mi">11</span><span class="p">],</span> <span class="mi">7</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3386775091</span>
+    <span class="k">assert</span> <span class="n">fasthash32</span><span class="p">(</span><span class="n">key</span><span class="p">[:</span><span class="mi">10</span><span class="p">],</span> <span class="mi">8</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2472970926</span>
+    <span class="k">assert</span> <span class="n">fasthash32</span><span class="p">(</span><span class="n">key</span><span class="p">[:</span><span class="mi">9</span><span class="p">],</span> <span class="mi">21</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1787443542</span>
+    <span class="k">assert</span> <span class="n">fasthash32</span><span class="p">(</span><span class="n">key</span><span class="p">[:</span><span class="mi">8</span><span class="p">],</span> <span class="mi">22</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2970440548</span>
+    <span class="k">assert</span> <span class="n">fasthash32</span><span class="p">(</span><span class="n">key</span><span class="p">[:</span><span class="mi">7</span><span class="p">],</span> <span class="mi">23</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3793135117</span>
+    <span class="k">assert</span> <span class="n">fasthash32</span><span class="p">(</span><span class="n">key</span><span class="p">[:</span><span class="mi">6</span><span class="p">],</span> <span class="mi">24</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3662885582</span>
+    <span class="k">assert</span> <span class="n">fasthash32</span><span class="p">(</span><span class="n">key</span><span class="p">[:</span><span class="mi">5</span><span class="p">],</span> <span class="mi">25</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2453668041</span>
+    <span class="k">assert</span> <span class="n">fasthash32</span><span class="p">(</span><span class="n">key</span><span class="p">[:</span><span class="mi">4</span><span class="p">],</span> <span class="mi">26</span><span class="p">)</span> <span class="o">==</span> <span class="mi">635486060</span>
+    <span class="k">assert</span> <span class="n">fasthash32</span><span class="p">(</span><span class="n">key</span><span class="p">[:</span><span class="mi">3</span><span class="p">],</span> <span class="mi">27</span><span class="p">)</span> <span class="o">==</span> <span class="mi">58999216</span>
+    <span class="k">assert</span> <span class="n">fasthash32</span><span class="p">(</span><span class="n">key</span><span class="p">[:</span><span class="mi">2</span><span class="p">],</span> <span class="mi">28</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3486011618</span>
+    <span class="k">assert</span> <span class="n">fasthash32</span><span class="p">(</span><span class="n">key</span><span class="p">[:</span><span class="mi">1</span><span class="p">],</span> <span class="mi">29</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3407281718</span>
+
+    <span class="n">hv1</span> <span class="o">=</span> <span class="n">fasthash32</span><span class="p">(</span><span class="sa">b</span><span class="s2">&quot;test&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">hv1</span> <span class="o">==</span> <span class="mi">2542785854</span>
+
+    <span class="n">hv2</span> <span class="o">=</span> <span class="n">fasthash32</span><span class="p">(</span><span class="sa">b</span><span class="s2">&quot;abc&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">hv2</span> <span class="o">==</span> <span class="mi">558486214</span>
+
+    <span class="n">hv3</span> <span class="o">=</span> <span class="n">fasthash32</span><span class="p">(</span><span class="sa">b</span><span class="s2">&quot;123&quot;</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">hv3</span> <span class="o">==</span> <span class="mi">3103508967</span></div>
+
+
+<div class="viewcode-block" id="test_murmur3"><a class="viewcode-back" href="../../sketchnu.html#sketchnu.tests.test_murmur3">[docs]</a><span class="k">def</span> <span class="nf">test_murmur3</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Compare the murmur3 against the smhasher C++ version found in the</span>
+<span class="sd">    MurmurHash3_x86_32() function.</span>
+
+<span class="sd">    Values we assert against are from running the C++ version with the given</span>
+<span class="sd">    keys and seeds. C++ code was taken from</span>
+<span class="sd">    https://github.com/rurban/smhasher/blob/master/MurmurHash3.cpp</span>
+<span class="sd">    https://github.com/rurban/smhasher/blob/master/MurmurHash3.h</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">hv1</span> <span class="o">=</span> <span class="n">murmur3</span><span class="p">(</span><span class="sa">b</span><span class="s2">&quot;test&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">hv1</span> <span class="o">==</span> <span class="mi">3127628307</span>
+
+    <span class="n">hv2</span> <span class="o">=</span> <span class="n">murmur3</span><span class="p">(</span><span class="sa">b</span><span class="s2">&quot;abc&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">hv2</span> <span class="o">==</span> <span class="mi">2859854335</span>
+
+    <span class="n">hv3</span> <span class="o">=</span> <span class="n">murmur3</span><span class="p">(</span><span class="sa">b</span><span class="s2">&quot;123&quot;</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">hv3</span> <span class="o">==</span> <span class="mi">1498078391</span></div>
+
+
+<div class="viewcode-block" id="test_cms_linear"><a class="viewcode-back" href="../../sketchnu.html#sketchnu.tests.test_cms_linear">[docs]</a><span class="k">def</span> <span class="nf">test_cms_linear</span><span class="p">(</span>
+    <span class="n">n_keys</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1024</span><span class="p">,</span>
+    <span class="n">c_min</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="n">c_max</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1024</span><span class="p">,</span>
+    <span class="n">width</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1024</span><span class="p">,</span>
+    <span class="n">depth</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">8</span><span class="p">,</span>
+<span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Test that the count-min sketch error quarantees hold. We first assert that</span>
+<span class="sd">    all estimates are greater than or equal to the true count.  Then we assert</span>
+<span class="sd">    that with a probability of at least `1 - exp(-depth)` that:</span>
+
+<span class="sd">        estimate &lt;= true + N * exp(1) / width</span>
+
+<span class="sd">    where `N` is the total number of elements added to the sketch.</span>
+
+<span class="sd">    We generate `n_keys` random keys. Each key is added a different number</span>
+<span class="sd">    of times based upon a linear spacing between [`c_min`, `c_max`].</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    n_keys : int, optional</span>
+<span class="sd">        Number of keys to test over. Default is 1024</span>
+<span class="sd">    c_min : int, optional</span>
+<span class="sd">        Minimum number of times a key is added into the sketch. Default is 1</span>
+<span class="sd">    c_max : int, optional</span>
+<span class="sd">        Maximum number of times a key is added into the sketch. Default is 1024</span>
+<span class="sd">    width : int, optional</span>
+<span class="sd">        Width of the count-min sketch. Default is 1024</span>
+<span class="sd">    depth : int, optional</span>
+<span class="sd">        Depth of the count-min sketch. Default is 8</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Generate n_keys random 16-byte keys</span>
+    <span class="n">keys</span> <span class="o">=</span> <span class="p">[</span><span class="nb">bytes</span><span class="p">(</span><span class="n">r</span><span class="p">)</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">256</span><span class="p">,</span> <span class="p">(</span><span class="n">n_keys</span><span class="p">,</span> <span class="mi">16</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">)]</span>
+    <span class="c1"># Generate the number of times we will insert each of the keys</span>
+    <span class="c1"># Equally spaced between c_min and c_max</span>
+    <span class="n">n_times</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">c_min</span><span class="p">,</span> <span class="n">c_max</span><span class="p">,</span> <span class="n">n_keys</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int64</span><span class="p">)</span>
+
+    <span class="n">cms</span> <span class="o">=</span> <span class="n">CountMin</span><span class="p">(</span><span class="s2">&quot;linear&quot;</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">depth</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">n</span><span class="p">,</span> <span class="n">key</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">n_times</span><span class="p">,</span> <span class="n">keys</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+            <span class="n">cms</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+
+    <span class="n">error</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n_keys</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">n_times</span><span class="p">,</span> <span class="n">keys</span><span class="p">)):</span>
+        <span class="n">error</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">cms</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">key</span><span class="p">)</span> <span class="o">-</span> <span class="n">n</span>
+
+    <span class="n">max_error</span> <span class="o">=</span> <span class="n">cms</span><span class="o">.</span><span class="n">n_added</span><span class="p">()</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="n">width</span>
+    <span class="n">n_over_max</span> <span class="o">=</span> <span class="n">error</span><span class="p">[</span><span class="n">error</span> <span class="o">&gt;</span> <span class="n">max_error</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="k">assert</span> <span class="n">error</span><span class="o">.</span><span class="n">min</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Minimum error, {error.min():.3f} is negative&quot;</span>
+    <span class="k">assert</span> <span class="p">(</span><span class="n">n_over_max</span> <span class="o">/</span> <span class="n">n_keys</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span>
+        <span class="o">-</span><span class="n">depth</span>
+    <span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;Exceeded the limit too often, </span><span class="si">{n_over_max}</span><span class="s2">&quot;</span></div>
+
+
+<div class="viewcode-block" id="test_cms_log8_update"><a class="viewcode-back" href="../../sketchnu.html#sketchnu.tests.test_cms_log8_update">[docs]</a><span class="k">def</span> <span class="nf">test_cms_log8_update</span><span class="p">(</span>
+    <span class="n">n_keys</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">500</span><span class="p">,</span>
+    <span class="n">c_min</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">15</span><span class="p">,</span>
+    <span class="n">c_mid</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5000</span><span class="p">,</span>
+    <span class="n">c_max</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100000</span><span class="p">,</span>
+    <span class="n">max_count</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">**</span> <span class="mi">32</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="n">num_reserved</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">15</span><span class="p">,</span>
+<span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Uses a t-test to test the null hypothesis that the mean of the</span>
+<span class="sd">    difference between the true count and estimated count is 0. Uses a</span>
+<span class="sd">    confidence level of 99% to reject the null hypotheses. The test asserts</span>
+<span class="sd">    that we should fail to reject the null hypothesis.</span>
+
+<span class="sd">    A log counter has an unbiased estimator of `n` (cardinality) with a variance</span>
+<span class="sd">    of `(x-1)n(n + 1)/2`, where `x` is the log base.</span>
+
+<span class="sd">    We generate `n_keys` random keys and then add them a total of `c_max` times to</span>
+<span class="sd">    the count-min sketch. We check the error against the true value at three</span>
+<span class="sd">    different values: `c_min`, `c_mid`, &amp; `c_max`.</span>
+
+<span class="sd">    The default `c_min` value is set to test the linear regime to ensure that is</span>
+<span class="sd">    done well. The other two values, `c_mid` &amp; `c_max`, test the log regime.</span>
+
+<span class="sd">    This test is for the updating log counters and not for the count-min sketch</span>
+<span class="sd">    itself. In order to limit the errors introduced by collisions in the</span>
+<span class="sd">    count-min sketch, we set the width equal to the total number of elements</span>
+<span class="sd">    inserted into the sketch times 3, i.e., `n_keys*c_max*3`.  This should give</span>
+<span class="sd">    a maximum error of </span>
+
+<span class="sd">        count_estimate &lt;= count_true + e/3</span>
+
+<span class="sd">    that is not exceeded with probability of `1-exp(-depth)`.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    n_keys : int, optional</span>
+<span class="sd">        Number of keys to test over. Default is 500</span>
+<span class="sd">    c_min : int, optional</span>
+<span class="sd">        Lowest value to check the error between the estimated count and the</span>
+<span class="sd">        true count for all n_keys. Default is 15</span>
+<span class="sd">    c_mid : int, optional</span>
+<span class="sd">        Medium value to check the error between the estimated count and the</span>
+<span class="sd">        true count for all n_keys. Default is 5000</span>
+<span class="sd">    c_max : int, optional</span>
+<span class="sd">        Highest value to check the error between the estimated count and the</span>
+<span class="sd">        true count for all n_keys. Default is 100000.</span>
+<span class="sd">    max_count : int, optional</span>
+<span class="sd">        Passed to CountMinLog() to specify max value available in the count-min</span>
+<span class="sd">        sketch. Default is 2**32-1</span>
+<span class="sd">    num_reserved : int, optional</span>
+<span class="sd">        Passed to CountMinLog() to specify the num_reserved. Default is 15</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Generate n_keys random 16-byte keys</span>
+    <span class="n">keys</span> <span class="o">=</span> <span class="p">[</span><span class="nb">bytes</span><span class="p">(</span><span class="n">r</span><span class="p">)</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">256</span><span class="p">,</span> <span class="p">(</span><span class="n">n_keys</span><span class="p">,</span> <span class="mi">16</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">)]</span>
+    <span class="c1"># Extremely small chance that duplicate keys are created</span>
+    <span class="n">keys</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">keys</span><span class="p">))</span>
+    <span class="n">n_keys</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">keys</span><span class="p">)</span>
+
+    <span class="n">w</span> <span class="o">=</span> <span class="n">n_keys</span> <span class="o">*</span> <span class="n">c_max</span> <span class="o">*</span> <span class="mi">3</span>
+    <span class="n">cms</span> <span class="o">=</span> <span class="n">CountMin</span><span class="p">(</span><span class="s2">&quot;log8&quot;</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">max_count</span><span class="o">=</span><span class="n">max_count</span><span class="p">,</span> <span class="n">num_reserved</span><span class="o">=</span><span class="n">num_reserved</span><span class="p">)</span>
+    <span class="n">error</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n_keys</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">c_max</span><span class="p">):</span>
+        <span class="n">cms</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">keys</span><span class="p">)</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="ow">in</span> <span class="p">[</span><span class="n">c_min</span><span class="p">,</span> <span class="n">c_mid</span><span class="p">,</span> <span class="n">c_max</span><span class="p">]:</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">key</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">keys</span><span class="p">):</span>
+                <span class="n">error</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">cms</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">key</span><span class="p">)</span> <span class="o">-</span> <span class="p">(</span><span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">error</span><span class="o">.</span><span class="n">std</span><span class="p">()</span> <span class="o">==</span> <span class="mf">0.0</span><span class="p">:</span>
+                <span class="k">assert</span> <span class="p">(</span>
+                    <span class="n">error</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="o">==</span> <span class="mf">0.0</span>
+                <span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;After {n+1} inserts std=0, but mean = {error.mean():.3f}&quot;</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">t_value</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">error</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span> <span class="o">/</span> <span class="p">(</span><span class="n">error</span><span class="o">.</span><span class="n">std</span><span class="p">()</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">n_keys</span><span class="p">))</span>
+                <span class="c1"># 99% Confidence Level</span>
+                <span class="k">assert</span> <span class="p">(</span>
+                    <span class="n">t_value</span> <span class="o">&lt;</span> <span class="mf">2.576</span>
+                <span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;After {n+1} inserts: t-value </span><span class="si">{t_value:.4}</span><span class="s2"> is above 2.576&quot;</span></div>
+
+
+<div class="viewcode-block" id="test_cms_log8_merge"><a class="viewcode-back" href="../../sketchnu.html#sketchnu.tests.test_cms_log8_merge">[docs]</a><span class="k">def</span> <span class="nf">test_cms_log8_merge</span><span class="p">(</span>
+    <span class="n">n_keys</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span>
+    <span class="n">cms_updates</span><span class="o">=</span><span class="mi">5000</span><span class="p">,</span>
+    <span class="n">other_updates</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span>
+    <span class="n">max_count</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">**</span> <span class="mi">32</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="n">num_reserved</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Uses a t-test to test the null hypothesis that the mean of the</span>
+<span class="sd">    difference between the true count and estimated count is 0. Uses a</span>
+<span class="sd">    confidence level of 99% to reject the null hypotheses. The test asserts</span>
+<span class="sd">    that we should fail to reject the null hypothesis.</span>
+
+<span class="sd">    A log counter has an unbiased estimator of `n` (cardinality) with a variance</span>
+<span class="sd">    of `(x-1)n(n + 1)/2`, where `x`` is the log base.</span>
+
+<span class="sd">    We insert n_keys into two sketches, &#39;cms&#39; &amp; &#39;other&#39;. We insert each key</span>
+<span class="sd">    `cms_updates` times into &#39;cms&#39; and `other_updates` times into &#39;other&#39;. We then</span>
+<span class="sd">    merge &#39;other&#39; into &#39;cms&#39;. The estimated count for each key should equal to</span>
+<span class="sd">    `cms_updates + other_updates`.</span>
+
+<span class="sd">    This test is for the merging log counters and not for the count-min sketch</span>
+<span class="sd">    itself. In order to limit the errors introduced by collisions in the</span>
+<span class="sd">    count-min sketch, we set the width equal to the total number of elements</span>
+<span class="sd">    inserted into the sketch times 3.  This should give a maximum error of </span>
+
+<span class="sd">        count_estimate &lt;= count_true + e/3</span>
+
+<span class="sd">    that is not exceeded with probability of `1-exp(-depth)`.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    n_keys : int, optional</span>
+<span class="sd">        Number of keys to test over. Default is 100</span>
+<span class="sd">    cms_updates : int, optional</span>
+<span class="sd">        Number of times to insert each key into the first sketch.</span>
+<span class="sd">        Default is 5000</span>
+<span class="sd">    other_updates : int, optional</span>
+<span class="sd">        Number of times to insert each key into the second sketch.</span>
+<span class="sd">        Default is 300.</span>
+<span class="sd">    max_count : int, optional</span>
+<span class="sd">        Passed to CountMin() to specify max value available in the count-min</span>
+<span class="sd">        sketch. Default is 2**32-1</span>
+<span class="sd">    num_reserved : int, optional</span>
+<span class="sd">        Passed to CountMin() to specify the num_reserved. Default is None.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Random 16-byte keys</span>
+    <span class="n">keys</span> <span class="o">=</span> <span class="p">[</span><span class="nb">bytes</span><span class="p">(</span><span class="n">r</span><span class="p">)</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">256</span><span class="p">,</span> <span class="p">(</span><span class="n">n_keys</span><span class="p">,</span> <span class="mi">16</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">)]</span>
+
+    <span class="n">l_cms</span> <span class="o">=</span> <span class="n">keys</span> <span class="o">*</span> <span class="n">cms_updates</span>
+    <span class="n">l_other</span> <span class="o">=</span> <span class="n">keys</span> <span class="o">*</span> <span class="n">other_updates</span>
+    <span class="n">N</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">l_cms</span><span class="p">)</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">l_other</span><span class="p">)</span>
+
+    <span class="n">cms</span> <span class="o">=</span> <span class="n">CountMin</span><span class="p">(</span><span class="s2">&quot;log8&quot;</span><span class="p">,</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">N</span><span class="p">,</span> <span class="n">max_count</span><span class="o">=</span><span class="n">max_count</span><span class="p">,</span> <span class="n">num_reserved</span><span class="o">=</span><span class="n">num_reserved</span><span class="p">)</span>
+    <span class="n">other</span> <span class="o">=</span> <span class="n">CountMin</span><span class="p">(</span><span class="s2">&quot;log8&quot;</span><span class="p">,</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">N</span><span class="p">,</span> <span class="n">max_count</span><span class="o">=</span><span class="n">max_count</span><span class="p">,</span> <span class="n">num_reserved</span><span class="o">=</span><span class="n">num_reserved</span><span class="p">)</span>
+
+    <span class="n">cms</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">l_cms</span><span class="p">)</span>
+    <span class="n">other</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">l_other</span><span class="p">)</span>
+    <span class="n">cms</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+
+    <span class="n">error</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n_keys</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_keys</span><span class="p">):</span>
+        <span class="n">error</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">cms</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">keys</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">-</span> <span class="p">(</span><span class="n">cms_updates</span> <span class="o">+</span> <span class="n">other_updates</span><span class="p">)</span>
+
+    <span class="c1"># If we happen to have stayed in the linear regime</span>
+    <span class="c1"># then if we have zero std, we should also have zero mean.</span>
+    <span class="k">if</span> <span class="n">error</span><span class="o">.</span><span class="n">std</span><span class="p">()</span> <span class="o">==</span> <span class="mf">0.0</span><span class="p">:</span>
+        <span class="k">assert</span> <span class="n">error</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="o">==</span> <span class="mf">0.0</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;std = 0, but mean !=0, {error.mean():.3f}&quot;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">t_value</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">error</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span> <span class="o">/</span> <span class="p">(</span><span class="n">error</span><span class="o">.</span><span class="n">std</span><span class="p">()</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">n_keys</span><span class="p">))</span>
+        <span class="c1"># 99% Confidence Level</span>
+        <span class="k">assert</span> <span class="n">t_value</span> <span class="o">&lt;</span> <span class="mf">2.576</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;t-value </span><span class="si">{t_value:.4}</span><span class="s2"> is above 2.576&quot;</span></div>
+
+
+<div class="viewcode-block" id="test_cms_log16_update"><a class="viewcode-back" href="../../sketchnu.html#sketchnu.tests.test_cms_log16_update">[docs]</a><span class="k">def</span> <span class="nf">test_cms_log16_update</span><span class="p">(</span>
+    <span class="n">n_keys</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">500</span><span class="p">,</span>
+    <span class="n">c_min</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1023</span><span class="p">,</span>
+    <span class="n">c_mid</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5000</span><span class="p">,</span>
+    <span class="n">c_max</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100000</span><span class="p">,</span>
+    <span class="n">max_count</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">**</span> <span class="mi">32</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="n">num_reserved</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1023</span><span class="p">,</span>
+<span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Uses a t-test to test the null hypothesis that the mean of the</span>
+<span class="sd">    difference between the true count and estimated count is 0. Uses a</span>
+<span class="sd">    confidence level of 99% to reject the null hypotheses. The test asserts</span>
+<span class="sd">    that we should fail to reject the null hypothesis.</span>
+
+<span class="sd">    We generate `n_keys` random keys and then add them a total of `c_max` times to</span>
+<span class="sd">    the count-min sketch. We check the error against the true value at three</span>
+<span class="sd">    different values: `c_min`, `c_mid`, &amp; `c_max`.</span>
+
+<span class="sd">    The default `c_min` value is set to test the linear regime to ensure that is</span>
+<span class="sd">    done well. The other two values, `c_mid` &amp; `c_max`, test the log regime.</span>
+
+<span class="sd">    This test is for the updating log counters and not for the count-min sketch</span>
+<span class="sd">    itself. In order to limit the errors introduced by collisions in the</span>
+<span class="sd">    count-min sketch, we set the width equal to the total number of elements</span>
+<span class="sd">    inserted into the sketch times 3, i.e., `n_keys*c_max*3`.  This should give</span>
+<span class="sd">    a maximum error of</span>
+
+<span class="sd">        count_estimate &lt;= count_true + e/3</span>
+
+<span class="sd">    that is not exceeded with probability of `1-exp(-depth)`.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    n_keys : int, optional</span>
+<span class="sd">        Number of keys to test over. Default is 500</span>
+<span class="sd">    c_min : int, optional</span>
+<span class="sd">        Lowest value to check the error between the estimated count and the</span>
+<span class="sd">        true count for all n_keys. Default is 1023</span>
+<span class="sd">    c_mid : int, optional</span>
+<span class="sd">        Medium value to check the error between the estimated count and the</span>
+<span class="sd">        true count for all n_keys. Default is 5000</span>
+<span class="sd">    c_max : int, optional</span>
+<span class="sd">        Highest value to check the error between the estimated count and the</span>
+<span class="sd">        true count for all n_keys. Default is 100000.</span>
+<span class="sd">    max_count : int, optional</span>
+<span class="sd">        Passed to CountMinLog() to specify max value available in the count-min</span>
+<span class="sd">        sketch. Default is 2**32-1</span>
+<span class="sd">    num_reserved : int, optional</span>
+<span class="sd">        Passed to CountMinLog() to specify the num_reserved. Default is 1023.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Generate n_keys random 16-byte keys</span>
+    <span class="n">keys</span> <span class="o">=</span> <span class="p">[</span><span class="nb">bytes</span><span class="p">(</span><span class="n">r</span><span class="p">)</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">256</span><span class="p">,</span> <span class="p">(</span><span class="n">n_keys</span><span class="p">,</span> <span class="mi">16</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">)]</span>
+    <span class="c1"># Extremely small chance that duplicate keys are created</span>
+    <span class="n">keys</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">keys</span><span class="p">))</span>
+    <span class="n">n_keys</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">keys</span><span class="p">)</span>
+
+    <span class="n">w</span> <span class="o">=</span> <span class="n">n_keys</span> <span class="o">*</span> <span class="n">c_max</span> <span class="o">*</span> <span class="mi">3</span>
+    <span class="n">cms</span> <span class="o">=</span> <span class="n">CountMin</span><span class="p">(</span><span class="s2">&quot;log16&quot;</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">max_count</span><span class="o">=</span><span class="n">max_count</span><span class="p">,</span> <span class="n">num_reserved</span><span class="o">=</span><span class="n">num_reserved</span><span class="p">)</span>
+    <span class="n">error</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n_keys</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">c_max</span><span class="p">):</span>
+        <span class="n">cms</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">keys</span><span class="p">)</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="ow">in</span> <span class="p">[</span><span class="n">c_min</span><span class="p">,</span> <span class="n">c_mid</span><span class="p">,</span> <span class="n">c_max</span><span class="p">]:</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">key</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">keys</span><span class="p">):</span>
+                <span class="n">error</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">cms</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">key</span><span class="p">)</span> <span class="o">-</span> <span class="p">(</span><span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">error</span><span class="o">.</span><span class="n">std</span><span class="p">()</span> <span class="o">==</span> <span class="mf">0.0</span><span class="p">:</span>
+                <span class="k">assert</span> <span class="p">(</span>
+                    <span class="n">error</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="o">==</span> <span class="mf">0.0</span>
+                <span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;After {n+1} inserts std=0, but mean = {error.mean():.3f}&quot;</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">t_value</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">error</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span> <span class="o">/</span> <span class="p">(</span><span class="n">error</span><span class="o">.</span><span class="n">std</span><span class="p">()</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">n_keys</span><span class="p">))</span>
+                <span class="c1"># 99% Confidence Level</span>
+                <span class="k">assert</span> <span class="p">(</span>
+                    <span class="n">t_value</span> <span class="o">&lt;</span> <span class="mf">2.576</span>
+                <span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;After {n+1} inserts: t-value </span><span class="si">{t_value:.4}</span><span class="s2"> is above 2.576&quot;</span></div>
+
+
+<div class="viewcode-block" id="test_cms_log16_merge"><a class="viewcode-back" href="../../sketchnu.html#sketchnu.tests.test_cms_log16_merge">[docs]</a><span class="k">def</span> <span class="nf">test_cms_log16_merge</span><span class="p">(</span>
+    <span class="n">n_keys</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span>
+    <span class="n">cms_updates</span><span class="o">=</span><span class="mi">5000</span><span class="p">,</span>
+    <span class="n">other_updates</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span>
+    <span class="n">max_count</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">**</span> <span class="mi">32</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="n">num_reserved</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">50</span><span class="p">,</span>
+<span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Uses a t-test to test the null hypothesis that the mean of the</span>
+<span class="sd">    difference between the true count and estimated count is 0. Uses a</span>
+<span class="sd">    confidence level of 99% to reject the null hypotheses. The test asserts</span>
+<span class="sd">    that we should fail to reject the null hypothesis.</span>
+
+<span class="sd">    We insert `n_keys` into two sketches, &#39;cms&#39; &amp; &#39;other&#39;. We insert each key</span>
+<span class="sd">    `cms_updates` times into &#39;cms&#39; and `other_updates` times into &#39;other&#39;. We then</span>
+<span class="sd">    merge &#39;other&#39; into &#39;cms&#39;. The estimated count for each key should equal to</span>
+<span class="sd">    `cms_updates + other_updates`.</span>
+
+<span class="sd">    This test is for the merging log counters and not for the count-min sketch</span>
+<span class="sd">    itself. In order to limit the errors introduced by collisions in the</span>
+<span class="sd">    count-min sketch, we set the width equal to the total number of elements</span>
+<span class="sd">    inserted into the sketch times 3.  This should give a maximum error of</span>
+
+<span class="sd">        count_estimate &lt;= count_true + e/3</span>
+
+<span class="sd">    that is not exceeded with probability of `1-exp(-depth)`.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    n_keys : int, optional</span>
+<span class="sd">        Number of keys to test over. Default is 100</span>
+<span class="sd">    cms_updates : int, optional</span>
+<span class="sd">        Number of times to insert each key into the first sketch.</span>
+<span class="sd">        Default is 5000</span>
+<span class="sd">    other_updates : int, optional</span>
+<span class="sd">        Number of times to insert each key into the second sketch.</span>
+<span class="sd">        Default is 300.</span>
+<span class="sd">    max_count : int, optional</span>
+<span class="sd">        Passed to CountMinLog() to specify max value available in the count-min</span>
+<span class="sd">        sketch. Default is 2**32-1</span>
+<span class="sd">    num_reserved : int, optional</span>
+<span class="sd">        Passed to CountMinLog() to specify the num_reserved. Default is 50.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Random 16-byte keys</span>
+    <span class="n">keys</span> <span class="o">=</span> <span class="p">[</span><span class="nb">bytes</span><span class="p">(</span><span class="n">r</span><span class="p">)</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">256</span><span class="p">,</span> <span class="p">(</span><span class="n">n_keys</span><span class="p">,</span> <span class="mi">16</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">)]</span>
+
+    <span class="n">l_cms</span> <span class="o">=</span> <span class="n">keys</span> <span class="o">*</span> <span class="n">cms_updates</span>
+    <span class="n">l_other</span> <span class="o">=</span> <span class="n">keys</span> <span class="o">*</span> <span class="n">other_updates</span>
+    <span class="n">N</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">l_cms</span><span class="p">)</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">l_other</span><span class="p">)</span>
+
+    <span class="n">cms</span> <span class="o">=</span> <span class="n">CountMin</span><span class="p">(</span><span class="s2">&quot;log16&quot;</span><span class="p">,</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">N</span><span class="p">,</span> <span class="n">max_count</span><span class="o">=</span><span class="n">max_count</span><span class="p">,</span> <span class="n">num_reserved</span><span class="o">=</span><span class="n">num_reserved</span><span class="p">)</span>
+    <span class="n">other</span> <span class="o">=</span> <span class="n">CountMin</span><span class="p">(</span><span class="s2">&quot;log16&quot;</span><span class="p">,</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">N</span><span class="p">,</span> <span class="n">max_count</span><span class="o">=</span><span class="n">max_count</span><span class="p">,</span> <span class="n">num_reserved</span><span class="o">=</span><span class="n">num_reserved</span><span class="p">)</span>
+
+    <span class="n">cms</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">l_cms</span><span class="p">)</span>
+    <span class="n">other</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">l_other</span><span class="p">)</span>
+    <span class="n">cms</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+
+    <span class="n">error</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n_keys</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_keys</span><span class="p">):</span>
+        <span class="n">error</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">cms</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">keys</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">-</span> <span class="p">(</span><span class="n">cms_updates</span> <span class="o">+</span> <span class="n">other_updates</span><span class="p">)</span>
+
+    <span class="c1"># If we happen to have stayed in the linear regime</span>
+    <span class="c1"># then if we have zero std, we should also have zero mean.</span>
+    <span class="k">if</span> <span class="n">error</span><span class="o">.</span><span class="n">std</span><span class="p">()</span> <span class="o">==</span> <span class="mf">0.0</span><span class="p">:</span>
+        <span class="k">assert</span> <span class="n">error</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="o">==</span> <span class="mf">0.0</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;std = 0, but mean !=0, {error.mean():.3f}&quot;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">t_value</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">error</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span> <span class="o">/</span> <span class="p">(</span><span class="n">error</span><span class="o">.</span><span class="n">std</span><span class="p">()</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">n_keys</span><span class="p">))</span>
+        <span class="c1"># 99% Confidence Level</span>
+        <span class="k">assert</span> <span class="n">t_value</span> <span class="o">&lt;</span> <span class="mf">2.576</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;t-value </span><span class="si">{t_value:.4}</span><span class="s2"> is above 2.576&quot;</span></div>
+
+
+<div class="viewcode-block" id="test_hll_update"><a class="viewcode-back" href="../../sketchnu.html#sketchnu.tests.test_hll_update">[docs]</a><span class="k">def</span> <span class="nf">test_hll_update</span><span class="p">(</span><span class="n">p</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span> <span class="n">n_keys</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100000</span><span class="p">,</span> <span class="n">n_trials</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Uses a t-test to test the null hypothesis that the mean of the</span>
+<span class="sd">    difference between the true count and estimated count is 0. Uses a</span>
+<span class="sd">    confidence level of 99% to reject the null hypotheses. The test asserts</span>
+<span class="sd">    that we should fail to reject the null hypothesis.</span>
+
+<span class="sd">    The HyperLogLog&#39;s estimated cardinality &quot;is asymptotically almost unbiased&quot;.</span>
+<span class="sd">    Despite this, even low values typically pass the test.</span>
+
+<span class="sd">    We insert the same `n_keys` random keys into a HyperLogLog with precision</span>
+<span class="sd">    `p` with different seeds a total of `n_trials` times. The query() should equal</span>
+<span class="sd">    the number of unique keys that were added to the HyperLogLog.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    p: int, optional</span>
+<span class="sd">        Precision of the HyperLogLog. Default is 10 which is relatively</span>
+<span class="sd">        low precision, but this is so we can easily exceed the sub-algorithm</span>
+<span class="sd">        threshold of 5 * 2**p when we use the estimated bias correction.</span>
+<span class="sd">    n_keys: int, optional</span>
+<span class="sd">        Number of random keys to generate. Default is 100,000. We create</span>
+<span class="sd">        keys that are random 16-byte values so this should be the number</span>
+<span class="sd">        of unique keys, but we do check against only the number of unique</span>
+<span class="sd">        keys which may be slightly less than n_keys.</span>
+<span class="sd">    n_trials: int, optional</span>
+<span class="sd">        The number of independent times to measure the error. Each run</span>
+<span class="sd">        uses a different seed to the HyperLogLog. Default is 100</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Create n_keys random 16-byte keys.</span>
+    <span class="n">keys_r</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">256</span><span class="p">,</span> <span class="p">(</span><span class="n">n_keys</span><span class="p">,</span> <span class="mi">16</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">)</span>
+    <span class="c1"># Remove any possible duplicates</span>
+    <span class="n">keys</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">([</span><span class="nb">bytes</span><span class="p">(</span><span class="n">k</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">keys_r</span><span class="p">]))</span>
+    <span class="n">n_keys</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">keys</span><span class="p">)</span>
+
+    <span class="n">error</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n_trials</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_trials</span><span class="p">):</span>
+        <span class="n">hll</span> <span class="o">=</span> <span class="n">HyperLogLog</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
+        <span class="n">hll</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">keys</span><span class="p">)</span>
+        <span class="n">error</span><span class="p">[</span><span class="n">n</span><span class="p">]</span> <span class="o">=</span> <span class="n">n_keys</span> <span class="o">-</span> <span class="n">hll</span><span class="o">.</span><span class="n">query</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="n">error</span><span class="o">.</span><span class="n">std</span><span class="p">()</span> <span class="o">==</span> <span class="mf">0.0</span><span class="p">:</span>
+        <span class="k">assert</span> <span class="n">error</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="o">==</span> <span class="mf">0.0</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;std = 0, but mean !=0, {error.mean():.3f}&quot;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">t_value</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">error</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="o">/</span> <span class="p">(</span><span class="n">error</span><span class="o">.</span><span class="n">std</span><span class="p">()</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">n_trials</span><span class="p">)))</span>
+        <span class="c1"># 99% confidence level</span>
+        <span class="k">assert</span> <span class="n">t_value</span> <span class="o">&lt;</span> <span class="mf">2.576</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;t-value </span><span class="si">{t_value:.4}</span><span class="s2"> is above 2.576&quot;</span></div>
+
+
+<div class="viewcode-block" id="test_hll_merge"><a class="viewcode-back" href="../../sketchnu.html#sketchnu.tests.test_hll_merge">[docs]</a><span class="k">def</span> <span class="nf">test_hll_merge</span><span class="p">(</span>
+    <span class="n">p</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span> <span class="n">n_keys1</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100000</span><span class="p">,</span> <span class="n">n_keys2</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">25000</span><span class="p">,</span> <span class="n">n_trials</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Uses a t-test to test the null hypothesis that the mean of the</span>
+<span class="sd">    difference between the true count and estimated count is 0. Uses a</span>
+<span class="sd">    confidence level of 99% to reject the null hypotheses. The test asserts</span>
+<span class="sd">    that we should fail to reject the null hypothesis.</span>
+
+<span class="sd">    The HyperLogLog&#39;s estimated cardinality &quot;is asymptotically almost unbiased&quot;.</span>
+<span class="sd">    Despite this, even low values typically pass the test.</span>
+
+<span class="sd">    We insert `n_keys1` random keys into the first HyperLogLog and `n_keys2`</span>
+<span class="sd">    random keys into a second HyperLogLog. We merge the second into the first</span>
+<span class="sd">    and then check that the estimated count is equal to the size of the union</span>
+<span class="sd">    of the two sets of random keys.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    p: int, optional</span>
+<span class="sd">        Precision of the HyperLogLog. Default is 10 which is relatively low</span>
+<span class="sd">        precision, but this is so we can easily exceed the sub-algorithm threshold</span>
+<span class="sd">        of `5 * 2\*\*p` when we use the estimated bias correction.</span>
+<span class="sd">    n_keys1: int, optional</span>
+<span class="sd">        Number of keys to add to the first HyperLogLog. Default is 100k.</span>
+<span class="sd">    n_keys2: int, optional</span>
+<span class="sd">        Number of keys to add to the second HyperLogLog. Default is 25k.</span>
+<span class="sd">    n_trials: int, optional</span>
+<span class="sd">        The number of independent times to measure the error. Each run uses a</span>
+<span class="sd">        different seed to the HyperLogLogs. Default is 100</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Create random 16-byte keys</span>
+    <span class="n">keys1</span> <span class="o">=</span> <span class="p">[</span><span class="nb">bytes</span><span class="p">(</span><span class="n">r</span><span class="p">)</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">256</span><span class="p">,</span> <span class="p">(</span><span class="n">n_keys1</span><span class="p">,</span> <span class="mi">16</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">)]</span>
+    <span class="n">keys1</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">keys1</span><span class="p">))</span>
+    <span class="n">n_keys1</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">keys1</span><span class="p">)</span>
+
+    <span class="n">keys2</span> <span class="o">=</span> <span class="p">[</span><span class="nb">bytes</span><span class="p">(</span><span class="n">r</span><span class="p">)</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">256</span><span class="p">,</span> <span class="p">(</span><span class="n">n_keys2</span><span class="p">,</span> <span class="mi">15</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">)]</span>
+    <span class="n">keys2</span> <span class="o">=</span> <span class="n">keys2</span> <span class="o">+</span> <span class="n">keys1</span>
+    <span class="n">keys2</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">keys2</span><span class="p">))</span>
+    <span class="n">n_keys2</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">keys2</span><span class="p">)</span>
+
+    <span class="n">n_true</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">keys1</span><span class="p">)</span><span class="o">.</span><span class="n">union</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">keys2</span><span class="p">)))</span>
+
+    <span class="n">error</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n_trials</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_trials</span><span class="p">):</span>
+        <span class="n">hll1</span> <span class="o">=</span> <span class="n">HyperLogLog</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
+        <span class="n">hll2</span> <span class="o">=</span> <span class="n">HyperLogLog</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
+        <span class="n">hll1</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">keys1</span><span class="p">)</span>
+        <span class="n">hll2</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">keys2</span><span class="p">)</span>
+        <span class="n">hll1</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">hll2</span><span class="p">)</span>
+        <span class="n">error</span><span class="p">[</span><span class="n">n</span><span class="p">]</span> <span class="o">=</span> <span class="n">hll1</span><span class="o">.</span><span class="n">query</span><span class="p">()</span> <span class="o">-</span> <span class="n">n_true</span>
+
+    <span class="k">if</span> <span class="n">error</span><span class="o">.</span><span class="n">std</span><span class="p">()</span> <span class="o">==</span> <span class="mf">0.0</span><span class="p">:</span>
+        <span class="k">assert</span> <span class="n">error</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="o">==</span> <span class="mf">0.0</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;std = 0, but mean !=0, {error.mean():.3f}&quot;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">t_value</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">error</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="o">/</span> <span class="p">(</span><span class="n">error</span><span class="o">.</span><span class="n">std</span><span class="p">()</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">n_trials</span><span class="p">)))</span>
+        <span class="c1"># 99% confidence level</span>
+        <span class="k">assert</span> <span class="n">t_value</span> <span class="o">&lt;</span> <span class="mf">2.576</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;t-value </span><span class="si">{t_value:.4}</span><span class="s2"> is above 2.576&quot;</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020, Matthew Hendrey.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
