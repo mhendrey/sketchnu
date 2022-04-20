@@ -31,6 +31,17 @@ memory required.
 
    countmin
 
+Heavy-Hitters
+-------------
+
+A sketch that estimates the top k most frequently observed elements that have been
+added into the sketch. Assumes that distribution of elements is fat-tailed.
+
+.. toctree::
+   :maxdepth: 2
+
+   heavyhitters
+
 Helpers
 -------
 Functions to aid in parallelizing the creation of HyperLogLogs and/or count-min

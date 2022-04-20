@@ -18,7 +18,7 @@ import sketchnu
 # -- Project information -----------------------------------------------------
 
 project = 'sketchnu'
-copyright = '2020, Matthew Hendrey'
+copyright = '2022, Matthew Hendrey'
 author = 'Matthew Hendrey'
 
 version = sketchnu.__version__
