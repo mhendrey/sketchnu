@@ -281,7 +281,6 @@
         <span class="n">uint64</span><span class="p">[:],</span>
         <span class="n">uint64</span><span class="p">,</span>
         <span class="n">uint64</span><span class="p">,</span>
-        <span class="n">uint64</span><span class="p">,</span>
         <span class="n">uint32</span><span class="p">,</span>
         <span class="n">uint8</span><span class="p">[:,</span> <span class="p">:,</span> <span class="p">:],</span>
         <span class="n">uint32</span><span class="p">[:,</span> <span class="p">:],</span>
@@ -296,7 +295,6 @@
     <span class="n">n_added_records</span><span class="p">,</span>
     <span class="n">width</span><span class="p">,</span>
     <span class="n">depth</span><span class="p">,</span>
-    <span class="n">max_key_len</span><span class="p">,</span>
     <span class="n">uint_maxval</span><span class="p">,</span>
     <span class="n">other_lhh</span><span class="p">,</span>
     <span class="n">other_lhh_count</span><span class="p">,</span>
@@ -318,6 +316,7 @@
                     <span class="n">lhh_count</span><span class="p">[</span><span class="n">row</span><span class="p">,</span> <span class="n">col</span><span class="p">]</span> <span class="o">-=</span> <span class="n">other_lhh_count</span><span class="p">[</span><span class="n">row</span><span class="p">,</span> <span class="n">col</span><span class="p">]</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">lhh</span><span class="p">[</span><span class="n">row</span><span class="p">,</span> <span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">other_lhh</span><span class="p">[</span><span class="n">row</span><span class="p">,</span> <span class="n">col</span><span class="p">]</span>
+                    <span class="n">key_lens</span><span class="p">[</span><span class="n">row</span><span class="p">,</span> <span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">other_key_lens</span><span class="p">[</span><span class="n">row</span><span class="p">,</span> <span class="n">col</span><span class="p">]</span>
                     <span class="n">lhh_count</span><span class="p">[</span><span class="n">row</span><span class="p">,</span> <span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
                         <span class="n">other_lhh_count</span><span class="p">[</span><span class="n">row</span><span class="p">,</span> <span class="n">col</span><span class="p">]</span> <span class="o">-</span> <span class="n">lhh_count</span><span class="p">[</span><span class="n">row</span><span class="p">,</span> <span class="n">col</span><span class="p">]</span>
                     <span class="p">)</span>
@@ -662,7 +661,6 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">n_added_records</span><span class="p">,</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="p">,</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">depth</span><span class="p">,</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">max_key_len</span><span class="p">,</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">uint_maxval</span><span class="p">,</span>
             <span class="n">other</span><span class="o">.</span><span class="n">lhh</span><span class="p">,</span>
             <span class="n">other</span><span class="o">.</span><span class="n">lhh_count</span><span class="p">,</span>
