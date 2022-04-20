@@ -151,7 +151,6 @@ def _add_ngram(
         uint64[:],
         uint64,
         uint64,
-        uint64,
         uint32,
         uint8[:, :, :],
         uint32[:, :],
@@ -166,7 +165,6 @@ def _merge(
     n_added_records,
     width,
     depth,
-    max_key_len,
     uint_maxval,
     other_lhh,
     other_lhh_count,
@@ -188,6 +186,7 @@ def _merge(
                     lhh_count[row, col] -= other_lhh_count[row, col]
                 else:
                     lhh[row, col] = other_lhh[row, col]
+                    key_lens[row, col] = other_key_lens[row, col]
                     lhh_count[row, col] = (
                         other_lhh_count[row, col] - lhh_count[row, col]
                     )
@@ -532,7 +531,6 @@ class HeavyHitters:
             self.n_added_records,
             self.width,
             self.depth,
-            self.max_key_len,
             self.uint_maxval,
             other.lhh,
             other.lhh_count,
