@@ -14,6 +14,14 @@ sketchnu.countmin
    :undoc-members:
    :show-inheritance:
 
+sketchnu.heavyhitters
+---------------------
+
+.. automodule:: sketchnu.heavyhitters
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 sketchnu.helpers
 ----------------
 

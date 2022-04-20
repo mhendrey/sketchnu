@@ -56,6 +56,14 @@
 </li>
 </ul>
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="heavyhitters.html">Heavy-Hitters</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="heavyhitters.html#the-basics">The Basics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="heavyhitters.html#usage">Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="heavyhitters.html#the-details">The Details</a></li>
+</ul>
+</li>
+</ul>
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="helpers.html">Helper Functions</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="helpers.html#usage">Usage</a></li>
 </ul>
@@ -80,6 +88,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="sketchnu.html">sketchnu.hyperloglog</a></li>
 <li class="toctree-l1"><a class="reference internal" href="sketchnu.html#module-sketchnu.countmin">sketchnu.countmin</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sketchnu.html#module-sketchnu.heavyhitters">sketchnu.heavyhitters</a></li>
 <li class="toctree-l1"><a class="reference internal" href="sketchnu.html#module-sketchnu.helpers">sketchnu.helpers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="sketchnu.html#module-sketchnu.hashes">sketchnu.hashes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="sketchnu.html#module-sketchnu.tests">sketchnu.tests</a></li>
@@ -174,6 +183,21 @@ memory required.</p>
 </ul>
 </div>
 </div>
+<div class="section" id="heavy-hitters">
+<h2>Heavy-Hitters<a class="headerlink" href="#heavy-hitters" title="Permalink to this headline">¶</a></h2>
+<p>A sketch that estimates the top k most frequently observed elements that have been
+added into the sketch. Assumes that distribution of elements is fat-tailed.</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="heavyhitters.html">Heavy-Hitters</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="heavyhitters.html#the-basics">The Basics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="heavyhitters.html#usage">Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="heavyhitters.html#the-details">The Details</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
 <div class="section" id="helpers">
 <h2>Helpers<a class="headerlink" href="#helpers" title="Permalink to this headline">¶</a></h2>
 <p>Functions to aid in parallelizing the creation of HyperLogLogs and/or count-min
@@ -205,6 +229,7 @@ Murmur3 (32-bit) have been implemented here.</p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="sketchnu.html">sketchnu.hyperloglog</a></li>
 <li class="toctree-l1"><a class="reference internal" href="sketchnu.html#module-sketchnu.countmin">sketchnu.countmin</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sketchnu.html#module-sketchnu.heavyhitters">sketchnu.heavyhitters</a></li>
 <li class="toctree-l1"><a class="reference internal" href="sketchnu.html#module-sketchnu.helpers">sketchnu.helpers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="sketchnu.html#module-sketchnu.hashes">sketchnu.hashes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="sketchnu.html#module-sketchnu.tests">sketchnu.tests</a></li>
@@ -243,7 +268,7 @@ Murmur3 (32-bit) have been implemented here.</p>
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2020, Matthew Hendrey.</p>
+    <p>&#169; Copyright 2022, Matthew Hendrey.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

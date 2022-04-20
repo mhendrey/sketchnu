@@ -57,6 +57,14 @@
 </li>
 </ul>
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="heavyhitters.html">Heavy-Hitters</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="heavyhitters.html#the-basics">The Basics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="heavyhitters.html#usage">Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="heavyhitters.html#the-details">The Details</a></li>
+</ul>
+</li>
+</ul>
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="helpers.html">Helper Functions</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="helpers.html#usage">Usage</a></li>
 </ul>
@@ -81,6 +89,7 @@
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">sketchnu.hyperloglog</a></li>
 <li class="toctree-l1"><a class="reference internal" href="#module-sketchnu.countmin">sketchnu.countmin</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#module-sketchnu.heavyhitters">sketchnu.heavyhitters</a></li>
 <li class="toctree-l1"><a class="reference internal" href="#module-sketchnu.helpers">sketchnu.helpers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="#module-sketchnu.hashes">sketchnu.hashes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="#module-sketchnu.tests">sketchnu.tests</a></li>
@@ -1254,6 +1263,372 @@ then add the whole <cite>key</cite></p>
 </dd></dl>
 
 </div>
+<div class="section" id="module-sketchnu.heavyhitters">
+<span id="sketchnu-heavyhitters"></span><h1>sketchnu.heavyhitters<a class="headerlink" href="#module-sketchnu.heavyhitters" title="Permalink to this headline">¶</a></h1>
+<p>Sketchnu has Numba implementations of sketch algorithms and other useful functions
+that utilize hash functions.</p>
+<p>Copyright (C) 2022 Matthew Hendrey</p>
+<p>This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.</p>
+<p>This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.</p>
+<p>You should have received a copy of the GNU General Public License
+along with this program.  If not, see &lt;<a class="reference external" href="https://www.gnu.org/licenses/">https://www.gnu.org/licenses/</a>&gt;.</p>
+<p>Numba implementation of the topkapi algorithm from</p>
+<p>A. Mandal, H. Jiang, A. Shrivastava, and V. Sarkar, “Topkapi: Parallel and Fast
+Sketches for Finding Top-K Frequent Elements”, Advances in Neural Information
+Processing Systems <strong>31</strong>, (2018).</p>
+<dl class="class">
+<dt id="sketchnu.heavyhitters.HeavyHitters">
+<em class="property">class </em><code class="sig-prename descclassname">sketchnu.heavyhitters.</code><code class="sig-name descname">HeavyHitters</code><span class="sig-paren">(</span><em class="sig-param">width: int</em>, <em class="sig-param">depth: int = 4</em>, <em class="sig-param">max_key_len: int = 16</em>, <em class="sig-param">threshold: int = 0</em>, <em class="sig-param">shared_memory: bool = False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sketchnu/heavyhitters.html#HeavyHitters"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sketchnu.heavyhitters.HeavyHitters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Sketch to identify the most frequent keys added into the sketch. Assumes that keys
+have a fat-tailed distribution in the data stream.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>width</strong> (<em>int</em>) – Width of the heavy hitters sketch. Must be non-negative</p></li>
+<li><p><strong>depth</strong> (<em>int</em><em>, </em><em>optional</em>) – Depth of the heavy hitters sketch. Must be non-negative. Default is 4</p></li>
+<li><p><strong>max_key_len</strong> (<em>int</em><em>, </em><em>optional</em>) – Maximum number of bytes any given key may have. Must be less than 256.
+Default is 16</p></li>
+<li><p><strong>threshold</strong> (<em>int</em><em>, </em><em>optional</em>) – Default threshold value to use when generating candidate set of heavy
+hitters. Default is 0</p></li>
+<li><p><strong>shared_memory</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, then sketch is placed in shared memory. Needed if performing
+multiprocessing as sketchnu.helpers.parallel_add() does. Default is False</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="attribute">
+<dt id="sketchnu.heavyhitters.HeavyHitters.width">
+<code class="sig-name descname">width</code><a class="headerlink" href="#sketchnu.heavyhitters.HeavyHitters.width" title="Permalink to this definition">¶</a></dt>
+<dd><p>Width of the 2-d array of counters of the sketch</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>np.uint64</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="sketchnu.heavyhitters.HeavyHitters.depth">
+<code class="sig-name descname">depth</code><a class="headerlink" href="#sketchnu.heavyhitters.HeavyHitters.depth" title="Permalink to this definition">¶</a></dt>
+<dd><p>Depth of the 2-d array of counters of the sketch</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>np.uint64</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="sketchnu.heavyhitters.HeavyHitters.max_key_len">
+<code class="sig-name descname">max_key_len</code><a class="headerlink" href="#sketchnu.heavyhitters.HeavyHitters.max_key_len" title="Permalink to this definition">¶</a></dt>
+<dd><p>Maximum number of bytes any given key may have. Must be less than 256</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>np.uint64</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="sketchnu.heavyhitters.HeavyHitters.threshold">
+<code class="sig-name descname">threshold</code><a class="headerlink" href="#sketchnu.heavyhitters.HeavyHitters.threshold" title="Permalink to this definition">¶</a></dt>
+<dd><p>Default threshold value. When generating a candidate set of heavy hitters, only
+keys whose count &gt; threshold will be added to the candidate set.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>np.uint64</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="sketchnu.heavyhitters.HeavyHitters.lhh">
+<code class="sig-name descname">lhh</code><a class="headerlink" href="#sketchnu.heavyhitters.HeavyHitters.lhh" title="Permalink to this definition">¶</a></dt>
+<dd><p>Storing the keys associated with each bucket in the 2-d array of counters. Keys
+are stored as numpy arrays, as opposed to 2-d list of bytes, in order for numba
+to be able to process them. If a given key has fewer bytes than max_len_key,
+then right padded with 0s.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>np.ndarray, shape=(depth, width, max_key_len), dtype=np.uint8</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="sketchnu.heavyhitters.HeavyHitters.lhh_count">
+<code class="sig-name descname">lhh_count</code><a class="headerlink" href="#sketchnu.heavyhitters.HeavyHitters.lhh_count" title="Permalink to this definition">¶</a></dt>
+<dd><p>Store the counts associated with keys stored in lhh.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>np.ndarray, shape=(depth, width), dtype=np.uint32</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="sketchnu.heavyhitters.HeavyHitters.key_lens">
+<code class="sig-name descname">key_lens</code><a class="headerlink" href="#sketchnu.heavyhitters.HeavyHitters.key_lens" title="Permalink to this definition">¶</a></dt>
+<dd><p>The length of each of the keys stored in lhh</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>np.ndarray, shape=(depth, width), dtype=np.uint8</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="sketchnu.heavyhitters.HeavyHitters.n_added_records">
+<code class="sig-name descname">n_added_records</code><a class="headerlink" href="#sketchnu.heavyhitters.HeavyHitters.n_added_records" title="Permalink to this definition">¶</a></dt>
+<dd><p>1-d array that holds two special counters. The first is the number of elements
+that have been added to the sketch. Useful for calculating error limits. The
+second is used by helpers.parallel_add() to keep track of the number of records
+that have been processed.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>np.ndarray, shape=(2,), dtype=np.uint64</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="sketchnu.heavyhitters.HeavyHitters.add">
+<code class="sig-name descname">add</code><span class="sig-paren">(</span><em class="sig-param">key: bytes</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="_modules/sketchnu/heavyhitters.html#HeavyHitters.add"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sketchnu.heavyhitters.HeavyHitters.add" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a single key to the heavy hitters sketch and update the counter tracking
+total number of keys added to the sketch.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>key</strong> (<em>bytes</em>) – Element to be added to the sketch</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="sketchnu.heavyhitters.HeavyHitters.add_ngram">
+<code class="sig-name descname">add_ngram</code><span class="sig-paren">(</span><em class="sig-param">key: bytes</em>, <em class="sig-param">ngram: int</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="_modules/sketchnu/heavyhitters.html#HeavyHitters.add_ngram"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sketchnu.heavyhitters.HeavyHitters.add_ngram" title="Permalink to this definition">¶</a></dt>
+<dd><p>Take a given <cite>key</cite> and shingle it into ngrams of size <cite>ngram</cite> and then
+add the ngrams to the sketch. If the <cite>key</cite> length is less than <cite>ngram</cite>
+then add the whole <cite>key</cite></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>key</strong> (<em>bytes</em>) – Element to be shingled before adding to the sketch</p></li>
+<li><p><strong>ngram</strong> (<em>int</em>) – ngram size</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="sketchnu.heavyhitters.HeavyHitters.attach_existing_shm">
+<code class="sig-name descname">attach_existing_shm</code><span class="sig-paren">(</span><em class="sig-param">existing_shm_name: str</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="_modules/sketchnu/heavyhitters.html#HeavyHitters.attach_existing_shm"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sketchnu.heavyhitters.HeavyHitters.attach_existing_shm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Attach this sketch to an existing shared memory block. Useful when working
+within a spawned child process. This creates self.existing_shm which gets
+closed when self.__del__ gets called.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>existing_shm_name</strong> (<em>str</em>) – Name of an existing shared memory block to attach this sketch to</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="sketchnu.heavyhitters.HeavyHitters.generate_candidate_set">
+<code class="sig-name descname">generate_candidate_set</code><span class="sig-paren">(</span><em class="sig-param">threshold: int = None</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="_modules/sketchnu/heavyhitters.html#HeavyHitters.generate_candidate_set"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sketchnu.heavyhitters.HeavyHitters.generate_candidate_set" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate a candidate set of heavy hitters. Only keys in <cite>lhh</cite> whose
+corresponding counts in <cite>lhh_count</cite> are greater the <cite>threshold</cite> are included.
+Only the keys in the first row of <cite>lhh</cite> are used. The candidate set is a
+collections.Counter stored in self.candidate_set</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>threshold</strong> (<em>int</em><em>, </em><em>optional</em>) – If None (default), then uses <cite>threshold</cite> provided during instantiation</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="sketchnu.heavyhitters.HeavyHitters.load">
+<em class="property">static </em><code class="sig-name descname">load</code><span class="sig-paren">(</span><em class="sig-param">filename: Union[str, pathlib.Path], shared_memory: bool = False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sketchnu/heavyhitters.html#HeavyHitters.load"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sketchnu.heavyhitters.HeavyHitters.load" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load a saved HeavyHitters stored in <cite>filename</cite></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename</strong> (<em>str | Path</em>) – File path to the saved .npz file</p></li>
+<li><p><strong>shared_memory</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, load into shared memory. Default is False.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#sketchnu.heavyhitters.HeavyHitters" title="sketchnu.heavyhitters.HeavyHitters">HeavyHitters</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="sketchnu.heavyhitters.HeavyHitters.merge">
+<code class="sig-name descname">merge</code><span class="sig-paren">(</span><em class="sig-param">other</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="_modules/sketchnu/heavyhitters.html#HeavyHitters.merge"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sketchnu.heavyhitters.HeavyHitters.merge" title="Permalink to this definition">¶</a></dt>
+<dd><p>Merge the HeavyHitter sketch <cite>other</cite> into this one.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>other</strong> (<a class="reference internal" href="#sketchnu.heavyhitters.HeavyHitters" title="sketchnu.heavyhitters.HeavyHitters"><em>HeavyHitters</em></a>) – Another HeavyHitters with the same width, depth, max_key_len.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>TypeError</strong> – If <cite>other</cite> has different width, depth, or max_key_len</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="sketchnu.heavyhitters.HeavyHitters.n_added">
+<code class="sig-name descname">n_added</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; numpy.uint64<a class="reference internal" href="_modules/sketchnu/heavyhitters.html#HeavyHitters.n_added"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sketchnu.heavyhitters.HeavyHitters.n_added" title="Permalink to this definition">¶</a></dt>
+<dd><p>This special counter is used to track the total number of elements
+that have been added to the sketch. Useful to check the error guarantees.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The number of elements that have been added to the sketch.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>np.uint64</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="sketchnu.heavyhitters.HeavyHitters.n_records">
+<code class="sig-name descname">n_records</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; numpy.uint64<a class="reference internal" href="_modules/sketchnu/heavyhitters.html#HeavyHitters.n_records"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sketchnu.heavyhitters.HeavyHitters.n_records" title="Permalink to this definition">¶</a></dt>
+<dd><p>This special counter is used by the sketchnu.helpers.parallel_add() to
+keep track of the number of records that have been added to the sketch.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The number of records that have been added to the sketch.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>np.uint64</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="sketchnu.heavyhitters.HeavyHitters.query">
+<code class="sig-name descname">query</code><span class="sig-paren">(</span><em class="sig-param">k: int</em>, <em class="sig-param">threshold: int = None</em><span class="sig-paren">)</span> &#x2192; List[Tuple[bytes, int]]<a class="reference internal" href="_modules/sketchnu/heavyhitters.html#HeavyHitters.query"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sketchnu.heavyhitters.HeavyHitters.query" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the top <cite>k</cite> heavy hitters. If new data has been added or if <cite>threshold</cite>
+is different from the last time a candidate set was generated, then this will
+generate a new candidate set before selecting the top <cite>k</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>k</strong> (<em>int</em>) – </p></li>
+<li><p><strong>threshold</strong> (<em>int</em><em>, </em><em>optional</em>) – Only include keys from lhh whose counts &gt; <cite>threshold</cite>. Default is None which
+then uses the <cite>threshold</cite> given when sketch was initialized.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Sorted list of the (key, count) of the top <cite>k</cite>. Format is the same as
+collections.Counter().most_common().</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>List[Tuple[bytes, int]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="sketchnu.heavyhitters.HeavyHitters.save">
+<code class="sig-name descname">save</code><span class="sig-paren">(</span><em class="sig-param">filename: Union[str, pathlib.Path]</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="_modules/sketchnu/heavyhitters.html#HeavyHitters.save"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sketchnu.heavyhitters.HeavyHitters.save" title="Permalink to this definition">¶</a></dt>
+<dd><p>Save the sketch to <cite>filename</cite></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>filename</strong> (<em>str | Path</em>) – File to save the sketch to disk. This will be a .npz file.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="sketchnu.heavyhitters.HeavyHitters.update">
+<code class="sig-name descname">update</code><span class="sig-paren">(</span><em class="sig-param">keys: List[bytes]</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="_modules/sketchnu/heavyhitters.html#HeavyHitters.update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sketchnu.heavyhitters.HeavyHitters.update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a list of <cite>keys</cite> to the sketch. This follows the convention of
+collections.Counter</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>keys</strong> (<em>List</em><em>[</em><em>bytes</em><em>]</em>) – List of elements to add to the sketch</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="sketchnu.heavyhitters.HeavyHitters.update_ngram">
+<code class="sig-name descname">update_ngram</code><span class="sig-paren">(</span><em class="sig-param">keys: List[bytes], ngram: int</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="_modules/sketchnu/heavyhitters.html#HeavyHitters.update_ngram"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sketchnu.heavyhitters.HeavyHitters.update_ngram" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given a list of keys, shingle each into ngrams of size <cite>ngram</cite>, and then
+add them to the sketch.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>keys</strong> (<em>List</em><em>[</em><em>bytes</em><em>]</em>) – List of elements to be shingled before adding to the sketch.</p></li>
+<li><p><strong>ngram</strong> (<em>int</em>) – ngram size</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
 <div class="section" id="module-sketchnu.helpers">
 <span id="sketchnu-helpers"></span><h1>sketchnu.helpers<a class="headerlink" href="#module-sketchnu.helpers" title="Permalink to this headline">¶</a></h1>
 <p>Sketchnu has Numba implementations of sketch algorithms and other useful functions
@@ -1758,7 +2133,7 @@ keys and seeds. C++ code was taken from
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2020, Matthew Hendrey.</p>
+    <p>&#169; Copyright 2022, Matthew Hendrey.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

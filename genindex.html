@@ -56,6 +56,14 @@
 </li>
 </ul>
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="heavyhitters.html">Heavy-Hitters</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="heavyhitters.html#the-basics">The Basics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="heavyhitters.html#usage">Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="heavyhitters.html#the-details">The Details</a></li>
+</ul>
+</li>
+</ul>
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="helpers.html">Helper Functions</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="helpers.html#usage">Usage</a></li>
 </ul>
@@ -80,6 +88,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="sketchnu.html">sketchnu.hyperloglog</a></li>
 <li class="toctree-l1"><a class="reference internal" href="sketchnu.html#module-sketchnu.countmin">sketchnu.countmin</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sketchnu.html#module-sketchnu.heavyhitters">sketchnu.heavyhitters</a></li>
 <li class="toctree-l1"><a class="reference internal" href="sketchnu.html#module-sketchnu.helpers">sketchnu.helpers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="sketchnu.html#module-sketchnu.hashes">sketchnu.hashes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="sketchnu.html#module-sketchnu.tests">sketchnu.tests</a></li>
@@ -127,7 +136,9 @@
  | <a href="#C"><strong>C</strong></a>
  | <a href="#D"><strong>D</strong></a>
  | <a href="#F"><strong>F</strong></a>
+ | <a href="#G"><strong>G</strong></a>
  | <a href="#H"><strong>H</strong></a>
+ | <a href="#K"><strong>K</strong></a>
  | <a href="#L"><strong>L</strong></a>
  | <a href="#M"><strong>M</strong></a>
  | <a href="#N"><strong>N</strong></a>
@@ -149,6 +160,8 @@
 </li>
         <li><a href="sketchnu.html#sketchnu.countmin.CountMinLog8.add">(sketchnu.countmin.CountMinLog8 method)</a>
 </li>
+        <li><a href="sketchnu.html#sketchnu.heavyhitters.HeavyHitters.add">(sketchnu.heavyhitters.HeavyHitters method)</a>
+</li>
         <li><a href="sketchnu.html#sketchnu.hyperloglog.HyperLogLog.add">(sketchnu.hyperloglog.HyperLogLog method)</a>
 </li>
       </ul></li>
@@ -159,6 +172,8 @@
 </li>
         <li><a href="sketchnu.html#sketchnu.countmin.CountMinLog8.add_ngram">(sketchnu.countmin.CountMinLog8 method)</a>
 </li>
+        <li><a href="sketchnu.html#sketchnu.heavyhitters.HeavyHitters.add_ngram">(sketchnu.heavyhitters.HeavyHitters method)</a>
+</li>
         <li><a href="sketchnu.html#sketchnu.hyperloglog.HyperLogLog.add_ngram">(sketchnu.hyperloglog.HyperLogLog method)</a>
 </li>
       </ul></li>
@@ -167,6 +182,8 @@
       <li><a href="sketchnu.html#sketchnu.countmin.CountMinLinear.attach_existing_shm">attach_existing_shm() (sketchnu.countmin.CountMinLinear method)</a>
 
       <ul>
+        <li><a href="sketchnu.html#sketchnu.heavyhitters.HeavyHitters.attach_existing_shm">(sketchnu.heavyhitters.HeavyHitters method)</a>
+</li>
         <li><a href="sketchnu.html#sketchnu.hyperloglog.HyperLogLog.attach_existing_shm">(sketchnu.hyperloglog.HyperLogLog method)</a>
 </li>
       </ul></li>
@@ -221,6 +238,8 @@
 </li>
         <li><a href="sketchnu.html#sketchnu.countmin.CountMinLog8.depth">(sketchnu.countmin.CountMinLog8 attribute)</a>
 </li>
+        <li><a href="sketchnu.html#sketchnu.heavyhitters.HeavyHitters.depth">(sketchnu.heavyhitters.HeavyHitters attribute)</a>
+</li>
       </ul></li>
   </ul></td>
 </tr></table>
@@ -237,10 +256,30 @@
   </ul></td>
 </tr></table>
 
+<h2 id="G">G</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="sketchnu.html#sketchnu.heavyhitters.HeavyHitters.generate_candidate_set">generate_candidate_set() (sketchnu.heavyhitters.HeavyHitters method)</a>
+</li>
+  </ul></td>
+</tr></table>
+
 <h2 id="H">H</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="sketchnu.html#sketchnu.heavyhitters.HeavyHitters">HeavyHitters (class in sketchnu.heavyhitters)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="sketchnu.html#sketchnu.hyperloglog.HyperLogLog">HyperLogLog (class in sketchnu.hyperloglog)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="K">K</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="sketchnu.html#sketchnu.heavyhitters.HeavyHitters.key_lens">key_lens (sketchnu.heavyhitters.HeavyHitters attribute)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -248,6 +287,10 @@
 <h2 id="L">L</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="sketchnu.html#sketchnu.heavyhitters.HeavyHitters.lhh">lhh (sketchnu.heavyhitters.HeavyHitters attribute)</a>
+</li>
+      <li><a href="sketchnu.html#sketchnu.heavyhitters.HeavyHitters.lhh_count">lhh_count (sketchnu.heavyhitters.HeavyHitters attribute)</a>
+</li>
       <li><a href="sketchnu.html#sketchnu.countmin.load">load() (in module sketchnu.countmin)</a>
 
       <ul>
@@ -256,6 +299,8 @@
         <li><a href="sketchnu.html#sketchnu.countmin.CountMinLog16.load">(sketchnu.countmin.CountMinLog16 static method)</a>
 </li>
         <li><a href="sketchnu.html#sketchnu.countmin.CountMinLog8.load">(sketchnu.countmin.CountMinLog8 static method)</a>
+</li>
+        <li><a href="sketchnu.html#sketchnu.heavyhitters.HeavyHitters.load">(sketchnu.heavyhitters.HeavyHitters static method)</a>
 </li>
         <li><a href="sketchnu.html#sketchnu.hyperloglog.HyperLogLog.load">(sketchnu.hyperloglog.HyperLogLog static method)</a>
 </li>
@@ -274,12 +319,16 @@
         <li><a href="sketchnu.html#sketchnu.countmin.CountMinLog8.max_count">(sketchnu.countmin.CountMinLog8 attribute)</a>
 </li>
       </ul></li>
+      <li><a href="sketchnu.html#sketchnu.heavyhitters.HeavyHitters.max_key_len">max_key_len (sketchnu.heavyhitters.HeavyHitters attribute)</a>
+</li>
       <li><a href="sketchnu.html#sketchnu.countmin.CountMinLinear.merge">merge() (sketchnu.countmin.CountMinLinear method)</a>
 
       <ul>
         <li><a href="sketchnu.html#sketchnu.countmin.CountMinLog16.merge">(sketchnu.countmin.CountMinLog16 method)</a>
 </li>
         <li><a href="sketchnu.html#sketchnu.countmin.CountMinLog8.merge">(sketchnu.countmin.CountMinLog8 method)</a>
+</li>
+        <li><a href="sketchnu.html#sketchnu.heavyhitters.HeavyHitters.merge">(sketchnu.heavyhitters.HeavyHitters method)</a>
 </li>
         <li><a href="sketchnu.html#sketchnu.hyperloglog.HyperLogLog.merge">(sketchnu.hyperloglog.HyperLogLog method)</a>
 </li>
@@ -295,7 +344,11 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="sketchnu.html#sketchnu.countmin.CountMinLinear.n_added">n_added() (sketchnu.countmin.CountMinLinear method)</a>
+
+      <ul>
+        <li><a href="sketchnu.html#sketchnu.heavyhitters.HeavyHitters.n_added">(sketchnu.heavyhitters.HeavyHitters method)</a>
 </li>
+      </ul></li>
       <li><a href="sketchnu.html#sketchnu.countmin.CountMinLinear.n_added_records">n_added_records (sketchnu.countmin.CountMinLinear attribute)</a>
 
       <ul>
@@ -303,11 +356,17 @@
 </li>
         <li><a href="sketchnu.html#sketchnu.countmin.CountMinLog8.n_added_records">(sketchnu.countmin.CountMinLog8 attribute)</a>
 </li>
+        <li><a href="sketchnu.html#sketchnu.heavyhitters.HeavyHitters.n_added_records">(sketchnu.heavyhitters.HeavyHitters attribute)</a>
+</li>
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="sketchnu.html#sketchnu.countmin.CountMinLinear.n_records">n_records() (sketchnu.countmin.CountMinLinear method)</a>
+
+      <ul>
+        <li><a href="sketchnu.html#sketchnu.heavyhitters.HeavyHitters.n_records">(sketchnu.heavyhitters.HeavyHitters method)</a>
 </li>
+      </ul></li>
       <li><a href="sketchnu.html#sketchnu.countmin.CountMinLog16.num_reserved">num_reserved (sketchnu.countmin.CountMinLog16 attribute)</a>
 
       <ul>
@@ -341,6 +400,8 @@
 </li>
         <li><a href="sketchnu.html#sketchnu.countmin.CountMinLog8.query">(sketchnu.countmin.CountMinLog8 method)</a>
 </li>
+        <li><a href="sketchnu.html#sketchnu.heavyhitters.HeavyHitters.query">(sketchnu.heavyhitters.HeavyHitters method)</a>
+</li>
         <li><a href="sketchnu.html#sketchnu.hyperloglog.HyperLogLog.query">(sketchnu.hyperloglog.HyperLogLog method)</a>
 </li>
       </ul></li>
@@ -354,6 +415,8 @@
 
       <ul>
         <li><a href="sketchnu.html#sketchnu.countmin.CountMinLog16.save">(sketchnu.countmin.CountMinLog16 method)</a>
+</li>
+        <li><a href="sketchnu.html#sketchnu.heavyhitters.HeavyHitters.save">(sketchnu.heavyhitters.HeavyHitters method)</a>
 </li>
         <li><a href="sketchnu.html#sketchnu.hyperloglog.HyperLogLog.save">(sketchnu.hyperloglog.HyperLogLog method)</a>
 </li>
@@ -378,6 +441,8 @@
 </li>
       <li><a href="sketchnu.html#module-sketchnu.hashes">sketchnu.hashes (module)</a>
 </li>
+      <li><a href="sketchnu.html#module-sketchnu.heavyhitters">sketchnu.heavyhitters (module)</a>
+</li>
       <li><a href="sketchnu.html#module-sketchnu.helpers">sketchnu.helpers (module)</a>
 </li>
       <li><a href="sketchnu.html#module-sketchnu.hyperloglog">sketchnu.hyperloglog (module)</a>
@@ -398,10 +463,10 @@
 </li>
       <li><a href="sketchnu.html#sketchnu.tests.test_cms_log8_merge">test_cms_log8_merge() (in module sketchnu.tests)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="sketchnu.html#sketchnu.tests.test_cms_log8_update">test_cms_log8_update() (in module sketchnu.tests)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="sketchnu.html#sketchnu.tests.test_fasthash">test_fasthash() (in module sketchnu.tests)</a>
 </li>
       <li><a href="sketchnu.html#sketchnu.tests.test_hll_merge">test_hll_merge() (in module sketchnu.tests)</a>
@@ -409,6 +474,8 @@
       <li><a href="sketchnu.html#sketchnu.tests.test_hll_update">test_hll_update() (in module sketchnu.tests)</a>
 </li>
       <li><a href="sketchnu.html#sketchnu.tests.test_murmur3">test_murmur3() (in module sketchnu.tests)</a>
+</li>
+      <li><a href="sketchnu.html#sketchnu.heavyhitters.HeavyHitters.threshold">threshold (sketchnu.heavyhitters.HeavyHitters attribute)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -419,6 +486,8 @@
       <li><a href="sketchnu.html#sketchnu.countmin.CountMinLinear.update">update() (sketchnu.countmin.CountMinLinear method)</a>
 
       <ul>
+        <li><a href="sketchnu.html#sketchnu.heavyhitters.HeavyHitters.update">(sketchnu.heavyhitters.HeavyHitters method)</a>
+</li>
         <li><a href="sketchnu.html#sketchnu.hyperloglog.HyperLogLog.update">(sketchnu.hyperloglog.HyperLogLog method)</a>
 </li>
       </ul></li>
@@ -427,6 +496,8 @@
       <li><a href="sketchnu.html#sketchnu.countmin.CountMinLinear.update_ngram">update_ngram() (sketchnu.countmin.CountMinLinear method)</a>
 
       <ul>
+        <li><a href="sketchnu.html#sketchnu.heavyhitters.HeavyHitters.update_ngram">(sketchnu.heavyhitters.HeavyHitters method)</a>
+</li>
         <li><a href="sketchnu.html#sketchnu.hyperloglog.HyperLogLog.update_ngram">(sketchnu.hyperloglog.HyperLogLog method)</a>
 </li>
       </ul></li>
@@ -443,6 +514,8 @@
 </li>
         <li><a href="sketchnu.html#sketchnu.countmin.CountMinLog8.width">(sketchnu.countmin.CountMinLog8 attribute)</a>
 </li>
+        <li><a href="sketchnu.html#sketchnu.heavyhitters.HeavyHitters.width">(sketchnu.heavyhitters.HeavyHitters attribute)</a>
+</li>
       </ul></li>
   </ul></td>
 </tr></table>
@@ -456,7 +529,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2020, Matthew Hendrey.</p>
+    <p>&#169; Copyright 2022, Matthew Hendrey.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
