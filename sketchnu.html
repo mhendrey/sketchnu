@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>sketchnu.hyperloglog &mdash; sketchnu 1.1.0 documentation</title><link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <title>sketchnu.hyperloglog &mdash; sketchnu 1.2.0 documentation</title><link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="_static/js/html5shiv.min.js"></script>
@@ -28,7 +28,7 @@
             <a href="index.html" class="icon icon-home"> sketchnu<img src="_static/logo.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                1.1.0
+                1.2.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -92,7 +92,7 @@
 <li class="toctree-l1"><a class="reference internal" href="#module-sketchnu.heavyhitters">sketchnu.heavyhitters</a></li>
 <li class="toctree-l1"><a class="reference internal" href="#module-sketchnu.helpers">sketchnu.helpers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="#module-sketchnu.hashes">sketchnu.hashes</a></li>
-<li class="toctree-l1"><a class="reference internal" href="#module-sketchnu.tests">sketchnu.tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#sketchnu-tests">sketchnu.tests</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Admin</span></p>
 <ul>
@@ -1284,10 +1284,21 @@ Sketches for Finding Top-K Frequent Elements”, Advances in Neural Information
 Processing Systems <strong>31</strong>, (2018).</p>
 <dl class="class">
 <dt id="sketchnu.heavyhitters.HeavyHitters">
-<em class="property">class </em><code class="sig-prename descclassname">sketchnu.heavyhitters.</code><code class="sig-name descname">HeavyHitters</code><span class="sig-paren">(</span><em class="sig-param">width: int</em>, <em class="sig-param">depth: int = 4</em>, <em class="sig-param">max_key_len: int = 16</em>, <em class="sig-param">threshold: int = 0</em>, <em class="sig-param">shared_memory: bool = False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sketchnu/heavyhitters.html#HeavyHitters"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sketchnu.heavyhitters.HeavyHitters" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">sketchnu.heavyhitters.</code><code class="sig-name descname">HeavyHitters</code><span class="sig-paren">(</span><em class="sig-param">width: int</em>, <em class="sig-param">depth: int = 4</em>, <em class="sig-param">max_key_len: int = 16</em>, <em class="sig-param">phi: float = None</em>, <em class="sig-param">shared_memory: bool = False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sketchnu/heavyhitters.html#HeavyHitters"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sketchnu.heavyhitters.HeavyHitters" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Sketch to identify the most frequent keys added into the sketch. Assumes that keys
-have a fat-tailed distribution in the data stream.</p>
+<p>Sketch implementation of the phi-heavy hitters algorithm which identifies all the
+keys in a data stream that are observed in at least phi fraction of the records.
+This assumes that keys have a fat-tailed distribution in the data stream. This is
+an implementation of the Topkapi algorithm.</p>
+<p>The parameter phi must be greater than 1 / width of the sketch for the theoretical
+guarantees to be valid. The theoretical guarantees use a count-min sketch to
+estimate the frequency of any given key. For practical reasons, the paper suggests
+dropping the count-min sketch to save space. In this case you use the lhh_count as
+an estimate of the frequency of occurence for a given key. Note that
+lhh_count &lt;= true count &lt;= cms. So when we call the query function we are doing a
+more conservative estimate which corresponds to a higher phi. If you are feeling
+like you want to squeeze more out of the sketch you can provide a lower threshold
+(= phi * n_added()) when calling the query() function.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -1295,8 +1306,9 @@ have a fat-tailed distribution in the data stream.</p>
 <li><p><strong>depth</strong> (<em>int</em><em>, </em><em>optional</em>) – Depth of the heavy hitters sketch. Must be non-negative. Default is 4</p></li>
 <li><p><strong>max_key_len</strong> (<em>int</em><em>, </em><em>optional</em>) – Maximum number of bytes any given key may have. Must be less than 256.
 Default is 16</p></li>
-<li><p><strong>threshold</strong> (<em>int</em><em>, </em><em>optional</em>) – Default threshold value to use when generating candidate set of heavy
-hitters. Default is 0</p></li>
+<li><p><strong>phi</strong> (<em>float</em><em>, </em><em>optional</em>) – When generating the candidate set of heavy hitters, only keys whose estimated
+frequency of occurrence (lhh_count) &gt;= phi * n_added() will be added to the
+candidate set. Default of None is set to 1 / width.</p></li>
 <li><p><strong>shared_memory</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, then sketch is placed in shared memory. Needed if performing
 multiprocessing as sketchnu.helpers.parallel_add() does. Default is False</p></li>
 </ul>
@@ -1336,13 +1348,14 @@ multiprocessing as sketchnu.helpers.parallel_add() does. Default is False</p></l
 </dd></dl>
 
 <dl class="attribute">
-<dt id="sketchnu.heavyhitters.HeavyHitters.threshold">
-<code class="sig-name descname">threshold</code><a class="headerlink" href="#sketchnu.heavyhitters.HeavyHitters.threshold" title="Permalink to this definition">¶</a></dt>
-<dd><p>Default threshold value. When generating a candidate set of heavy hitters, only
-keys whose count &gt; threshold will be added to the candidate set.</p>
+<dt id="sketchnu.heavyhitters.HeavyHitters.phi">
+<code class="sig-name descname">phi</code><a class="headerlink" href="#sketchnu.heavyhitters.HeavyHitters.phi" title="Permalink to this definition">¶</a></dt>
+<dd><p>When generating the candidate set of heavy hitters, only keys whose estimated
+frequency of occurrence (lhh_count) &gt;= phi * n_added() will be added to the
+candidate set. Default of None is set to 1 / width.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
-<dd class="field-odd"><p>np.uint64</p>
+<dd class="field-odd"><p>np.float64</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1400,7 +1413,7 @@ that have been processed.</p>
 <dl class="method">
 <dt id="sketchnu.heavyhitters.HeavyHitters.add">
 <code class="sig-name descname">add</code><span class="sig-paren">(</span><em class="sig-param">key: bytes</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="_modules/sketchnu/heavyhitters.html#HeavyHitters.add"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sketchnu.heavyhitters.HeavyHitters.add" title="Permalink to this definition">¶</a></dt>
-<dd><p>Add a single key to the heavy hitters sketch and update the counter tracking
+<dd><p>Add a single <cite>key</cite> to the heavy hitters sketch and update the counter tracking
 total number of keys added to the sketch.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1461,8 +1474,9 @@ closed when self.__del__ gets called.</p>
 <code class="sig-name descname">generate_candidate_set</code><span class="sig-paren">(</span><em class="sig-param">threshold: int = None</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="_modules/sketchnu/heavyhitters.html#HeavyHitters.generate_candidate_set"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sketchnu.heavyhitters.HeavyHitters.generate_candidate_set" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generate a candidate set of heavy hitters. Only keys in <cite>lhh</cite> whose
 corresponding counts in <cite>lhh_count</cite> are greater the <cite>threshold</cite> are included.
-Only the keys in the first row of <cite>lhh</cite> are used. The candidate set is a
-collections.Counter stored in self.candidate_set</p>
+Contrary to the paper, we all the rows instead of just the first one. This
+seems like a small price to pay to not lose candidates due to hash collisions.
+The candidate set is a collections.Counter stored in self.candidate_set</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>threshold</strong> (<em>int</em><em>, </em><em>optional</em>) – If None (default), then uses <cite>threshold</cite> provided during instantiation</p>
@@ -1556,8 +1570,8 @@ generate a new candidate set before selecting the top <cite>k</cite>.</p>
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>k</strong> (<em>int</em>) – </p></li>
-<li><p><strong>threshold</strong> (<em>int</em><em>, </em><em>optional</em>) – Only include keys from lhh whose counts &gt; <cite>threshold</cite>. Default is None which
-then uses the <cite>threshold</cite> given when sketch was initialized.</p></li>
+<li><p><strong>threshold</strong> (<em>int</em><em>, </em><em>optional</em>) – Only include keys from lhh whose lhh_counts &gt;= <cite>threshold</cite>. Default is None
+which then sets threshold to self.phi * self.n_added()</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -1573,7 +1587,8 @@ collections.Counter().most_common().</p>
 <dl class="method">
 <dt id="sketchnu.heavyhitters.HeavyHitters.save">
 <code class="sig-name descname">save</code><span class="sig-paren">(</span><em class="sig-param">filename: Union[str, pathlib.Path]</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="_modules/sketchnu/heavyhitters.html#HeavyHitters.save"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sketchnu.heavyhitters.HeavyHitters.save" title="Permalink to this definition">¶</a></dt>
-<dd><p>Save the sketch to <cite>filename</cite></p>
+<dd><p>Save the sketch to <cite>filename</cite> adding the .npz extension if not already part of
+<cite>filename</cite></p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>filename</strong> (<em>str | Path</em>) – File to save the sketch to disk. This will be a .npz file.</p>
@@ -1848,278 +1863,8 @@ given <cite>seed</cite>. Code adapted from <a class="reference external" href="h
 </dd></dl>
 
 </div>
-<div class="section" id="module-sketchnu.tests">
-<span id="sketchnu-tests"></span><h1>sketchnu.tests<a class="headerlink" href="#module-sketchnu.tests" title="Permalink to this headline">¶</a></h1>
-<p>Sketchnu has Numba implementations of sketch algorithms and other useful functions
-that utilize hash functions.</p>
-<p>Copyright (C) 2022 Matthew Hendrey</p>
-<p>This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.</p>
-<p>This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.</p>
-<p>You should have received a copy of the GNU General Public License
-along with this program.  If not, see &lt;<a class="reference external" href="https://www.gnu.org/licenses/">https://www.gnu.org/licenses/</a>&gt;.</p>
-<dl class="function">
-<dt id="sketchnu.tests.test_cms_linear">
-<code class="sig-prename descclassname">sketchnu.tests.</code><code class="sig-name descname">test_cms_linear</code><span class="sig-paren">(</span><em class="sig-param">n_keys: int = 1024</em>, <em class="sig-param">c_min: int = 1</em>, <em class="sig-param">c_max: int = 1024</em>, <em class="sig-param">width: int = 1024</em>, <em class="sig-param">depth: int = 8</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sketchnu/tests.html#test_cms_linear"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sketchnu.tests.test_cms_linear" title="Permalink to this definition">¶</a></dt>
-<dd><p>Test that the count-min sketch error quarantees hold. We first assert that
-all estimates are greater than or equal to the true count.  Then we assert
-that with a probability of at least <cite>1 - exp(-depth)</cite> that:</p>
-<blockquote>
-<div><p>estimate &lt;= true + N * exp(1) / width</p>
-</div></blockquote>
-<p>where <cite>N</cite> is the total number of elements added to the sketch.</p>
-<p>We generate <cite>n_keys</cite> random keys. Each key is added a different number
-of times based upon a linear spacing between [<cite>c_min</cite>, <cite>c_max</cite>].</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>n_keys</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of keys to test over. Default is 1024</p></li>
-<li><p><strong>c_min</strong> (<em>int</em><em>, </em><em>optional</em>) – Minimum number of times a key is added into the sketch. Default is 1</p></li>
-<li><p><strong>c_max</strong> (<em>int</em><em>, </em><em>optional</em>) – Maximum number of times a key is added into the sketch. Default is 1024</p></li>
-<li><p><strong>width</strong> (<em>int</em><em>, </em><em>optional</em>) – Width of the count-min sketch. Default is 1024</p></li>
-<li><p><strong>depth</strong> (<em>int</em><em>, </em><em>optional</em>) – Depth of the count-min sketch. Default is 8</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="sketchnu.tests.test_cms_log16_merge">
-<code class="sig-prename descclassname">sketchnu.tests.</code><code class="sig-name descname">test_cms_log16_merge</code><span class="sig-paren">(</span><em class="sig-param">n_keys: int = 100</em>, <em class="sig-param">cms_updates=5000</em>, <em class="sig-param">other_updates=300</em>, <em class="sig-param">max_count: int = 4294967295</em>, <em class="sig-param">num_reserved: int = 50</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sketchnu/tests.html#test_cms_log16_merge"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sketchnu.tests.test_cms_log16_merge" title="Permalink to this definition">¶</a></dt>
-<dd><p>Uses a t-test to test the null hypothesis that the mean of the
-difference between the true count and estimated count is 0. Uses a
-confidence level of 99% to reject the null hypotheses. The test asserts
-that we should fail to reject the null hypothesis.</p>
-<p>We insert <cite>n_keys</cite> into two sketches, ‘cms’ &amp; ‘other’. We insert each key
-<cite>cms_updates</cite> times into ‘cms’ and <cite>other_updates</cite> times into ‘other’. We then
-merge ‘other’ into ‘cms’. The estimated count for each key should equal to
-<cite>cms_updates + other_updates</cite>.</p>
-<p>This test is for the merging log counters and not for the count-min sketch
-itself. In order to limit the errors introduced by collisions in the
-count-min sketch, we set the width equal to the total number of elements
-inserted into the sketch times 3.  This should give a maximum error of</p>
-<blockquote>
-<div><p>count_estimate &lt;= count_true + e/3</p>
-</div></blockquote>
-<p>that is not exceeded with probability of <cite>1-exp(-depth)</cite>.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>n_keys</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of keys to test over. Default is 100</p></li>
-<li><p><strong>cms_updates</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of times to insert each key into the first sketch.
-Default is 5000</p></li>
-<li><p><strong>other_updates</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of times to insert each key into the second sketch.
-Default is 300.</p></li>
-<li><p><strong>max_count</strong> (<em>int</em><em>, </em><em>optional</em>) – Passed to CountMinLog() to specify max value available in the count-min
-sketch. Default is 2**32-1</p></li>
-<li><p><strong>num_reserved</strong> (<em>int</em><em>, </em><em>optional</em>) – Passed to CountMinLog() to specify the num_reserved. Default is 50.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="sketchnu.tests.test_cms_log16_update">
-<code class="sig-prename descclassname">sketchnu.tests.</code><code class="sig-name descname">test_cms_log16_update</code><span class="sig-paren">(</span><em class="sig-param">n_keys: int = 500</em>, <em class="sig-param">c_min: int = 1023</em>, <em class="sig-param">c_mid: int = 5000</em>, <em class="sig-param">c_max: int = 100000</em>, <em class="sig-param">max_count: int = 4294967295</em>, <em class="sig-param">num_reserved: int = 1023</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sketchnu/tests.html#test_cms_log16_update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sketchnu.tests.test_cms_log16_update" title="Permalink to this definition">¶</a></dt>
-<dd><p>Uses a t-test to test the null hypothesis that the mean of the
-difference between the true count and estimated count is 0. Uses a
-confidence level of 99% to reject the null hypotheses. The test asserts
-that we should fail to reject the null hypothesis.</p>
-<p>We generate <cite>n_keys</cite> random keys and then add them a total of <cite>c_max</cite> times to
-the count-min sketch. We check the error against the true value at three
-different values: <cite>c_min</cite>, <cite>c_mid</cite>, &amp; <cite>c_max</cite>.</p>
-<p>The default <cite>c_min</cite> value is set to test the linear regime to ensure that is
-done well. The other two values, <cite>c_mid</cite> &amp; <cite>c_max</cite>, test the log regime.</p>
-<p>This test is for the updating log counters and not for the count-min sketch
-itself. In order to limit the errors introduced by collisions in the
-count-min sketch, we set the width equal to the total number of elements
-inserted into the sketch times 3, i.e., <cite>n_keys*c_max*3</cite>.  This should give
-a maximum error of</p>
-<blockquote>
-<div><p>count_estimate &lt;= count_true + e/3</p>
-</div></blockquote>
-<p>that is not exceeded with probability of <cite>1-exp(-depth)</cite>.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>n_keys</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of keys to test over. Default is 500</p></li>
-<li><p><strong>c_min</strong> (<em>int</em><em>, </em><em>optional</em>) – Lowest value to check the error between the estimated count and the
-true count for all n_keys. Default is 1023</p></li>
-<li><p><strong>c_mid</strong> (<em>int</em><em>, </em><em>optional</em>) – Medium value to check the error between the estimated count and the
-true count for all n_keys. Default is 5000</p></li>
-<li><p><strong>c_max</strong> (<em>int</em><em>, </em><em>optional</em>) – Highest value to check the error between the estimated count and the
-true count for all n_keys. Default is 100000.</p></li>
-<li><p><strong>max_count</strong> (<em>int</em><em>, </em><em>optional</em>) – Passed to CountMinLog() to specify max value available in the count-min
-sketch. Default is 2**32-1</p></li>
-<li><p><strong>num_reserved</strong> (<em>int</em><em>, </em><em>optional</em>) – Passed to CountMinLog() to specify the num_reserved. Default is 1023.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="sketchnu.tests.test_cms_log8_merge">
-<code class="sig-prename descclassname">sketchnu.tests.</code><code class="sig-name descname">test_cms_log8_merge</code><span class="sig-paren">(</span><em class="sig-param">n_keys: int = 100</em>, <em class="sig-param">cms_updates=5000</em>, <em class="sig-param">other_updates=300</em>, <em class="sig-param">max_count: int = 4294967295</em>, <em class="sig-param">num_reserved: int = None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sketchnu/tests.html#test_cms_log8_merge"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sketchnu.tests.test_cms_log8_merge" title="Permalink to this definition">¶</a></dt>
-<dd><p>Uses a t-test to test the null hypothesis that the mean of the
-difference between the true count and estimated count is 0. Uses a
-confidence level of 99% to reject the null hypotheses. The test asserts
-that we should fail to reject the null hypothesis.</p>
-<p>A log counter has an unbiased estimator of <cite>n</cite> (cardinality) with a variance
-of <cite>(x-1)n(n + 1)/2</cite>, where <cite>x`</cite> is the log base.</p>
-<p>We insert n_keys into two sketches, ‘cms’ &amp; ‘other’. We insert each key
-<cite>cms_updates</cite> times into ‘cms’ and <cite>other_updates</cite> times into ‘other’. We then
-merge ‘other’ into ‘cms’. The estimated count for each key should equal to
-<cite>cms_updates + other_updates</cite>.</p>
-<p>This test is for the merging log counters and not for the count-min sketch
-itself. In order to limit the errors introduced by collisions in the
-count-min sketch, we set the width equal to the total number of elements
-inserted into the sketch times 3.  This should give a maximum error of</p>
-<blockquote>
-<div><p>count_estimate &lt;= count_true + e/3</p>
-</div></blockquote>
-<p>that is not exceeded with probability of <cite>1-exp(-depth)</cite>.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>n_keys</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of keys to test over. Default is 100</p></li>
-<li><p><strong>cms_updates</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of times to insert each key into the first sketch.
-Default is 5000</p></li>
-<li><p><strong>other_updates</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of times to insert each key into the second sketch.
-Default is 300.</p></li>
-<li><p><strong>max_count</strong> (<em>int</em><em>, </em><em>optional</em>) – Passed to CountMin() to specify max value available in the count-min
-sketch. Default is 2**32-1</p></li>
-<li><p><strong>num_reserved</strong> (<em>int</em><em>, </em><em>optional</em>) – Passed to CountMin() to specify the num_reserved. Default is None.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="sketchnu.tests.test_cms_log8_update">
-<code class="sig-prename descclassname">sketchnu.tests.</code><code class="sig-name descname">test_cms_log8_update</code><span class="sig-paren">(</span><em class="sig-param">n_keys: int = 500</em>, <em class="sig-param">c_min: int = 15</em>, <em class="sig-param">c_mid: int = 5000</em>, <em class="sig-param">c_max: int = 100000</em>, <em class="sig-param">max_count: int = 4294967295</em>, <em class="sig-param">num_reserved: int = 15</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sketchnu/tests.html#test_cms_log8_update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sketchnu.tests.test_cms_log8_update" title="Permalink to this definition">¶</a></dt>
-<dd><p>Uses a t-test to test the null hypothesis that the mean of the
-difference between the true count and estimated count is 0. Uses a
-confidence level of 99% to reject the null hypotheses. The test asserts
-that we should fail to reject the null hypothesis.</p>
-<p>A log counter has an unbiased estimator of <cite>n</cite> (cardinality) with a variance
-of <cite>(x-1)n(n + 1)/2</cite>, where <cite>x</cite> is the log base.</p>
-<p>We generate <cite>n_keys</cite> random keys and then add them a total of <cite>c_max</cite> times to
-the count-min sketch. We check the error against the true value at three
-different values: <cite>c_min</cite>, <cite>c_mid</cite>, &amp; <cite>c_max</cite>.</p>
-<p>The default <cite>c_min</cite> value is set to test the linear regime to ensure that is
-done well. The other two values, <cite>c_mid</cite> &amp; <cite>c_max</cite>, test the log regime.</p>
-<p>This test is for the updating log counters and not for the count-min sketch
-itself. In order to limit the errors introduced by collisions in the
-count-min sketch, we set the width equal to the total number of elements
-inserted into the sketch times 3, i.e., <cite>n_keys*c_max*3</cite>.  This should give
-a maximum error of</p>
-<blockquote>
-<div><p>count_estimate &lt;= count_true + e/3</p>
-</div></blockquote>
-<p>that is not exceeded with probability of <cite>1-exp(-depth)</cite>.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>n_keys</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of keys to test over. Default is 500</p></li>
-<li><p><strong>c_min</strong> (<em>int</em><em>, </em><em>optional</em>) – Lowest value to check the error between the estimated count and the
-true count for all n_keys. Default is 15</p></li>
-<li><p><strong>c_mid</strong> (<em>int</em><em>, </em><em>optional</em>) – Medium value to check the error between the estimated count and the
-true count for all n_keys. Default is 5000</p></li>
-<li><p><strong>c_max</strong> (<em>int</em><em>, </em><em>optional</em>) – Highest value to check the error between the estimated count and the
-true count for all n_keys. Default is 100000.</p></li>
-<li><p><strong>max_count</strong> (<em>int</em><em>, </em><em>optional</em>) – Passed to CountMinLog() to specify max value available in the count-min
-sketch. Default is 2**32-1</p></li>
-<li><p><strong>num_reserved</strong> (<em>int</em><em>, </em><em>optional</em>) – Passed to CountMinLog() to specify the num_reserved. Default is 15</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="sketchnu.tests.test_fasthash">
-<code class="sig-prename descclassname">sketchnu.tests.</code><code class="sig-name descname">test_fasthash</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/sketchnu/tests.html#test_fasthash"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sketchnu.tests.test_fasthash" title="Permalink to this definition">¶</a></dt>
-<dd><p>Compare the fasthash32 against the smhasher C++ version. Since the
-fasthash32() calls fasthash64() and then does some bit mixing, by testing
-the fasthash32() we are also testing the fasthash64().</p>
-<p>Values we assert against are from running the C++ version with the given
-keys and seeds. C++ code was taken from
-<a class="reference external" href="https://github.com/rurban/smhasher/blob/master/fasthash.cpp">https://github.com/rurban/smhasher/blob/master/fasthash.cpp</a>
-<a class="reference external" href="https://github.com/rurban/smhasher/blob/master/fasthash.h">https://github.com/rurban/smhasher/blob/master/fasthash.h</a></p>
-</dd></dl>
-
-<dl class="function">
-<dt id="sketchnu.tests.test_hll_merge">
-<code class="sig-prename descclassname">sketchnu.tests.</code><code class="sig-name descname">test_hll_merge</code><span class="sig-paren">(</span><em class="sig-param">p: int = 10</em>, <em class="sig-param">n_keys1: int = 100000</em>, <em class="sig-param">n_keys2: int = 25000</em>, <em class="sig-param">n_trials: int = 100</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sketchnu/tests.html#test_hll_merge"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sketchnu.tests.test_hll_merge" title="Permalink to this definition">¶</a></dt>
-<dd><p>Uses a t-test to test the null hypothesis that the mean of the
-difference between the true count and estimated count is 0. Uses a
-confidence level of 99% to reject the null hypotheses. The test asserts
-that we should fail to reject the null hypothesis.</p>
-<p>The HyperLogLog’s estimated cardinality “is asymptotically almost unbiased”.
-Despite this, even low values typically pass the test.</p>
-<p>We insert <cite>n_keys1</cite> random keys into the first HyperLogLog and <cite>n_keys2</cite>
-random keys into a second HyperLogLog. We merge the second into the first
-and then check that the estimated count is equal to the size of the union
-of the two sets of random keys.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>p</strong> (<em>int</em><em>, </em><em>optional</em>) – Precision of the HyperLogLog. Default is 10 which is relatively low
-precision, but this is so we can easily exceed the sub-algorithm threshold
-of <cite>5 * 2**p</cite> when we use the estimated bias correction.</p></li>
-<li><p><strong>n_keys1</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of keys to add to the first HyperLogLog. Default is 100k.</p></li>
-<li><p><strong>n_keys2</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of keys to add to the second HyperLogLog. Default is 25k.</p></li>
-<li><p><strong>n_trials</strong> (<em>int</em><em>, </em><em>optional</em>) – The number of independent times to measure the error. Each run uses a
-different seed to the HyperLogLogs. Default is 100</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="sketchnu.tests.test_hll_update">
-<code class="sig-prename descclassname">sketchnu.tests.</code><code class="sig-name descname">test_hll_update</code><span class="sig-paren">(</span><em class="sig-param">p: int = 10</em>, <em class="sig-param">n_keys: int = 100000</em>, <em class="sig-param">n_trials: int = 100</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sketchnu/tests.html#test_hll_update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sketchnu.tests.test_hll_update" title="Permalink to this definition">¶</a></dt>
-<dd><p>Uses a t-test to test the null hypothesis that the mean of the
-difference between the true count and estimated count is 0. Uses a
-confidence level of 99% to reject the null hypotheses. The test asserts
-that we should fail to reject the null hypothesis.</p>
-<p>The HyperLogLog’s estimated cardinality “is asymptotically almost unbiased”.
-Despite this, even low values typically pass the test.</p>
-<p>We insert the same <cite>n_keys</cite> random keys into a HyperLogLog with precision
-<cite>p</cite> with different seeds a total of <cite>n_trials</cite> times. The query() should equal
-the number of unique keys that were added to the HyperLogLog.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>p</strong> (<em>int</em><em>, </em><em>optional</em>) – Precision of the HyperLogLog. Default is 10 which is relatively
-low precision, but this is so we can easily exceed the sub-algorithm
-threshold of 5 * 2**p when we use the estimated bias correction.</p></li>
-<li><p><strong>n_keys</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of random keys to generate. Default is 100,000. We create
-keys that are random 16-byte values so this should be the number
-of unique keys, but we do check against only the number of unique
-keys which may be slightly less than n_keys.</p></li>
-<li><p><strong>n_trials</strong> (<em>int</em><em>, </em><em>optional</em>) – The number of independent times to measure the error. Each run
-uses a different seed to the HyperLogLog. Default is 100</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="sketchnu.tests.test_murmur3">
-<code class="sig-prename descclassname">sketchnu.tests.</code><code class="sig-name descname">test_murmur3</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/sketchnu/tests.html#test_murmur3"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sketchnu.tests.test_murmur3" title="Permalink to this definition">¶</a></dt>
-<dd><p>Compare the murmur3 against the smhasher C++ version found in the
-MurmurHash3_x86_32() function.</p>
-<p>Values we assert against are from running the C++ version with the given
-keys and seeds. C++ code was taken from
-<a class="reference external" href="https://github.com/rurban/smhasher/blob/master/MurmurHash3.cpp">https://github.com/rurban/smhasher/blob/master/MurmurHash3.cpp</a>
-<a class="reference external" href="https://github.com/rurban/smhasher/blob/master/MurmurHash3.h">https://github.com/rurban/smhasher/blob/master/MurmurHash3.h</a></p>
-</dd></dl>
-
+<div class="section" id="sketchnu-tests">
+<h1>sketchnu.tests<a class="headerlink" href="#sketchnu-tests" title="Permalink to this headline">¶</a></h1>
 </div>
 
 

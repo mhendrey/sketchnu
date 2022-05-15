@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>sketchnu.heavyhitters &mdash; sketchnu 1.1.0 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <title>sketchnu.heavyhitters &mdash; sketchnu 1.2.0 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
@@ -26,7 +26,7 @@
             <a href="../../index.html" class="icon icon-home"> sketchnu<img src="../../_static/logo.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                1.1.0
+                1.2.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -90,7 +90,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../sketchnu.html#module-sketchnu.heavyhitters">sketchnu.heavyhitters</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../sketchnu.html#module-sketchnu.helpers">sketchnu.helpers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../sketchnu.html#module-sketchnu.hashes">sketchnu.hashes</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../sketchnu.html#module-sketchnu.tests">sketchnu.tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../sketchnu.html#sketchnu-tests">sketchnu.tests</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Admin</span></p>
 <ul>
@@ -191,6 +191,9 @@
     <span class="n">uint_maxval</span><span class="p">,</span>
     <span class="n">key</span><span class="p">,</span>
 <span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Numba function that adds `key` into the sketch</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">key_len</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">uint64</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">key</span><span class="p">))</span>
 
     <span class="c1"># Handle different key sizes</span>
@@ -245,6 +248,10 @@
     <span class="n">key</span><span class="p">,</span>
     <span class="n">ngram</span><span class="p">,</span>
 <span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Numba function that shingles `key` into ngrams of size `ngram` and then adds each</span>
+<span class="sd">    ngram into the sketch</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">key_len</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">uint64</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">key</span><span class="p">))</span>
     <span class="k">if</span> <span class="n">key_len</span> <span class="o">&lt;=</span> <span class="n">ngram</span><span class="p">:</span>
         <span class="n">_add</span><span class="p">(</span>
@@ -301,6 +308,9 @@
     <span class="n">other_key_lens</span><span class="p">,</span>
     <span class="n">other_n_added_records</span><span class="p">,</span>
 <span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Numba function to merge the second heavy hitter sketch into the first</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">depth</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">width</span><span class="p">):</span>
             <span class="n">keys_match</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">lhh</span><span class="p">[</span><span class="n">row</span><span class="p">,</span> <span class="n">col</span><span class="p">]</span> <span class="o">==</span> <span class="n">other_lhh</span><span class="p">[</span><span class="n">row</span><span class="p">,</span> <span class="n">col</span><span class="p">]))</span> <span class="ow">and</span> <span class="p">(</span>
@@ -338,6 +348,9 @@
     <span class="p">)</span>
 <span class="p">)</span>
 <span class="k">def</span> <span class="nf">_max_count</span><span class="p">(</span><span class="n">lhh</span><span class="p">,</span> <span class="n">lhh_count</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">depth</span><span class="p">,</span> <span class="n">max_key_len</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">key_len</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Numba function to provide the estimated count for the given `key`</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">key_len</span> <span class="o">==</span> <span class="n">max_key_len</span><span class="p">:</span>
         <span class="n">key_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">frombuffer</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">uint8</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
@@ -355,8 +368,20 @@
 
 <div class="viewcode-block" id="HeavyHitters"><a class="viewcode-back" href="../../sketchnu.html#sketchnu.heavyhitters.HeavyHitters">[docs]</a><span class="k">class</span> <span class="nc">HeavyHitters</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Sketch to identify the most frequent keys added into the sketch. Assumes that keys</span>
-<span class="sd">    have a fat-tailed distribution in the data stream.</span>
+<span class="sd">    Sketch implementation of the phi-heavy hitters algorithm which identifies all the</span>
+<span class="sd">    keys in a data stream that are observed in at least phi fraction of the records.</span>
+<span class="sd">    This assumes that keys have a fat-tailed distribution in the data stream. This is</span>
+<span class="sd">    an implementation of the Topkapi algorithm.</span>
+
+<span class="sd">    The parameter phi must be greater than 1 / width of the sketch for the theoretical</span>
+<span class="sd">    guarantees to be valid. The theoretical guarantees use a count-min sketch to</span>
+<span class="sd">    estimate the frequency of any given key. For practical reasons, the paper suggests</span>
+<span class="sd">    dropping the count-min sketch to save space. In this case you use the lhh_count as</span>
+<span class="sd">    an estimate of the frequency of occurence for a given key. Note that</span>
+<span class="sd">    lhh_count &lt;= true count &lt;= cms. So when we call the query function we are doing a</span>
+<span class="sd">    more conservative estimate which corresponds to a higher phi. If you are feeling</span>
+<span class="sd">    like you want to squeeze more out of the sketch you can provide a lower threshold</span>
+<span class="sd">    (= phi * n_added()) when calling the query() function.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -367,9 +392,10 @@
 <span class="sd">    max_key_len : int, optional</span>
 <span class="sd">        Maximum number of bytes any given key may have. Must be less than 256.</span>
 <span class="sd">        Default is 16</span>
-<span class="sd">    threshold : int, optional</span>
-<span class="sd">        Default threshold value to use when generating candidate set of heavy</span>
-<span class="sd">        hitters. Default is 0</span>
+<span class="sd">    phi : float, optional</span>
+<span class="sd">        When generating the candidate set of heavy hitters, only keys whose estimated</span>
+<span class="sd">        frequency of occurrence (lhh_count) &gt;= phi * n_added() will be added to the</span>
+<span class="sd">        candidate set. Default of None is set to 1 / width.</span>
 <span class="sd">    shared_memory : bool, optional</span>
 <span class="sd">        If True, then sketch is placed in shared memory. Needed if performing</span>
 <span class="sd">        multiprocessing as sketchnu.helpers.parallel_add() does. Default is False</span>
@@ -382,9 +408,10 @@
 <span class="sd">        Depth of the 2-d array of counters of the sketch</span>
 <span class="sd">    max_key_len : np.uint64</span>
 <span class="sd">        Maximum number of bytes any given key may have. Must be less than 256</span>
-<span class="sd">    threshold : np.uint64</span>
-<span class="sd">        Default threshold value. When generating a candidate set of heavy hitters, only</span>
-<span class="sd">        keys whose count &gt; threshold will be added to the candidate set.</span>
+<span class="sd">    phi : np.float64</span>
+<span class="sd">        When generating the candidate set of heavy hitters, only keys whose estimated</span>
+<span class="sd">        frequency of occurrence (lhh_count) &gt;= phi * n_added() will be added to the</span>
+<span class="sd">        candidate set. Default of None is set to 1 / width.</span>
 <span class="sd">    lhh : np.ndarray, shape=(depth, width, max_key_len), dtype=np.uint8</span>
 <span class="sd">        Storing the keys associated with each bucket in the 2-d array of counters. Keys</span>
 <span class="sd">        are stored as numpy arrays, as opposed to 2-d list of bytes, in order for numba</span>
@@ -406,7 +433,7 @@
         <span class="n">width</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
         <span class="n">depth</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span>
         <span class="n">max_key_len</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">16</span><span class="p">,</span>
-        <span class="n">threshold</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="n">phi</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">shared_memory</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -421,9 +448,10 @@
 <span class="sd">        max_key_len : int, optional</span>
 <span class="sd">            Maximum number of bytes any given key may have. Must be less than 256.</span>
 <span class="sd">            Default is 16</span>
-<span class="sd">        threshold : int, optional</span>
-<span class="sd">            Default threshold value to use when generating candidate set of heavy</span>
-<span class="sd">            hitters. Default is 0</span>
+<span class="sd">        phi : float, optional</span>
+<span class="sd">            When generating the candidate set of heavy hitters, only keys whose</span>
+<span class="sd">            estimated frequency of occurrence (lhh_count) &gt;= phi * n_added() will be</span>
+<span class="sd">            added to the candidate set. Default of None is set to 1 / width.</span>
 <span class="sd">        shared_memory : bool, optional</span>
 <span class="sd">            If True, then sketch is placed in shared memory. Needed if performing</span>
 <span class="sd">            multiprocessing as sketchnu.helpers.parallel_add() does. Default is False</span>
@@ -433,6 +461,7 @@
 <span class="sd">        HeavyHitters</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">int_types</span> <span class="o">=</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">int8</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">uint32</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">uint64</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">int64</span><span class="p">)</span>
+        <span class="n">float_types</span> <span class="o">=</span> <span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">width</span> <span class="o">&lt;=</span> <span class="mi">0</span> <span class="ow">or</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="n">int_types</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;{width=:}. Must be an integer greater than 0&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">depth</span> <span class="o">&lt;=</span> <span class="mi">0</span> <span class="ow">or</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">depth</span><span class="p">,</span> <span class="n">int_types</span><span class="p">):</span>
@@ -443,28 +472,33 @@
             <span class="ow">or</span> <span class="n">max_key_len</span> <span class="o">&gt;</span> <span class="mi">255</span>
         <span class="p">):</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;{max_key_len=:}. Must be an integer [1, 255]&quot;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">threshold</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">threshold</span><span class="p">,</span> <span class="n">int_types</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;{threshold=:}. Must be a non-negative integer&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">phi</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">phi</span><span class="p">,</span> <span class="n">float_types</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;{phi=:}. Must be None or a positive float&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">phi</span><span class="p">,</span> <span class="n">float_types</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">phi</span> <span class="o">&lt;=</span> <span class="mf">0.0</span> <span class="ow">or</span> <span class="n">phi</span> <span class="o">&gt;=</span> <span class="mf">1.0</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;{phi=:}. Must be float between (0.0, 1.0)&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">shared_memory</span><span class="p">,</span> <span class="nb">bool</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;{type(shared_memory)=:}. Must be a boolean&quot;</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">uint64</span><span class="p">(</span><span class="n">width</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">depth</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">uint64</span><span class="p">(</span><span class="n">depth</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">max_key_len</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">uint64</span><span class="p">(</span><span class="n">max_key_len</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">threshold</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">uint64</span><span class="p">(</span><span class="n">threshold</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">phi</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">phi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">phi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">(</span><span class="n">phi</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">uint_maxval</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">uint32</span><span class="p">(</span><span class="mi">2</span> <span class="o">**</span> <span class="mi">32</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="p">{</span>
             <span class="s2">&quot;width&quot;</span><span class="p">:</span> <span class="n">width</span><span class="p">,</span>
             <span class="s2">&quot;depth&quot;</span><span class="p">:</span> <span class="n">depth</span><span class="p">,</span>
             <span class="s2">&quot;max_key_len&quot;</span><span class="p">:</span> <span class="n">max_key_len</span><span class="p">,</span>
-            <span class="s2">&quot;threshold&quot;</span><span class="p">:</span> <span class="n">threshold</span><span class="p">,</span>
+            <span class="s2">&quot;phi&quot;</span><span class="p">:</span> <span class="n">phi</span><span class="p">,</span>
         <span class="p">}</span>
 
         <span class="c1"># Store the value of n_added_records[0] when query was last run</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">candidate_set</span> <span class="o">=</span> <span class="n">Counter</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">n_added_sort</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">threshold_sort</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">threshold</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">threshold_sort</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">uint32</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 
         <span class="c1"># Number of bytes needed for lhh, lhh_count, n_added_records</span>
         <span class="n">lhh_nbytes</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">max_key_len</span> <span class="o">*</span> <span class="n">width</span> <span class="o">*</span> <span class="n">depth</span><span class="p">)</span>
@@ -510,8 +544,8 @@
 <span class="sd">        ----------</span>
 <span class="sd">        k : int</span>
 <span class="sd">        threshold : int, optional</span>
-<span class="sd">            Only include keys from lhh whose counts &gt; `threshold`. Default is None which</span>
-<span class="sd">            then uses the `threshold` given when sketch was initialized.</span>
+<span class="sd">            Only include keys from lhh whose lhh_counts &gt;= `threshold`. Default is None</span>
+<span class="sd">            which then sets threshold to self.phi * self.n_added()</span>
 <span class="sd">        </span>
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -520,20 +554,18 @@
 <span class="sd">            collections.Counter().most_common().</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">threshold</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">threshold</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">threshold</span>
+            <span class="n">threshold</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">uint32</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">phi</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_added</span><span class="p">())</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">threshold</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">uint32</span><span class="p">(</span><span class="n">threshold</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_added_sort</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_added_records</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="ow">or</span> <span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">threshold_sort</span> <span class="o">!=</span> <span class="n">threshold</span>
-        <span class="p">):</span>
+        <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_added_sort</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_added</span><span class="p">())</span> <span class="ow">or</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">threshold_sort</span> <span class="o">!=</span> <span class="n">threshold</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">generate_candidate_set</span><span class="p">(</span><span class="n">threshold</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">candidate_set</span><span class="o">.</span><span class="n">most_common</span><span class="p">(</span><span class="n">k</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="HeavyHitters.add"><a class="viewcode-back" href="../../sketchnu.html#sketchnu.heavyhitters.HeavyHitters.add">[docs]</a>    <span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Add a single key to the heavy hitters sketch and update the counter tracking</span>
+<span class="sd">        Add a single `key` to the heavy hitters sketch and update the counter tracking</span>
 <span class="sd">        total number of keys added to the sketch.</span>
 
 <span class="sd">        Parameters</span>
@@ -670,7 +702,8 @@
 
 <div class="viewcode-block" id="HeavyHitters.save"><a class="viewcode-back" href="../../sketchnu.html#sketchnu.heavyhitters.HeavyHitters.save">[docs]</a>    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Save the sketch to `filename`</span>
+<span class="sd">        Save the sketch to `filename` adding the .npz extension if not already part of</span>
+<span class="sd">        `filename`</span>
 <span class="sd">        </span>
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -685,7 +718,7 @@
         <span class="n">np</span><span class="o">.</span><span class="n">savez</span><span class="p">(</span>
             <span class="n">filename</span><span class="p">,</span>
             <span class="n">args</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
-                <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">depth</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_key_len</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">threshold</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">uint64</span>
+                <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">depth</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_key_len</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">phi</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span>
             <span class="p">),</span>
             <span class="n">lhh</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">lhh</span><span class="p">,</span>
             <span class="n">lhh_count</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">lhh_count</span><span class="p">,</span>
@@ -711,7 +744,13 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">with</span> <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span> <span class="k">as</span> <span class="n">npzfile</span><span class="p">:</span>
             <span class="n">args</span> <span class="o">=</span> <span class="n">npzfile</span><span class="p">[</span><span class="s2">&quot;args&quot;</span><span class="p">]</span>
-            <span class="n">hh</span> <span class="o">=</span> <span class="n">HeavyHitters</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">shared_memory</span><span class="o">=</span><span class="n">shared_memory</span><span class="p">)</span>
+            <span class="n">width</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">uint64</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="n">depth</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">uint64</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+            <span class="n">max_key_len</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">uint64</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+            <span class="n">phi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
+            <span class="n">hh</span> <span class="o">=</span> <span class="n">HeavyHitters</span><span class="p">(</span>
+                <span class="n">width</span><span class="p">,</span> <span class="n">depth</span><span class="p">,</span> <span class="n">max_key_len</span><span class="p">,</span> <span class="n">phi</span><span class="p">,</span> <span class="n">shared_memory</span><span class="o">=</span><span class="n">shared_memory</span>
+            <span class="p">)</span>
             <span class="n">np</span><span class="o">.</span><span class="n">copyto</span><span class="p">(</span><span class="n">hh</span><span class="o">.</span><span class="n">lhh</span><span class="p">,</span> <span class="n">npzfile</span><span class="p">[</span><span class="s2">&quot;lhh&quot;</span><span class="p">])</span>
             <span class="n">np</span><span class="o">.</span><span class="n">copyto</span><span class="p">(</span><span class="n">hh</span><span class="o">.</span><span class="n">lhh_count</span><span class="p">,</span> <span class="n">npzfile</span><span class="p">[</span><span class="s2">&quot;lhh_count&quot;</span><span class="p">])</span>
             <span class="n">np</span><span class="o">.</span><span class="n">copyto</span><span class="p">(</span><span class="n">hh</span><span class="o">.</span><span class="n">key_lens</span><span class="p">,</span> <span class="n">npzfile</span><span class="p">[</span><span class="s2">&quot;key_lens&quot;</span><span class="p">])</span>
@@ -789,8 +828,9 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Generate a candidate set of heavy hitters. Only keys in `lhh` whose</span>
 <span class="sd">        corresponding counts in `lhh_count` are greater the `threshold` are included.</span>
-<span class="sd">        Only the keys in the first row of `lhh` are used. The candidate set is a</span>
-<span class="sd">        collections.Counter stored in self.candidate_set</span>
+<span class="sd">        Contrary to the paper, we all the rows instead of just the first one. This</span>
+<span class="sd">        seems like a small price to pay to not lose candidates due to hash collisions.</span>
+<span class="sd">        The candidate set is a collections.Counter stored in self.candidate_set</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -802,36 +842,37 @@
 <span class="sd">        None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">threshold</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">threshold</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">threshold</span>
+            <span class="n">threshold</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">uint32</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">phi</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_added</span><span class="p">())</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">threshold</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">uint32</span><span class="p">(</span><span class="n">threshold</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">n_added_sort</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_added_records</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_added_sort</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_added</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">threshold_sort</span> <span class="o">=</span> <span class="n">threshold</span>
-        <span class="n">candidate_dict</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">candidate_set</span> <span class="o">=</span> <span class="n">Counter</span><span class="p">()</span>
 
-        <span class="c1"># Generate candidate list just from the first row of lhh</span>
-        <span class="k">for</span> <span class="n">column</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="p">):</span>
-            <span class="c1"># No key associated with this column, so skip</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">lhh_count</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">column</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-                <span class="k">continue</span>
+        <span class="c1"># Generate candidate list</span>
+        <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">depth</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">column</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="p">):</span>
+                <span class="c1"># No key associated with this column, so skip</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">lhh_count</span><span class="p">[</span><span class="n">row</span><span class="p">,</span> <span class="n">column</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="k">continue</span>
 
-            <span class="n">key_len</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">key_lens</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">column</span><span class="p">]</span>
-            <span class="n">key</span> <span class="o">=</span> <span class="nb">bytes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lhh</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">column</span><span class="p">,</span> <span class="p">:</span><span class="n">key_len</span><span class="p">])</span>
-            <span class="n">max_count</span> <span class="o">=</span> <span class="n">_max_count</span><span class="p">(</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">lhh</span><span class="p">,</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">lhh_count</span><span class="p">,</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="p">,</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">depth</span><span class="p">,</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">max_key_len</span><span class="p">,</span>
-                <span class="n">key</span><span class="p">,</span>
-                <span class="n">key_len</span><span class="p">,</span>
-            <span class="p">)</span>
+                <span class="n">key_len</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">key_lens</span><span class="p">[</span><span class="n">row</span><span class="p">,</span> <span class="n">column</span><span class="p">]</span>
+                <span class="n">key</span> <span class="o">=</span> <span class="nb">bytes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lhh</span><span class="p">[</span><span class="n">row</span><span class="p">,</span> <span class="n">column</span><span class="p">,</span> <span class="p">:</span><span class="n">key_len</span><span class="p">])</span>
+                <span class="c1"># Only need to do this once for each key</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">candidate_set</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">max_count</span> <span class="o">=</span> <span class="n">_max_count</span><span class="p">(</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">lhh</span><span class="p">,</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">lhh_count</span><span class="p">,</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="p">,</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">depth</span><span class="p">,</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">max_key_len</span><span class="p">,</span>
+                        <span class="n">key</span><span class="p">,</span>
+                        <span class="n">key_len</span><span class="p">,</span>
+                    <span class="p">)</span>
 
-            <span class="k">if</span> <span class="n">max_count</span> <span class="o">&gt;</span> <span class="n">threshold</span><span class="p">:</span>
-                <span class="n">candidate_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">max_count</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">candidate_set</span> <span class="o">=</span> <span class="n">Counter</span><span class="p">(</span><span class="n">candidate_dict</span><span class="p">)</span></div>
+                    <span class="k">if</span> <span class="n">max_count</span> <span class="o">&gt;=</span> <span class="n">threshold</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">candidate_set</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">max_count</span></div>
 
     <span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
