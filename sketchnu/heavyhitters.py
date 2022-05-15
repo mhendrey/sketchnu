@@ -61,6 +61,9 @@ def _add(
     uint_maxval,
     key,
 ):
+    """
+    Numba function that adds `key` into the sketch
+    """
     key_len = np.uint64(len(key))
 
     # Handle different key sizes
@@ -115,6 +118,10 @@ def _add_ngram(
     key,
     ngram,
 ):
+    """
+    Numba function that shingles `key` into ngrams of size `ngram` and then adds each
+    ngram into the sketch
+    """
     key_len = np.uint64(len(key))
     if key_len <= ngram:
         _add(
@@ -171,6 +178,9 @@ def _merge(
     other_key_lens,
     other_n_added_records,
 ):
+    """
+    Numba function to merge the second heavy hitter sketch into the first
+    """
     for row in range(depth):
         for col in range(width):
             keys_match = (np.all(lhh[row, col] == other_lhh[row, col])) and (
@@ -208,6 +218,9 @@ def _merge(
     )
 )
 def _max_count(lhh, lhh_count, width, depth, max_key_len, key, key_len):
+    """
+    Numba function to provide the estimated count for the given `key`
+    """
     if key_len == max_key_len:
         key_array = np.frombuffer(key, uint8)
     else:
@@ -225,8 +238,20 @@ def _max_count(lhh, lhh_count, width, depth, max_key_len, key, key_len):
 
 class HeavyHitters:
     """
-    Sketch to identify the most frequent keys added into the sketch. Assumes that keys
-    have a fat-tailed distribution in the data stream.
+    Sketch implementation of the phi-heavy hitters algorithm which identifies all the
+    keys in a data stream that are observed in at least phi fraction of the records.
+    This assumes that keys have a fat-tailed distribution in the data stream. This is
+    an implementation of the Topkapi algorithm.
+
+    The parameter phi must be greater than 1 / width of the sketch for the theoretical
+    guarantees to be valid. The theoretical guarantees use a count-min sketch to
+    estimate the frequency of any given key. For practical reasons, the paper suggests
+    dropping the count-min sketch to save space. In this case you use the lhh_count as
+    an estimate of the frequency of occurence for a given key. Note that
+    lhh_count <= true count <= cms. So when we call the query function we are doing a
+    more conservative estimate which corresponds to a higher phi. If you are feeling
+    like you want to squeeze more out of the sketch you can provide a lower threshold
+    (= phi * n_added()) when calling the query() function.
 
     Parameters
     ----------
@@ -237,9 +262,10 @@ class HeavyHitters:
     max_key_len : int, optional
         Maximum number of bytes any given key may have. Must be less than 256.
         Default is 16
-    threshold : int, optional
-        Default threshold value to use when generating candidate set of heavy
-        hitters. Default is 0
+    phi : float, optional
+        When generating the candidate set of heavy hitters, only keys whose estimated
+        frequency of occurrence (lhh_count) >= phi * n_added() will be added to the
+        candidate set. Default of None is set to 1 / width.
     shared_memory : bool, optional
         If True, then sketch is placed in shared memory. Needed if performing
         multiprocessing as sketchnu.helpers.parallel_add() does. Default is False
@@ -252,9 +278,10 @@ class HeavyHitters:
         Depth of the 2-d array of counters of the sketch
     max_key_len : np.uint64
         Maximum number of bytes any given key may have. Must be less than 256
-    threshold : np.uint64
-        Default threshold value. When generating a candidate set of heavy hitters, only
-        keys whose count > threshold will be added to the candidate set.
+    phi : np.float64
+        When generating the candidate set of heavy hitters, only keys whose estimated
+        frequency of occurrence (lhh_count) >= phi * n_added() will be added to the
+        candidate set. Default of None is set to 1 / width.
     lhh : np.ndarray, shape=(depth, width, max_key_len), dtype=np.uint8
         Storing the keys associated with each bucket in the 2-d array of counters. Keys
         are stored as numpy arrays, as opposed to 2-d list of bytes, in order for numba
@@ -276,7 +303,7 @@ class HeavyHitters:
         width: int,
         depth: int = 4,
         max_key_len: int = 16,
-        threshold: int = 0,
+        phi: float = None,
         shared_memory: bool = False,
     ) -> None:
         """
@@ -291,9 +318,10 @@ class HeavyHitters:
         max_key_len : int, optional
             Maximum number of bytes any given key may have. Must be less than 256.
             Default is 16
-        threshold : int, optional
-            Default threshold value to use when generating candidate set of heavy
-            hitters. Default is 0
+        phi : float, optional
+            When generating the candidate set of heavy hitters, only keys whose
+            estimated frequency of occurrence (lhh_count) >= phi * n_added() will be
+            added to the candidate set. Default of None is set to 1 / width.
         shared_memory : bool, optional
             If True, then sketch is placed in shared memory. Needed if performing
             multiprocessing as sketchnu.helpers.parallel_add() does. Default is False
@@ -303,6 +331,7 @@ class HeavyHitters:
         HeavyHitters
         """
         int_types = (int, np.uint8, np.int8, np.uint32, np.int32, np.uint64, np.int64)
+        float_types = (float, np.float32, np.float64)
         if width <= 0 or not isinstance(width, int_types):
             raise ValueError(f"{width=:}. Must be an integer greater than 0")
         if depth <= 0 or not isinstance(depth, int_types):
@@ -313,28 +342,33 @@ class HeavyHitters:
             or max_key_len > 255
         ):
             raise ValueError(f"{max_key_len=:}. Must be an integer [1, 255]")
-        if threshold < 0 or not isinstance(threshold, int_types):
-            raise ValueError(f"{threshold=:}. Must be a non-negative integer")
+        if phi is not None and not isinstance(phi, float_types):
+            raise ValueError(f"{phi=:}. Must be None or a positive float")
+        if isinstance(phi, float_types) and (phi <= 0.0 or phi >= 1.0):
+            raise ValueError(f"{phi=:}. Must be float between (0.0, 1.0)")
         if not isinstance(shared_memory, bool):
             raise ValueError(f"{type(shared_memory)=:}. Must be a boolean")
 
         self.width = np.uint64(width)
         self.depth = np.uint64(depth)
         self.max_key_len = np.uint64(max_key_len)
-        self.threshold = np.uint64(threshold)
+        if phi is None:
+            self.phi = np.float64(1.0 / self.width)
+        else:
+            self.phi = np.float64(phi)
         self.uint_maxval = np.uint32(2 ** 32 - 1)
 
         self.args = {
             "width": width,
             "depth": depth,
             "max_key_len": max_key_len,
-            "threshold": threshold,
+            "phi": phi,
         }
 
         # Store the value of n_added_records[0] when query was last run
         self.candidate_set = Counter()
         self.n_added_sort = 0
-        self.threshold_sort = self.threshold
+        self.threshold_sort = np.uint32(0)
 
         # Number of bytes needed for lhh, lhh_count, n_added_records
         lhh_nbytes = int(max_key_len * width * depth)
@@ -380,8 +414,8 @@ class HeavyHitters:
         ----------
         k : int
         threshold : int, optional
-            Only include keys from lhh whose counts > `threshold`. Default is None which
-            then uses the `threshold` given when sketch was initialized.
+            Only include keys from lhh whose lhh_counts >= `threshold`. Default is None
+            which then sets threshold to self.phi * self.n_added()
         
         Returns
         -------
@@ -390,20 +424,18 @@ class HeavyHitters:
             collections.Counter().most_common().
         """
         if threshold is None:
-            threshold = self.threshold
+            threshold = np.uint32(self.phi * self.n_added())
         else:
             threshold = np.uint32(threshold)
 
-        if (self.n_added_sort < self.n_added_records[0]) or (
-            self.threshold_sort != threshold
-        ):
+        if (self.n_added_sort < self.n_added()) or (self.threshold_sort != threshold):
             self.generate_candidate_set(threshold)
 
         return self.candidate_set.most_common(k)
 
     def add(self, key: bytes) -> None:
         """
-        Add a single key to the heavy hitters sketch and update the counter tracking
+        Add a single `key` to the heavy hitters sketch and update the counter tracking
         total number of keys added to the sketch.
 
         Parameters
@@ -540,7 +572,8 @@ class HeavyHitters:
 
     def save(self, filename: Union[str, Path]) -> None:
         """
-        Save the sketch to `filename`
+        Save the sketch to `filename` adding the .npz extension if not already part of
+        `filename`
         
         Parameters
         ----------
@@ -555,7 +588,7 @@ class HeavyHitters:
         np.savez(
             filename,
             args=np.array(
-                [self.width, self.depth, self.max_key_len, self.threshold], np.uint64
+                [self.width, self.depth, self.max_key_len, self.phi], np.float64
             ),
             lhh=self.lhh,
             lhh_count=self.lhh_count,
@@ -581,7 +614,13 @@ class HeavyHitters:
         """
         with np.load(filename) as npzfile:
             args = npzfile["args"]
-            hh = HeavyHitters(*args, shared_memory=shared_memory)
+            width = np.uint64(args[0])
+            depth = np.uint64(args[1])
+            max_key_len = np.uint64(args[2])
+            phi = np.float64(args[3])
+            hh = HeavyHitters(
+                width, depth, max_key_len, phi, shared_memory=shared_memory
+            )
             np.copyto(hh.lhh, npzfile["lhh"])
             np.copyto(hh.lhh_count, npzfile["lhh_count"])
             np.copyto(hh.key_lens, npzfile["key_lens"])
@@ -659,8 +698,9 @@ class HeavyHitters:
         """
         Generate a candidate set of heavy hitters. Only keys in `lhh` whose
         corresponding counts in `lhh_count` are greater the `threshold` are included.
-        Only the keys in the first row of `lhh` are used. The candidate set is a
-        collections.Counter stored in self.candidate_set
+        Contrary to the paper, we all the rows instead of just the first one. This
+        seems like a small price to pay to not lose candidates due to hash collisions.
+        The candidate set is a collections.Counter stored in self.candidate_set
 
         Parameters
         ----------
@@ -672,36 +712,37 @@ class HeavyHitters:
         None
         """
         if threshold is None:
-            threshold = self.threshold
+            threshold = np.uint32(self.phi * self.n_added())
         else:
             threshold = np.uint32(threshold)
 
-        self.n_added_sort = self.n_added_records[0]
+        self.n_added_sort = self.n_added()
         self.threshold_sort = threshold
-        candidate_dict = {}
+        self.candidate_set = Counter()
 
-        # Generate candidate list just from the first row of lhh
-        for column in range(self.width):
-            # No key associated with this column, so skip
-            if self.lhh_count[0, column] == 0:
-                continue
+        # Generate candidate list
+        for row in range(self.depth):
+            for column in range(self.width):
+                # No key associated with this column, so skip
+                if self.lhh_count[row, column] == 0:
+                    continue
 
-            key_len = self.key_lens[0, column]
-            key = bytes(self.lhh[0, column, :key_len])
-            max_count = _max_count(
-                self.lhh,
-                self.lhh_count,
-                self.width,
-                self.depth,
-                self.max_key_len,
-                key,
-                key_len,
-            )
+                key_len = self.key_lens[row, column]
+                key = bytes(self.lhh[row, column, :key_len])
+                # Only need to do this once for each key
+                if self.candidate_set[key] == 0:
+                    max_count = _max_count(
+                        self.lhh,
+                        self.lhh_count,
+                        self.width,
+                        self.depth,
+                        self.max_key_len,
+                        key,
+                        key_len,
+                    )
 
-            if max_count > threshold:
-                candidate_dict[key] = max_count
-
-        self.candidate_set = Counter(candidate_dict)
+                    if max_count >= threshold:
+                        self.candidate_set[key] = max_count
 
     def __getitem__(self, key: bytes) -> int:
         """
