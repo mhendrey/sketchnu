@@ -1062,6 +1062,7 @@ class CountMinLog16(CountMinLinear):
         Calculated base for the log counters. Depends affected by max_count and
         num_reserved.
     """
+
     def __init__(
         self,
         width: int,
@@ -1566,6 +1567,7 @@ class CountMinLog8(CountMinLog16):
         Calculated base for the log counters. Depends affected by max_count and
         num_reserved.
     """
+
     def __init__(
         self,
         width: int,
