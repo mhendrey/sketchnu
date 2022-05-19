@@ -131,20 +131,23 @@
              
   <div class="section" id="helper-functions">
 <h1>Helper Functions<a class="headerlink" href="#helper-functions" title="Permalink to this headline">¶</a></h1>
-<p>We have written a few helper functions to aid in parallelizing the creation of
-HyperLogLogs and/or count-min sketches. The functions will spin up multiple
-independent workers, each of which has its own sketch to add its portion of the
-data to be processed. Once all the data has been processed, then the individual
-sketches will be merged efficiently in successive rounds of merging to achieve
-the final sketch.</p>
-<p>There are separate functions to parallelize the creation of both HyperLogLogs and
-count-min sketches, <code class="code docutils literal notranslate"><span class="pre">parallel_hll</span></code> and <code class="code docutils literal notranslate"><span class="pre">parallel_cms</span></code>, respectively.
-Since reading large amounts of data from disk is an expensive operation, the
-<code class="code docutils literal notranslate"><span class="pre">parallel_cms</span></code> can also be given arguments that will create both a
-count-min sketch and a HyperLogLog at the same time.</p>
-<p>The helper functions take a user-defined function, <code class="code docutils literal notranslate"><span class="pre">process_q_item</span></code>, which
-turns an item from the queue into an iterable of records with each record being
+<p>We have written a few helper functions to aid in parallelizing the creation of the one
+or more of the sketches. The functions will spin up multiple independent workers, each
+of which has its own sketch to add its portion of the data to be processed. Once all
+the data has been processed, then the individual sketches will be merged efficiently in
+successive rounds of merging to achieve the final sketch for each type.</p>
+<p>The main helper function, <code class="code docutils literal notranslate"><span class="pre">parallel_add</span></code>, can add the data to one or more of the
+sketches at the same time. You just need to specify one or more of <code class="code docutils literal notranslate"><span class="pre">cms_args</span></code>,
+<code class="code docutils literal notranslate"><span class="pre">hh_args</span></code>, or <code class="code docutils literal notranslate"><span class="pre">hll_args</span></code>, which provide the necessary parameters to
+initialize the respective sketch. Simply leave one or two as the default <code class="code docutils literal notranslate"><span class="pre">None</span></code>
+if you don’t want that type of sketch.</p>
+<p>The <code class="code docutils literal notranslate"><span class="pre">parallel_add</span></code> function takes a user-defined function, <code class="code docutils literal notranslate"><span class="pre">process_q_item</span></code>,
+which turns an item from the queue into an iterable of records with each record being
 an iterable of elements (bytes) that are to be added to the sketch.</p>
+<p>When using <code class="code docutils literal notranslate"><span class="pre">parallel_add</span></code>, the sketches are placed into shared memory which then
+subprocess can access to parallelize the data processing, but also during the
+subsequent call to <code class="code docutils literal notranslate"><span class="pre">parallel_merge</span></code> which combines the different sketches into a
+single final sketch which is what is returned.</p>
 <div class="section" id="usage">
 <h2>Usage<a class="headerlink" href="#usage" title="Permalink to this headline">¶</a></h2>
 <p>Let’s assume that we have a bunch of text files in a directory. Each line in
@@ -155,7 +158,7 @@ be added to a sketch, hence the <code class="code docutils literal notranslate">
 iterable of bytes.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
-<span class="kn">from</span> <span class="nn">sketchnu.helpers</span> <span class="kn">import</span> <span class="n">parallel_cms</span><span class="p">,</span> <span class="n">parallel_hll</span>
+<span class="kn">from</span> <span class="nn">sketchnu.helpers</span> <span class="kn">import</span> <span class="n">parallel_add</span>
 
 <span class="n">input_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s1">&#39;/path/to/text/files&#39;</span><span class="p">)</span>
 <span class="n">files</span> <span class="o">=</span> <span class="n">input_dir</span><span class="o">.</span><span class="n">iterdir</span><span class="p">()</span>
@@ -169,19 +172,29 @@ iterable of bytes.</p>
             <span class="n">record</span> <span class="o">=</span> <span class="p">[</span><span class="n">w</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span> <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()]</span>
             <span class="k">yield</span> <span class="n">record</span>
 
-<span class="n">cms</span> <span class="o">=</span> <span class="n">parallel_cms</span><span class="p">(</span><span class="n">files</span><span class="p">,</span> <span class="n">process_q_item</span><span class="p">,</span> <span class="s1">&#39;linear&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="o">**</span><span class="mi">20</span><span class="p">)</span>
+<span class="n">cms_args</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;cms_type&quot;</span><span class="p">:</span> <span class="s2">&quot;linear&quot;</span><span class="p">,</span> <span class="s2">&quot;width&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="o">**</span><span class="mi">20</span><span class="p">}</span>
+<span class="n">hh_args</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;width&quot;</span><span class="p">:</span> <span class="mi">50</span><span class="p">,</span> <span class="s2">&quot;max_key_len&quot;</span><span class="p">:</span> <span class="mi">16</span><span class="p">}</span>
+<span class="n">hll_args</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;p&quot;</span><span class="p">:</span> <span class="mi">16</span><span class="p">}</span>
+
+<span class="n">cms</span><span class="p">,</span> <span class="n">hh</span><span class="p">,</span> <span class="n">hll</span> <span class="o">=</span> <span class="n">parallel_add</span><span class="p">(</span>
+    <span class="n">files</span><span class="p">,</span>
+    <span class="n">process_q_item</span><span class="p">,</span>
+    <span class="n">n_workers</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+    <span class="n">cms_args</span><span class="o">=</span><span class="n">cms_args</span><span class="p">,</span>
+    <span class="n">hh_args</span><span class="o">=</span><span class="n">hh_args</span><span class="p">,</span>
+    <span class="n">hll_args</span><span class="o">=</span><span class="n">hll_args</span><span class="p">,</span>
+<span class="p">)</span>
 
 <span class="c1"># To see total number of elements added</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;A total of {cms.n_added():,} elements have been added&#39;</span><span class="p">)</span>
 <span class="c1"># To see total number of records added</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;{cms.n_records():,} records were processed&#39;</span><span class="p">)</span>
-
-<span class="c1"># files is an iterator that has now been exhausted. Let&#39;s make it a list</span>
-<span class="n">files</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">input_dir</span><span class="o">.</span><span class="n">iterdir</span><span class="p">())</span>
-<span class="n">hll</span> <span class="o">=</span> <span class="n">parallel_hll</span><span class="p">(</span><span class="n">files</span><span class="p">,</span> <span class="n">process_q_item</span><span class="p">,</span> <span class="n">log_console_level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">)</span>
-
-<span class="c1"># You can make both at the same time</span>
-<span class="n">cms</span><span class="p">,</span> <span class="n">hll</span> <span class="o">=</span> <span class="n">parallel_cms</span><span class="p">(</span><span class="n">files</span><span class="p">,</span> <span class="n">process_q_item</span><span class="p">,</span> <span class="s1">&#39;linear&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="o">**</span><span class="mi">20</span><span class="p">,</span> <span class="n">hll_p</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="n">n_workers</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+<span class="c1"># To see how many times had &quot;the&quot; appears in the text</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&#39;the&#39; appears </span><span class="si">{cms[&#39;the&#39;.encode(&#39;utf-8&#39;)]}</span><span class="s2"> times&quot;</span><span class="p">)</span>
+<span class="c1"># To see how many distinct words in all the data</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;{hll.query():.1f} unique words&quot;</span><span class="p">)</span>
+<span class="c1"># To see the most common word</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;{hh.query(1)} is the most commonly seen word&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
