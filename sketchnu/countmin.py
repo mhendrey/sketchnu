@@ -61,7 +61,7 @@ to create the count-min sketch.
 """
 import gc
 from multiprocessing.shared_memory import SharedMemory
-from numba import njit, uint8, uint16, uint32, uint64, float64, types
+from numba import njit, uint8, uint16, uint32, uint64, float64, types, prange
 import numpy as np
 from pathlib import Path
 from time import sleep
@@ -391,7 +391,8 @@ def _add_ngram_linear(
 @njit(
     types.void(
         uint32[:, :], uint32[:, :], uint64, uint64, uint32, uint64[:], uint64[:],
-    )
+    ),
+    parallel=True,
 )
 def _merge_linear(
     cms, other_cms, width, depth, uint_maxval, n_added_records, other_n_added_records
@@ -423,7 +424,7 @@ def _merge_linear(
     None
     """
     # Merge the count-min sketches
-    for row in range(depth):
+    for row in prange(depth):
         for col in range(width):
             if other_cms[row, col] > uint_maxval - cms[row, col]:
                 cms[row, col] = uint_maxval
@@ -949,7 +950,8 @@ def _add_ngram_log16(
         float64,
         uint64[:],
         uint64[:],
-    )
+    ),
+    parallel=True,
 )
 def _merge_log16(
     cms,
@@ -984,7 +986,7 @@ def _merge_log16(
     None
     """
     # Need to take care of various cases with log counters
-    for row in range(depth):
+    for row in prange(depth):
         for col in range(width):
             # Get what the combined value should be
             v = _counter2value(cms[row, col], num_reserved, base) + _counter2value(
@@ -1454,7 +1456,8 @@ def _add_ngram_log8(
         float64,
         uint64[:],
         uint64[:],
-    )
+    ),
+    parallel=True,
 )
 def _merge_log8(
     cms,
@@ -1489,7 +1492,7 @@ def _merge_log8(
     None
     """
     # Need to take care of various cases with log counters
-    for row in range(depth):
+    for row in prange(depth):
         for col in range(width):
             # Get what the combined value should be
             v = _counter2value(cms[row, col], num_reserved, base) + _counter2value(

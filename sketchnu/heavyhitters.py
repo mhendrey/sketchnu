@@ -29,7 +29,7 @@ from collections import Counter
 import gc
 from multiprocessing.shared_memory import SharedMemory
 from time import sleep
-from numba import njit, uint8, uint32, uint64, types
+from numba import njit, uint8, uint32, uint64, types, prange
 import numpy as np
 from pathlib import Path
 from typing import List, Tuple, Union
@@ -163,7 +163,8 @@ def _add_ngram(
         uint32[:, :],
         uint8[:, :],
         uint64[:],
-    )
+    ),
+    parallel=True,
 )
 def _merge(
     lhh,
@@ -181,7 +182,7 @@ def _merge(
     """
     Numba function to merge the second heavy hitter sketch into the first
     """
-    for row in range(depth):
+    for row in prange(depth):
         for col in range(width):
             keys_match = (np.all(lhh[row, col] == other_lhh[row, col])) and (
                 key_lens[row, col] == other_key_lens[row, col]
