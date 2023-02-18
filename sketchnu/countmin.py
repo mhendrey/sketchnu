@@ -65,7 +65,7 @@ from numba import njit, uint8, uint16, uint32, uint64, float64, types, prange
 import numpy as np
 from pathlib import Path
 from time import sleep
-from typing import List, Union
+from typing import Dict, List, Union
 
 from sketchnu.hashes import fasthash64
 
@@ -150,7 +150,7 @@ def _counter2value(counter, num_reserved, base):
         return float64(counter)
     else:
         cprime = float64(counter - num_reserved)
-        return (base ** cprime - 1.0) / (base - 1.0) + float64(num_reserved)
+        return (base**cprime - 1.0) / (base - 1.0) + float64(num_reserved)
 
 
 @njit(types.Tuple((float64, uint64))(float64[:], uint64))
@@ -167,7 +167,7 @@ def _rand(rand_batch, rand_ptr):
         1-d array of 2,048 random values with uniform distribution between [0, 1).
     rand_ptr : np.uint64
         Keeps track of where in the rand_batch you are.
-    
+
     Returns
     -------
     rand_value : np.float64
@@ -181,6 +181,59 @@ def _rand(rand_batch, rand_ptr):
     else:
         rand_ptr += uint64(1)
     return rand_batch[rand_ptr - uint64(1)], rand_ptr
+
+
+@njit(
+    types.Tuple((uint16, uint64))(
+        uint16, uint16, uint16, float64, float64[:], uint64, uint64
+    )
+)
+def _log_counter(counter, num_reserved, uint_maxval, base, rand_nums, rand_ptr, value):
+    """
+    Numba function to update a log counter by `value`. This will randomly determine
+    whether the log counter needs to be increased. Used by both `CountMinLog16` and
+    `CountMinLog8`. For `CountMinLog8`, the values just get cast to uint16.
+
+    Parameters
+    ----------
+    counter : np.uint16
+        Current value of the log counter
+    num_reserved : np.uint16
+        Number of values reserved for linear counting. After that use log counting
+    uint_maxval : np.uint16
+        Maximum value that a counter can store. Just the max value of uint of the
+        appropriate type (uint8 | uint16)
+    base : np.float64
+        Log base used by the counter
+    rand_nums : np.ndarray, dtype=np.float64
+        1-d array of random values
+    rand_ptr : np.uint64
+        Stores the pointer location into `rand_nums`
+    value : np.uint64
+        Value (linear) that you want to add to the log counter
+
+    Returns
+    -------
+    counter : np.uint16
+        Updated value of the log counter after adding `value`
+    rand_ptr : np.uint64
+        Current pointer location into `rand_nums`
+    """
+    one = uint16(1)
+    for i in range(value):
+        # If the counter is at the maximum value, nothing to do
+        if counter >= uint_maxval:
+            return counter, rand_ptr
+
+        cprime = float64(counter) - float64(num_reserved)
+        if cprime < 0:
+            counter += one
+        else:
+            rand, rand_ptr = _rand(rand_nums, rand_ptr)
+            if rand < base ** (-cprime):
+                counter += one
+
+    return counter, rand_ptr
 
 
 @njit(
@@ -211,7 +264,7 @@ def _increase_counter(counter, num_reserved, uint_maxval, base, rand_nums, rand_
         1-d array of random values
     rand_ptr : np.uint64
         Stores the pointer location into `rand_nums`
-    
+
     Returns
     -------
     bool
@@ -261,7 +314,7 @@ def _query_linear(cms, buckets, width, depth, uint_maxval, key):
     uint_maxval : np.uint32
         Maximum uint32 value. That is 2\*\*32 - 1
     key : bytes
-    
+
     Returns
     -------
     int
@@ -285,9 +338,10 @@ def _query_linear(cms, buckets, width, depth, uint_maxval, key):
         uint64,
         uint32,
         types.Bytes(types.uint8, 1, "C"),
+        uint32,
     )
 )
-def _add_linear(cms, n_added_records, buckets, width, depth, uint_maxval, key):
+def _add_linear(cms, n_added_records, buckets, width, depth, uint_maxval, key, value):
     """
     Numba function to add `key` to the CountMinLinear sketch. Uses conservative
     updating, so it first queries the sketch for the estimated count of `key` which
@@ -310,22 +364,32 @@ def _add_linear(cms, n_added_records, buckets, width, depth, uint_maxval, key):
     uint_maxval : np.uint32
         Maximum uint32 value. That is 2\*\*32 - 1
     key : bytes
+        The `key` to add to the `cms`
+    value : np.uint32
+        Number of times you want to add `key`.
 
     Returns
     -------
     None
     """
-    # Track total number of elements added to the sketch
-    n_added_records[0] += uint64(1)
-
     # This gets min_count AND updates buckets
     min_count = _query_linear(cms, buckets, width, depth, uint_maxval, key)
+
+    # Counter is maxed out, nothing to do
+    if min_count == uint_maxval:
+        return
+
+    # Make sure we don't exceed maximum value the counter can hold
+    value = min(value, uint_maxval - min_count)
+
+    # Track total number of elements added to the sketch
+    n_added_records[0] += uint64(value)
 
     # Now update only those counters that have min_count
     for row in range(depth):
         count = cms[row, buckets[row]]
-        if count == min_count and count < uint_maxval:
-            cms[row, buckets[row]] += np.uint32(1)
+        if count == min_count:
+            cms[row, buckets[row]] += value
 
 
 @njit(
@@ -344,7 +408,7 @@ def _add_ngram_linear(
     cms, n_added_records, buckets, width, depth, uint_maxval, key, ngram
 ):
     """
-    Numba functino to take a given `key`, split it into ngrams of size `ngram`, and add
+    Numba function to take a given `key`, split it into ngrams of size `ngram`, and add
     the ngrams to a CountMinLinear sketch. If the `key` length is less than `ngram`
     then add the whole `key`.
 
@@ -374,7 +438,9 @@ def _add_ngram_linear(
     """
     key_len = uint64(len(key))
     if key_len <= ngram:
-        _add_linear(cms, n_added_records, buckets, width, depth, uint_maxval, key)
+        _add_linear(
+            cms, n_added_records, buckets, width, depth, uint_maxval, key, uint32(1)
+        )
     else:
         for i in range(key_len - (ngram - uint64(1))):
             _add_linear(
@@ -385,12 +451,19 @@ def _add_ngram_linear(
                 depth,
                 uint_maxval,
                 key[i : i + ngram],
+                uint32(1),
             )
 
 
 @njit(
     types.void(
-        uint32[:, :], uint32[:, :], uint64, uint64, uint32, uint64[:], uint64[:],
+        uint32[:, :],
+        uint32[:, :],
+        uint64,
+        uint64,
+        uint32,
+        uint64[:],
+        uint64[:],
     ),
     parallel=True,
 )
@@ -495,7 +568,7 @@ class CountMinLinear:
 
         self.width = np.uint64(width)
         self.depth = np.uint64(depth)
-        self.uint_maxval = np.uint32(2 ** 32 - 1)
+        self.uint_maxval = np.uint32(2**32 - 1)
 
         self.args = {"cms_type": "linear", "width": width, "depth": depth}
 
@@ -532,7 +605,7 @@ class CountMinLinear:
             self.cms, self.buckets, self.width, self.depth, self.uint_maxval, key
         )
 
-    def add(self, key: bytes) -> None:
+    def add(self, key: bytes, value: int = 1) -> None:
         """
         Add a single key to the count-min sketch and update the counter tracking total
         number of keys added to the count-min sketch. This is in n_added_records[0].
@@ -541,11 +614,16 @@ class CountMinLinear:
         ----------
         key : bytes
             Element to be added to the sketch
+        value : int, optional
+            Number of times to add `key` to the sketch. `value` will be capped at
+            4,294,967,295 to prevent overflows. Default is 1
 
         Returns
         -------
         None
         """
+        value = min(value, self.uint_maxval)
+
         _add_linear(
             self.cms,
             self.n_added_records,
@@ -554,25 +632,30 @@ class CountMinLinear:
             self.depth,
             self.uint_maxval,
             key,
+            value,
         )
 
-    def update(self, keys: List[bytes]) -> None:
+    def update(self, keys: Union[List[bytes], Dict[bytes, int]]) -> None:
         """
-        Add a list of `keys` to the sketch. This follows the convention of
-        collections.Counter
+        Add `keys` to the sketch. This follows the convention of collections.Counter
 
         Parameters
         ----------
-        keys : List[bytes]
-            List of elements to add to the sketch
+        keys : List[bytes] | Dict[bytes, int]
+            List of elements to add to the sketch or a dictionary which can specify the
+            number of times to add each `key`
 
         Returns
         -------
         None
 
         """
-        for key in keys:
-            self.add(key)
+        if isinstance(keys, Dict):
+            for key, value in keys.items():
+                self.add(key, value)
+        else:
+            for key in keys:
+                self.add(key)
 
     def add_ngram(self, key: bytes, ngram: int) -> None:
         """
@@ -842,6 +925,7 @@ def _query_log16(cms, buckets, width, depth, uint_maxval, key):
         float64[:],
         uint64,
         types.Bytes(types.uint8, 1, "C"),
+        uint64,
     )
 )
 def _add_log16(
@@ -856,21 +940,26 @@ def _add_log16(
     rand_nums,
     rand_ptr,
     key,
+    value,
 ):
     # Track total number of elements added to the sketch
-    n_added_records[0] += uint64(1)
+    n_added_records[0] += uint64(value)
 
     # This gets min_count AND updates buckets
     min_count = _query_log16(cms, buckets, width, depth, uint_maxval, key)
-    increase, rand_ptr = _increase_counter(
-        min_count, num_reserved, uint_maxval, base, rand_nums, rand_ptr
+
+    new_count, rand_ptr = _log_counter(
+        min_count, num_reserved, uint_maxval, base, rand_nums, rand_ptr, value
     )
-    if increase:
+    # Nothing to do
+    if new_count == min_count:
+        return rand_ptr
+    else:
         # Now update only those counter that have min_count
         for row in range(depth):
             count = cms[row, buckets[row]]
             if count == min_count:
-                cms[row, buckets[row]] += np.uint16(1)
+                cms[row, buckets[row]] = new_count
 
     return rand_ptr
 
@@ -919,6 +1008,7 @@ def _add_ngram_log16(
             rand_nums,
             rand_ptr,
             key,
+            uint64(1),
         )
     else:
         for i in range(key_len - (ngram - uint64(1))):
@@ -934,6 +1024,7 @@ def _add_ngram_log16(
                 rand_nums,
                 rand_ptr,
                 key[i : i + ngram],
+                uint64(1),
             )
     return rand_ptr
 
@@ -1109,7 +1200,7 @@ class CountMinLog16(CountMinLinear):
 
         self.width = np.uint64(width)
         self.depth = np.uint64(depth)
-        self.uint_maxval = np.uint16(2 ** 16 - 1)
+        self.uint_maxval = np.uint16(2**16 - 1)
         self.max_count = np.uint64(max_count)
         self.num_reserved = np.uint16(num_reserved)
 
@@ -1129,7 +1220,7 @@ class CountMinLog16(CountMinLinear):
 
         # Create random numbers in batches of 2048
         rng = np.random.default_rng()
-        self.rng = np.random.default_rng(rng.integers(0, 2 ** 63))
+        self.rng = np.random.default_rng(rng.integers(0, 2**63))
         self.rand_ptr = 0
         self.rand_nums = self.rng.random(2048)
 
@@ -1165,7 +1256,7 @@ class CountMinLog16(CountMinLinear):
 
         return _counter2value(min_counter, self.num_reserved, self.base)
 
-    def add(self, key: bytes) -> None:
+    def add(self, key: bytes, value: int = 1) -> None:
         """
         Add a single key to the count-min sketch and update the counter tracking total
         number of keys added to the count-min sketch. This is in n_added_records[0].
@@ -1174,7 +1265,9 @@ class CountMinLog16(CountMinLinear):
         ----------
         key : bytes
             Element to be added to the sketch
-        
+        value : int, optional
+            Number of times to add `key` to the sketch. Default is 1
+
         Returns
         -------
         None
@@ -1191,6 +1284,7 @@ class CountMinLog16(CountMinLinear):
             self.rand_nums,
             self.rand_ptr,
             key,
+            value,
         )
 
     def add_ngram(self, key: bytes, ngram: int) -> None:
@@ -1205,7 +1299,7 @@ class CountMinLog16(CountMinLinear):
             Element to be shingled before adding to the sketch
         ngram : int
             ngram size
-        
+
         Returns
         -------
         None
@@ -1234,7 +1328,7 @@ class CountMinLog16(CountMinLinear):
         ----------
         other : CountMinLog16
             Another CountMinLog16 with the same parameters.
-        
+
         Returns
         -------
         None
@@ -1272,12 +1366,12 @@ class CountMinLog16(CountMinLinear):
     def save(self, filename: Union[str, Path]) -> None:
         """
         Save the count-min sketch to `filename`
-        
+
         Parameters
         ----------
         filename: str | Path
             File to save the hll to disk. This will be a .npz file.
-        
+
         Returns
         -------
         None
@@ -1302,7 +1396,7 @@ class CountMinLog16(CountMinLinear):
             File path to the saved .npz file
         shared_memory : bool, optional
             If True, load into shared memory. Default is False.
-        
+
         Returns
         -------
         CountMinLog16
@@ -1322,7 +1416,12 @@ class CountMinLog16(CountMinLinear):
 
 @njit(
     uint8(
-        uint8[:, :], uint64[:], uint64, uint64, uint8, types.Bytes(types.uint8, 1, "C"),
+        uint8[:, :],
+        uint64[:],
+        uint64,
+        uint64,
+        uint8,
+        types.Bytes(types.uint8, 1, "C"),
     )
 )
 def _query_log8(cms, buckets, width, depth, uint_maxval, key):
@@ -1348,6 +1447,7 @@ def _query_log8(cms, buckets, width, depth, uint_maxval, key):
         float64[:],
         uint64,
         types.Bytes(types.uint8, 1, "C"),
+        uint64,
     )
 )
 def _add_log8(
@@ -1362,21 +1462,28 @@ def _add_log8(
     rand_nums,
     rand_ptr,
     key,
+    value,
 ):
     # Track total number of elements added to the sketch
-    n_added_records[0] += uint64(1)
+    n_added_records[0] += uint64(value)
 
     # This gets min_count AND updates buckets
     min_count = _query_log8(cms, buckets, width, depth, uint_maxval, key)
-    increase, rand_ptr = _increase_counter(
-        min_count, num_reserved, uint_maxval, base, rand_nums, rand_ptr
-    )
-    if increase:
+
+    new_count, rand_ptr = _log_counter(
+            min_count, num_reserved, uint_maxval, base, rand_nums, rand_ptr, value
+        )
+    # Reminder that this is a uint16 value so cast to uint8
+    new_count = uint8(new_count)
+    # Nothing to do
+    if new_count == min_count:
+        return rand_ptr
+    else:
         # Now update only those counter that have min_count
         for row in range(depth):
             count = cms[row, buckets[row]]
             if count == min_count:
-                cms[row, buckets[row]] += np.uint8(1)
+                cms[row, buckets[row]] = new_count
 
     return rand_ptr
 
@@ -1425,6 +1532,7 @@ def _add_ngram_log8(
             rand_nums,
             rand_ptr,
             key,
+            uint64(1),
         )
     else:
         for i in range(key_len - (ngram - uint64(1))):
@@ -1440,6 +1548,7 @@ def _add_ngram_log8(
                 rand_nums,
                 rand_ptr,
                 key[i : i + ngram],
+                uint64(1),
             )
     return rand_ptr
 
@@ -1486,7 +1595,7 @@ def _merge_log8(
     base : float64
     n_added_records : np.ndarray, dtype=uint64, shape=(2,)
     other_n_added_records : np.ndarray, dtype=uint64, shape=(2,)
-    
+
     Returns
     -------
     None
@@ -1601,7 +1710,7 @@ class CountMinLog8(CountMinLog16):
             If True, then CountMinLinear is placed in shared memory. Needed if
             performing multiprocessing as sketchnu.helpers.parallel_add() does.
             Default is False.
-        
+
         Returns
         -------
         CountMinLog8
@@ -1615,7 +1724,7 @@ class CountMinLog8(CountMinLog16):
 
         self.width = np.uint64(width)
         self.depth = np.uint64(depth)
-        self.uint_maxval = np.uint8(2 ** 8 - 1)
+        self.uint_maxval = np.uint8(2**8 - 1)
         self.max_count = np.uint64(max_count)
         self.num_reserved = np.uint8(num_reserved)
 
@@ -1635,7 +1744,7 @@ class CountMinLog8(CountMinLog16):
 
         # Create random numbers in batches of 2048
         rng = np.random.default_rng()
-        self.rng = np.random.default_rng(rng.integers(0, 2 ** 63))
+        self.rng = np.random.default_rng(rng.integers(0, 2**63))
         self.rand_ptr = 0
         self.rand_nums = self.rng.random(2048)
 
@@ -1671,7 +1780,7 @@ class CountMinLog8(CountMinLog16):
 
         return _counter2value(min_counter, self.num_reserved, self.base)
 
-    def add(self, key: bytes) -> None:
+    def add(self, key: bytes, value: int = 1) -> None:
         """
         Add a single key to the count-min sketch and update the counter tracking total
         number of keys added to the count-min sketch. This is in n_added_records[0].
@@ -1680,7 +1789,9 @@ class CountMinLog8(CountMinLog16):
         ----------
         key : bytes
             Element to be added to the sketch
-        
+        value : int, optional
+            Number of times to add `key` to the sketch. Default is 1
+
         Returns
         -------
         None
@@ -1697,6 +1808,7 @@ class CountMinLog8(CountMinLog16):
             self.rand_nums,
             self.rand_ptr,
             key,
+            value,
         )
 
     def add_ngram(self, key: bytes, ngram: int) -> None:
@@ -1711,7 +1823,7 @@ class CountMinLog8(CountMinLog16):
             Element to be shingled before adding to the sketch
         ngram : int
             ngram size
-        
+
         Returns
         -------
         None
@@ -1740,7 +1852,7 @@ class CountMinLog8(CountMinLog16):
         ----------
         other : CountMinLog8
             Another CountMinLog8 with the same parameters.
-        
+
         Returns
         -------
         None
@@ -1786,7 +1898,7 @@ class CountMinLog8(CountMinLog16):
             File path to the saved .npz file
         shared_memory : bool, optional
             If True, load into shared memory. Default is False.
-        
+
         Returns
         -------
         CountMinLog8
@@ -1840,7 +1952,7 @@ def CountMin(
         If True, then count-min sketch is placed in shared memory. Needed if
         performing multiprocessing as sketchnu.helpers.parallel_add() does.
         Default is False.
-    
+
     Returns
     -------
     cms : CountMinLinear | CountMinLog16 | CountMinLog8
@@ -1876,7 +1988,7 @@ def load(
         File path to the saved .npz file
     shared_memory : bool
         If True, load into shared memory
-        
+
     Returns
     -------
     CountMinLinear | CountMinLog16 | CountMinLog8
