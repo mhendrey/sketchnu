@@ -237,55 +237,6 @@ def _log_counter(counter, num_reserved, uint_maxval, base, rand_nums, rand_ptr, 
 
 
 @njit(
-    types.Tuple((types.boolean, uint64))(
-        uint16, uint16, uint16, float64, float64[:], uint64
-    )
-)
-def _increase_counter(counter, num_reserved, uint_maxval, base, rand_nums, rand_ptr):
-    """
-    Numba function to randomly determine whether to increase a log counter based upon
-    the current counter value. Used by both CountMinLog16 and CountMinLog8. For log8,
-    the values just get cast to uint16. If `rand_ptr` is at the end of `rand_nums`,
-    then a new batch of `rand_nums` is generated and `rand_ptr` resets to the
-    beginning.
-
-    Parameters
-    ----------
-    counter : np.uint16
-        Current value of the counter
-    num_reserved : np.uint16
-        Number of values reserved for linear counting. After that use log counting
-    uint_maxval : np.uint16
-        Maximum value that a counter can store. Just the max value of uint of the
-        appropriate type (uint8 | uint16)
-    base : np.float64
-        Log base used by the counter
-    rand_nums : np.ndarray, dtype=np.float64
-        1-d array of random values
-    rand_ptr : np.uint64
-        Stores the pointer location into `rand_nums`
-
-    Returns
-    -------
-    bool
-        True if counter should be increased. False if it shouldn't
-    rand_ptr : uint64
-        Updated pointer location into `rand_nums`
-    """
-    cprime = float64(counter) - float64(num_reserved)
-    if counter >= uint_maxval:
-        return False, rand_ptr
-    elif cprime < 0:
-        return True, rand_ptr
-    else:
-        rand, rand_ptr = _rand(rand_nums, rand_ptr)
-        if rand < base ** (-cprime):
-            return True, rand_ptr
-        else:
-            return False, rand_ptr
-
-
-@njit(
     uint32(
         uint32[:, :],
         uint64[:],
@@ -942,6 +893,44 @@ def _add_log16(
     key,
     value,
 ):
+    """
+    Numba function to add `key` to the CountMinLog16 sketch. Uses conservative
+    updating, so it first queries the sketch for the estimated count of `key` which
+    causes the buckets to be updated too. Updates `n_added_records[0]` which tracks
+    the number of elements added to the sketch.
+
+    Parameters
+    ----------
+    cms : np.ndarray, dtype=np.uint16
+        2-d array of shape (`depth`, `width`) containing the log counters.
+    n_added_records : np.ndarray, dtype=np.uint64
+        1-d array of shape (2,) holding special counters for number of elements added
+        to the sketch and number of records.
+    buckets : np.ndarray, dtype=np.uint64
+        1-d array of shape (`depth`,) holding column ids that `key` maps to in cms.
+    width : np.uint64
+        Number of columns in `cms`
+    depth : np.uint64
+        Number of rows in `cms`
+    uint_maxval : np.uint16
+        Maximum uint16 value. That is 2\*\*16 - 1
+    num_reserved : np.uint16
+        Number of values reserved for linear counting. After that use log counting
+    base : np.float64
+        Log base used by the counter
+    rand_nums : np.ndarray, dtype=np.float64
+        1-d array of random values
+    rand_ptr : np.uint64
+        Stores the pointer location into `rand_nums`
+    key : bytes
+        The `key` to add to the `cms`
+    value : np.uint64
+        Number of times you want to add `key`.
+
+    Returns
+    -------
+    None
+    """
     # Track total number of elements added to the sketch
     n_added_records[0] += uint64(value)
 
@@ -994,6 +983,43 @@ def _add_ngram_log16(
     key,
     ngram,
 ):
+    """
+    Numba function to take a given `key`, split it into ngrams of size `ngram`, and add
+    the ngrams to a CountMinLog16 sketch. If the `key` length is less than `ngram`
+    then add the whole `key`.
+
+    Parameters
+    ----------
+    cms : np.ndarray, dtype=np.uint16
+        2-d array of shape (`depth`, `width`) containing the log counters.
+    n_added_records : np.ndarray, dtype=np.uint64
+        1-d array of shape (2,) holding special counters for number of elements added
+        to the sketch and number of records.
+    buckets : np.ndarray, dtype=np.uint64
+        1-d array of shape (`depth`,) holding column ids that `key` maps to in cms.
+    width : np.uint64
+        Number of columns in `cms`
+    depth : np.uint64
+        Number of rows in `cms`
+    uint_maxval : np.uint16
+        Maximum uint16 value. That is 2\*\*16 - 1
+    num_reserved : np.uint16
+        Number of values reserved for linear counting. After that use log counting
+    base : np.float64
+        Log base used by the counter
+    rand_nums : np.ndarray, dtype=np.float64
+        1-d array of random values
+    rand_ptr : np.uint64
+        Stores the pointer location into `rand_nums`
+    key : bytes
+        Element to be shingled before adding to the sketch
+    ngram : uint64
+        ngram size
+
+    Returns
+    -------
+    None
+    """
     key_len = uint64(len(key))
     if key_len <= ngram:
         rand_ptr = _add_log16(
@@ -1464,6 +1490,44 @@ def _add_log8(
     key,
     value,
 ):
+    """
+    Numba function to add `key` to the CountMinLog8 sketch. Uses conservative
+    updating, so it first queries the sketch for the estimated count of `key` which
+    causes the buckets to be updated too. Updates `n_added_records[0]` which tracks
+    the number of elements added to the sketch.
+
+    Parameters
+    ----------
+    cms : np.ndarray, dtype=np.uint8
+        2-d array of shape (`depth`, `width`) containing the log counters.
+    n_added_records : np.ndarray, dtype=np.uint64
+        1-d array of shape (2,) holding special counters for number of elements added
+        to the sketch and number of records.
+    buckets : np.ndarray, dtype=np.uint64
+        1-d array of shape (`depth`,) holding column ids that `key` maps to in cms.
+    width : np.uint64
+        Number of columns in `cms`
+    depth : np.uint64
+        Number of rows in `cms`
+    uint_maxval : np.uint8
+        Maximum uint8 value. That is 2\*\*8 - 1
+    num_reserved : np.uint8
+        Number of values reserved for linear counting. After that use log counting
+    base : np.float64
+        Log base used by the counter
+    rand_nums : np.ndarray, dtype=np.float64
+        1-d array of random values
+    rand_ptr : np.uint64
+        Stores the pointer location into `rand_nums`
+    key : bytes
+        The `key` to add to the `cms`
+    value : np.uint64
+        Number of times you want to add `key`.
+
+    Returns
+    -------
+    None
+    """
     # Track total number of elements added to the sketch
     n_added_records[0] += uint64(value)
 
@@ -1471,8 +1535,8 @@ def _add_log8(
     min_count = _query_log8(cms, buckets, width, depth, uint_maxval, key)
 
     new_count, rand_ptr = _log_counter(
-            min_count, num_reserved, uint_maxval, base, rand_nums, rand_ptr, value
-        )
+        min_count, num_reserved, uint_maxval, base, rand_nums, rand_ptr, value
+    )
     # Reminder that this is a uint16 value so cast to uint8
     new_count = uint8(new_count)
     # Nothing to do
@@ -1518,6 +1582,43 @@ def _add_ngram_log8(
     key,
     ngram,
 ):
+    """
+    Numba function to take a given `key`, split it into ngrams of size `ngram`, and add
+    the ngrams to a CountMinLog8 sketch. If the `key` length is less than `ngram`
+    then add the whole `key`.
+
+    Parameters
+    ----------
+    cms : np.ndarray, dtype=np.uint8
+        2-d array of shape (`depth`, `width`) containing the log counters.
+    n_added_records : np.ndarray, dtype=np.uint64
+        1-d array of shape (2,) holding special counters for number of elements added
+        to the sketch and number of records.
+    buckets : np.ndarray, dtype=np.uint64
+        1-d array of shape (`depth`,) holding column ids that `key` maps to in cms.
+    width : np.uint64
+        Number of columns in `cms`
+    depth : np.uint64
+        Number of rows in `cms`
+    uint_maxval : np.uint8
+        Maximum uint8 value. That is 2\*\*8 - 1
+    num_reserved : np.uint8
+        Number of values reserved for linear counting. After that use log counting
+    base : np.float64
+        Log base used by the counter
+    rand_nums : np.ndarray, dtype=np.float64
+        1-d array of random values
+    rand_ptr : np.uint64
+        Stores the pointer location into `rand_nums`
+    key : bytes
+        Element to be shingled before adding to the sketch
+    ngram : uint64
+        ngram size
+
+    Returns
+    -------
+    None
+    """
     key_len = uint64(len(key))
     if key_len <= ngram:
         rand_ptr = _add_log8(
