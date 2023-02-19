@@ -32,7 +32,7 @@ from time import sleep
 from numba import njit, uint8, uint32, uint64, types, prange
 import numpy as np
 from pathlib import Path
-from typing import List, Tuple, Union
+from typing import Dict, List, Tuple, Union
 
 from sketchnu.hashes import fasthash64
 
@@ -48,6 +48,7 @@ from sketchnu.hashes import fasthash64
         uint64,
         uint32,
         types.Bytes(uint8, 1, "C"),
+        uint32,
     )
 )
 def _add(
@@ -60,6 +61,7 @@ def _add(
     max_key_len,
     uint_maxval,
     key,
+    value,
 ):
     """
     Numba function that adds `key` into the sketch
@@ -78,18 +80,21 @@ def _add(
         key_len = max_key_len
         key_array = np.frombuffer(key, uint8)
 
-    n_added_records[0] += uint64(1)
+    n_added_records[0] += uint64(value)
     for row in range(depth):
         col = fasthash64(key, row) % width
         if np.all(key_array == lhh[row, col]):
-            if lhh_count[row, col] < uint_maxval:
-                lhh_count[row, col] += uint32(1)
-        elif lhh_count[row, col] == uint32(0):
-            lhh[row, col, :] = key_array
-            lhh_count[row, col] += uint32(1)
-            key_lens[row, col] = uint8(key_len)
+            if value < uint_maxval - lhh_count[row, col]:
+                lhh_count[row, col] += value
+            else:
+                lhh_count[row, col] = uint_maxval
         else:
-            lhh_count[row, col] -= uint32(1)
+            if value > lhh_count[row, col]:
+                lhh[row, col, :] = key_array
+                lhh_count[row, col] = value - lhh_count[row, col]
+                key_lens[row, col] = uint8(key_len)
+            else:
+                lhh_count[row, col] -= value
 
 
 @njit(
@@ -134,6 +139,7 @@ def _add_ngram(
             max_key_len,
             uint_maxval,
             key,
+            uint32(1),
         )
     else:
         for i in range(key_len - (ngram - uint64(1))):
@@ -147,6 +153,7 @@ def _add_ngram(
                 max_key_len,
                 uint_maxval,
                 key[i : i + ngram],
+                uint32(1),
             )
 
 
@@ -357,7 +364,7 @@ class HeavyHitters:
             self.phi = np.float64(1.0 / self.width)
         else:
             self.phi = np.float64(phi)
-        self.uint_maxval = np.uint32(2 ** 32 - 1)
+        self.uint_maxval = np.uint32(2**32 - 1)
 
         self.args = {
             "width": width,
@@ -389,16 +396,21 @@ class HeavyHitters:
             )
             start = end
             end += lhh_count_nbytes
-            self.lhh_count = np.frombuffer(self.shm.buf[start:end], np.uint32,).reshape(
-                self.depth, self.width
-            )
+            self.lhh_count = np.frombuffer(
+                self.shm.buf[start:end],
+                np.uint32,
+            ).reshape(self.depth, self.width)
             start = end
             end += key_lens_nbytes
-            self.key_lens = np.frombuffer(self.shm.buf[start:end], np.uint8,).reshape(
-                self.depth, self.width
-            )
+            self.key_lens = np.frombuffer(
+                self.shm.buf[start:end],
+                np.uint8,
+            ).reshape(self.depth, self.width)
             start = end
-            self.n_added_records = np.frombuffer(self.shm.buf[start:], np.uint64,)
+            self.n_added_records = np.frombuffer(
+                self.shm.buf[start:],
+                np.uint64,
+            )
         else:
             self.lhh = np.zeros((self.depth, self.width, self.max_key_len), np.uint8)
             self.lhh_count = np.zeros((self.depth, self.width), np.uint32)
@@ -417,7 +429,7 @@ class HeavyHitters:
         threshold : int, optional
             Only include keys from lhh whose lhh_counts >= `threshold`. Default is None
             which then sets threshold to self.phi * self.n_added()
-        
+
         Returns
         -------
         List[Tuple[bytes, int]]
@@ -434,7 +446,7 @@ class HeavyHitters:
 
         return self.candidate_set.most_common(k)
 
-    def add(self, key: bytes) -> None:
+    def add(self, key: bytes, value: int = 1) -> None:
         """
         Add a single `key` to the heavy hitters sketch and update the counter tracking
         total number of keys added to the sketch.
@@ -443,11 +455,14 @@ class HeavyHitters:
         ----------
         key : bytes
             Element to be added to the sketch
-        
+        value : int, optional
+            Number of times to add `key` to the sketch. Default is 1
+
         Returns
         -------
         None
         """
+        value = min(value, self.uint_maxval)
         _add(
             self.lhh,
             self.lhh_count,
@@ -458,25 +473,30 @@ class HeavyHitters:
             self.max_key_len,
             self.uint_maxval,
             key,
+            value,
         )
 
-    def update(self, keys: List[bytes]) -> None:
+    def update(self, keys: Union[List[bytes], Dict[bytes, int]]) -> None:
         """
-        Add a list of `keys` to the sketch. This follows the convention of
-        collections.Counter
+        Add `keys` to the sketch. This follows the convention of collections.Counter
 
         Parameters
         ----------
-        keys : List[bytes]
-            List of elements to add to the sketch
+        keys : List[bytes] | Dict[bytes, int]
+            List of elements to add to the sketch or a dictionary which can specify the
+            number of times to add each `key`
 
         Returns
         -------
         None
 
         """
-        for key in keys:
-            self.add(key)
+        if isinstance(keys, Dict):
+            for key, value in keys.items():
+                self.add(key, value)
+        else:
+            for key in keys:
+                self.add(key)
 
     def add_ngram(self, key: bytes, ngram: int) -> None:
         """
@@ -490,7 +510,7 @@ class HeavyHitters:
             Element to be shingled before adding to the sketch
         ngram : int
             ngram size
-        
+
         Returns
         -------
         None
@@ -539,7 +559,7 @@ class HeavyHitters:
         ----------
         other : HeavyHitters
             Another HeavyHitters with the same width, depth, max_key_len.
-        
+
         Returns
         -------
         None
@@ -575,12 +595,12 @@ class HeavyHitters:
         """
         Save the sketch to `filename` adding the .npz extension if not already part of
         `filename`
-        
+
         Parameters
         ----------
         filename: str | Path
             File to save the sketch to disk. This will be a .npz file.
-        
+
         Returns
         -------
         None
@@ -608,7 +628,7 @@ class HeavyHitters:
             File path to the saved .npz file
         shared_memory : bool, optional
             If True, load into shared memory. Default is False.
-        
+
         Returns
         -------
         HeavyHitters
@@ -641,7 +661,7 @@ class HeavyHitters:
         ----------
         existing_shm_name : str
             Name of an existing shared memory block to attach this sketch to
-        
+
         Returns
         -------
         None
@@ -655,16 +675,21 @@ class HeavyHitters:
         )
         start = end
         end += self.lhh_count.nbytes
-        self.lhh_count = np.frombuffer(existing_shm.buf[start:end], np.uint32,).reshape(
-            self.depth, self.width
-        )
+        self.lhh_count = np.frombuffer(
+            existing_shm.buf[start:end],
+            np.uint32,
+        ).reshape(self.depth, self.width)
         start = end
         end += self.key_lens.nbytes
-        self.key_lens = np.frombuffer(existing_shm.buf[start:end], np.uint8,).reshape(
-            self.depth, self.width
-        )
+        self.key_lens = np.frombuffer(
+            existing_shm.buf[start:end],
+            np.uint8,
+        ).reshape(self.depth, self.width)
         start = end
-        self.n_added_records = np.frombuffer(existing_shm.buf[start:], np.uint64,)
+        self.n_added_records = np.frombuffer(
+            existing_shm.buf[start:],
+            np.uint64,
+        )
 
         # Now create class member to hold this so __del__ can clean up for us
         self.existing_shm = existing_shm
@@ -707,7 +732,7 @@ class HeavyHitters:
         ----------
         threshold : int, optional
             If None (default), then uses `threshold` provided during instantiation
-        
+
         Returns
         -------
         None

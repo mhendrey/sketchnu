@@ -18,6 +18,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 """
+from collections import Counter
 import numpy as np
 from pathlib import Path
 import pytest
@@ -54,6 +55,21 @@ def test_repeat_keys(p: int = 10):
     n_uniq = hll.query()
     hll.update(keys)
     assert n_uniq == hll.query()
+
+
+def test_update_dict_list(p: int = 10):
+    """Test that we get the same answer if using a list or dict to update the sketch
+
+    Parameters
+    ----------
+    p : int, optional
+        Precision of the HyperLogLog, by default 10
+    """
+    hll_list = HyperLogLog(p)
+    hll_list.update(keys)
+    hll_dict = HyperLogLog(p)
+    hll_dict.update(Counter(keys))
+    assert hll_list.query() == hll_dict.query()
 
 
 def test_update_low(p: int = 10, n_trials: int = 20, t_stat: float = 3.291):
@@ -121,7 +137,7 @@ def test_update_med(p: int = 10, n_trials: int = 20, t_stat: float = 3.291):
     """
     hll = HyperLogLog(p)
     error = np.zeros(n_trials)
-    n_uniq = np.random.randint(hll.threshold + 20, 5 * (2 ** p))
+    n_uniq = np.random.randint(hll.threshold + 20, 5 * (2**p))
     n_uniq = min(n_uniq, n_keys)
     for seed in range(n_trials):
         hll = HyperLogLog(p, seed)
@@ -160,7 +176,7 @@ def test_update_hi(p: int = 10, n_trials: int = 20, t_stat: float = 3.291):
         to 99.9%. Default is 3.291
     """
     error = np.zeros(n_trials)
-    assert n_keys > (5 * (2 ** p))
+    assert n_keys > (5 * (2**p))
     n_uniq = n_keys
     for seed in range(n_trials):
         hll = HyperLogLog(p, seed)
@@ -266,6 +282,7 @@ def test_saving(tmp_path: Path, p: int = 10):
 if __name__ == "__main__":
     test_empty()
     test_repeat_keys()
+    test_update_dict_list()
     test_update_low()
     test_update_med()
     test_update_hi()
