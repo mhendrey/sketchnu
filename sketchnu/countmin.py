@@ -332,15 +332,16 @@ def _add_linear(cms, n_added_records, buckets, width, depth, uint_maxval, key, v
 
     # Make sure we don't exceed maximum value the counter can hold
     value = min(value, uint_maxval - min_count)
+    new_count = min_count + value
 
     # Track total number of elements added to the sketch
     n_added_records[0] += uint64(value)
 
-    # Now update only those counters that have min_count
+    # Now update only those counters that are below the new value
     for row in range(depth):
         count = cms[row, buckets[row]]
-        if count == min_count:
-            cms[row, buckets[row]] += value
+        if count < new_count:
+            cms[row, buckets[row]] = new_count
 
 
 @njit(
@@ -943,12 +944,12 @@ def _add_log16(
     # Nothing to do
     if new_count == min_count:
         return rand_ptr
-    else:
-        # Now update only those counter that have min_count
-        for row in range(depth):
-            count = cms[row, buckets[row]]
-            if count == min_count:
-                cms[row, buckets[row]] = new_count
+
+    # Now update only those counters that are below the new value
+    for row in range(depth):
+        count = cms[row, buckets[row]]
+        if count < new_count:
+            cms[row, buckets[row]] = new_count
 
     return rand_ptr
 
@@ -1542,12 +1543,12 @@ def _add_log8(
     # Nothing to do
     if new_count == min_count:
         return rand_ptr
-    else:
-        # Now update only those counter that have min_count
-        for row in range(depth):
-            count = cms[row, buckets[row]]
-            if count == min_count:
-                cms[row, buckets[row]] = new_count
+
+    # Now update only those counters that are below the new value
+    for row in range(depth):
+        count = cms[row, buckets[row]]
+        if count < new_count:
+            cms[row, buckets[row]] = new_count
 
     return rand_ptr
 
