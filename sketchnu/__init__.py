@@ -31,7 +31,6 @@ from sketchnu.heavyhitters import HeavyHitters
 from sketchnu.helpers import (
     parallel_add,
     parallel_merging,
-    setup_logger,
     attach_shared_memory,
 )
 from sketchnu.hyperloglog import HyperLogLog

@@ -50,7 +50,7 @@ def process_q_item_dict(q_item: Iterable, batch_size: int):
         yield Counter(q_item[i : i + batch_size])
 
 
-def test_parallel_add_list(tmp_path: Path, batch_size: int = 100):
+def test_parallel_add_list(batch_size: int = 100):
     """
     Test that parallel processing provides the same answers as single threaded. For cms
     we make it wide enough so that the answers are the same for all keys. For hh, the
@@ -60,8 +60,6 @@ def test_parallel_add_list(tmp_path: Path, batch_size: int = 100):
 
     Parameters
     ----------
-    tmp_path : Path
-        Temporary directory to write the log file
     batch_size : int, optional
         A record is a batch from the data stream of this size. Default is 100
     """
@@ -80,7 +78,6 @@ def test_parallel_add_list(tmp_path: Path, batch_size: int = 100):
         cms_args=cms_args,
         hh_args=hh_args,
         hll_args=hll_args,
-        log_file=tmp_path / "sketchnu.log",
         batch_size=batch_size,
     )
 
@@ -105,7 +102,7 @@ def test_parallel_add_list(tmp_path: Path, batch_size: int = 100):
     assert hll.query() == hll_single.query()
 
 
-def test_parallel_add_dict(tmp_path: Path, batch_size: int = 100):
+def test_parallel_add_dict(batch_size: int = 100):
     """
     Test that parallel processing provides the same answers as single threaded. For cms
     we make it wide enough so that the answers are the same for all keys. For hh, the
@@ -115,8 +112,6 @@ def test_parallel_add_dict(tmp_path: Path, batch_size: int = 100):
 
     Parameters
     ----------
-    tmp_path : Path
-        Temporary directory to write the log file
     batch_size : int, optional
         A record is a batch from the data stream of this size. Default is 100
     """
@@ -135,7 +130,6 @@ def test_parallel_add_dict(tmp_path: Path, batch_size: int = 100):
         cms_args=cms_args,
         hh_args=hh_args,
         hll_args=hll_args,
-        log_file=tmp_path / "sketchnu.log",
         batch_size=batch_size,
     )
 

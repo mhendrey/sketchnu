@@ -18,22 +18,18 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 Helper functions to aid in parallelizating the creation of sketches using Python's
-:code:`multiprocessing`. Also includes :code:`setup_logger` to log statements to both
-the console and a log file.
+:code:`multiprocessing`.
 """
 from datetime import datetime
 import gc
 import logging
-from logging.handlers import RotatingFileHandler
 from multiprocessing import get_context, Queue
-from multiprocessing import shared_memory
-from multiprocessing.shared_memory import SharedMemory
-from time import sleep
 import numpy as np
 import psutil
+from time import sleep
 from typing import Callable, Dict, Iterable, List, Tuple, Union
 
-from sketchnu.countmin import CountMin, CountMinLinear, CountMinLog16, CountMinLog8
+from sketchnu.countmin import CountMin, CountMinLinear
 from sketchnu.heavyhitters import HeavyHitters
 from sketchnu.hyperloglog import HyperLogLog
 
@@ -73,64 +69,6 @@ def attach_shared_memory(sketch_type: str, sketch_args: Dict, shm_name: str):
     return local_sketch
 
 
-def setup_logger(
-    log_console_level: int = logging.INFO,
-    log_file_level: int = logging.DEBUG,
-    max_bytes: int = 104857600,
-    backup_count: int = 5,
-    log_file: str = "sketchnu.log",
-):
-    """
-    Create a logger that goes to both the console and a rotating log file.
-
-    Parameters
-    ----------
-    log_console_level : int, optional
-        Minimum log level to send to the console. Default is logging.INFO
-    log_file_level : int, optional
-        Minimum log level to send to the log file. Default is logging.DEBUG
-    max_bytes : int, optional
-        Rotate file log once it has gotten to this size. Default is 100MB
-    backup_count : int, optional
-        Maximum number of old log files to keep. Default is 5
-    log_file : str, optional
-        Name of the log file. Default is sketchnu.log
-
-    Returns
-    -------
-    logging.Logger
-        Logger with the specified levels
-
-    """
-    logger = logging.getLogger("sketchnu")
-    logger.setLevel(logging.DEBUG)
-
-    # We have already set up this logger before. Don't add more handlers
-    # Just set the levels that were requested and return it
-    if len(logger.handlers) == 2:
-        logger.handlers[0].setLevel(log_console_level)
-        logger.handlers[1].setLevel(log_file_level)
-        return logger
-
-    formatter = logging.Formatter(
-        "%(asctime)s %(name)s %(levelname)s: %(message)s", "%Y-%m-%d %H:%M:%S"
-    )
-
-    # Set up the console logging
-    console = logging.StreamHandler()
-    console.setLevel(log_console_level)
-    console.setFormatter(formatter)
-    logger.addHandler(console)
-
-    # Set up a file logger
-    fh = RotatingFileHandler(log_file, maxBytes=max_bytes, backupCount=backup_count)
-    fh.setLevel(log_file_level)
-    fh.setFormatter(formatter)
-    logger.addHandler(fh)
-
-    return logger
-
-
 def _fill_queue(
     queue: Queue, items: Iterable, n_workers: int, log_queue: Queue
 ) -> None:
@@ -152,33 +90,19 @@ def _fill_queue(
     return None
 
 
-def _log_worker(
-    log_queue: Queue,
-    log_console_level: int,
-    log_file_level: int,
-    max_bytes: int,
-    backup_count: int,
-    log_file: str,
-):
+def _log_worker(log_queue: Queue):
     """
     Worker that will log statements placed onto the log_queue
 
     Parameters
     ----------
-    logger : logging.Logger
     log_queue : multiprocessing.Queue
 
     Returns
     -------
     None
     """
-    logger = setup_logger(
-        log_console_level,
-        log_file_level,
-        max_bytes,
-        backup_count,
-        log_file,
-    )
+    logger = logging.getLogger(__name__)
     while True:
         q_item = log_queue.get()
         # Process log message
@@ -306,17 +230,12 @@ def _worker(
 
 def parallel_add(
     items: Iterable,
-    process_q_item: Callable[..., Iterable[Iterable[bytes]]],
+    process_q_item: Callable[..., Iterable[Union[Iterable[bytes], Dict[bytes, int]]]],
     n_workers: int = None,
     ngram: int = None,
     cms_args: Dict = None,
     hh_args: Dict = None,
     hll_args: Dict = None,
-    log_file: str = "sketchnu.log",
-    log_console_level: int = logging.INFO,
-    log_file_level: int = logging.DEBUG,
-    max_bytes: int = 104857600,
-    backup_count: int = 5,
     **kwargs,
 ):
     """
@@ -342,7 +261,7 @@ def parallel_add(
     items : Iterable
         A generator or list of items that will be placed onto a queue and then worked
         by one of the workers in a separate spawned process.
-    process_q_item : Callable[..., Iterable[Iterable[bytes]]]
+    process_q_item : Callable[...,Iterable[Union[Iterable[bytes],Dict[bytes,int]]]]
         Function that turns an item from the queue into an Iterable of records with
         each record being an Iterable of keys (bytes) to be added to the sketch(s)
         or a Dict[key=bytes, value=int] to add each key multiple times to the
@@ -364,16 +283,6 @@ def parallel_add(
     hll_args : Dict, optional
         Dictionary containing arguments to instantiate a HyperLogLog. If None (default)
         then don't create a sketch of this type.
-    log_file : str, optional
-        Filepath to write the logs. Default is sketchnu.log
-    log_console_level : int, optional
-        Minimum log level to send to the console. Default is INFO
-    log_file_level : int, optional
-        Minimum log level to send to log_file. Default is DEBUG
-    max_bytes: int = 104857600,
-        Maximum size of log file before rolling
-    backup_count: int = 5,
-        Maximum number of log rotating log files to keep
     \*\*kwargs :
         Keyword arguments that get passed to `process_q_item` function
 
@@ -397,14 +306,7 @@ def parallel_add(
     # Set up logging
     log_process = ctx.Process(
         target=_log_worker,
-        args=(
-            log_queue,
-            log_console_level,
-            log_file_level,
-            max_bytes,
-            backup_count,
-            log_file,
-        ),
+        args=(log_queue,),
     )
     log_process.start()
 
@@ -548,15 +450,7 @@ def _merge_worker(sketch1: Tuple[str, Dict, str], sketch2: Tuple[str, Dict, str]
     s1 = attach_shared_memory(*sketch1)
     s2 = attach_shared_memory(*sketch2)
 
-    print(
-        f"_merge_worker: Before merge() avail = {psutil.virtual_memory().available/1024**3:.3f}"
-    )
-
     s1.merge(s2)
-
-    print(
-        f"_merge_worker: After merge() avail = {psutil.virtual_memory().available/1024**3:.3f}"
-    )
 
     # Clean up
     del s1
