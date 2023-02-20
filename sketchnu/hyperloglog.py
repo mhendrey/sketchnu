@@ -34,11 +34,13 @@ To get a HyperLogLog with precision of 16 and seed 0::
     hll.query()
 
 """
+import gc
 from multiprocessing.shared_memory import SharedMemory
+from time import sleep
 from numba import njit, uint8, uint64, float64, types
 import numpy as np
 from pathlib import Path
-from typing import List, Union
+from typing import Dict, List, Union
 
 from sketchnu.hashes import fasthash64
 from sketchnu.hll_constants import sub_algorithm_threshold, raw_estimate, bias_data
@@ -49,7 +51,7 @@ def _linear_counting(m, n_zero):
     """
     If there are registers that are zero, then we do linear_counting to
     estimate the cardinality
-    
+
     Parameters
     ----------
     m : int
@@ -79,7 +81,7 @@ def _estimation_function(registers, m, alpha):
     total = float64(0.0)
     for r in registers:
         total += 2.0 ** (-float64(r))
-    return alpha * float64(m ** 2) / total
+    return alpha * float64(m**2) / total
 
 
 @njit(uint8(uint64))
@@ -165,7 +167,7 @@ def _query(registers, m, threshold, alpha, raw_estimate, bias_data):
 def _add(registers, seed, p, m, key):
     """
     Add a single `key` to the HyperLogLog.
-    
+
     Parameters
     ----------
     registers : uint8[:]
@@ -220,7 +222,7 @@ def _add_ngram(registers, seed, p, m, key, ngram):
         Element to be shingled before adding to the sketch
     ngram : uint64
         ngram size
-    
+
     Returns
     -------
     None
@@ -247,7 +249,7 @@ def _merge(registers, other_registers, m):
         Registers for another HyperLogLog that is merged into the first
     m : uint64
         Number of elements in both registers and other_registers
-    
+
     Returns
     -------
     None
@@ -273,7 +275,7 @@ class HyperLogLog:
         If True, then HyperLogLog is placed in shared memory. Needed if
         performing multiprocessing as sketchnu.helpers.parallel_add() does.
         Default is False.
-    
+
     Attributes
     ----------
     p : int
@@ -288,6 +290,7 @@ class HyperLogLog:
         Default is False.
 
     """
+
     def __init__(self, p: int = 16, seed: int = 0, shared_memory: bool = False):
         """
         Instantiate a HyperLogLog. This is an implementation of the HyperLogLog++
@@ -342,7 +345,7 @@ class HyperLogLog:
     def add(self, key: bytes) -> None:
         """
         Add a single key to the HyperLogLog.
-        
+
         Note
         ----
         Currently, the numba.typed.List needed for the update() are quite slow.
@@ -361,11 +364,13 @@ class HyperLogLog:
         """
         _add(self.registers, self.seed, self.p, self.m, key)
 
-    def update(self, keys: List[bytes]) -> None:
+    def update(self, keys: Union[List[bytes], Dict[bytes, int]]) -> None:
         """
         Given a list of keys, update the HyperLogLog. This follows the
         convention of collections.Counter in that keys should be a list of
-        keys.
+        keys or a dictionary whose keys are the keys. For this sketch, the
+        value of the dictionary is ignored since it doesn't make sense to
+        put the same key in multiple times.
 
         Note
         ----
@@ -377,8 +382,9 @@ class HyperLogLog:
 
         Parameters
         ----------
-        keys : List[bytes]
-            List of elements to add to the HyperLogLog at once
+        keys : List[bytes] | Dict[bytes, int]
+            List of elements to add to the HyperLogLog at once. If a Dict is passed,
+            then only the Dict.keys() are put into the sketch.
 
         Returns
         -------
@@ -400,7 +406,7 @@ class HyperLogLog:
             Element to be shingled before adding to the sketch
         ngram : int
             ngram size
-        
+
         Returns
         -------
         None
@@ -465,7 +471,7 @@ class HyperLogLog:
         ----------
         other : HyperLogLog
             Another HyperLogLog with the same precision and seed
-        
+
         Returns
         -------
         None
@@ -491,7 +497,7 @@ class HyperLogLog:
         ----------
         existing_shm_name : str
             Name an existing shared memory block to attach this sketch to
-        
+
         Returns
         -------
         None
@@ -504,12 +510,12 @@ class HyperLogLog:
     def save(self, filename: Union[str, Path]) -> None:
         """
         Save the HyperLogLog sketch, hll, to the file, filename
-        
+
         Parameters
         ----------
         filename: str | Path
             File to save the hll to disk. This will be a .npz file.
-        
+
         Returns
         -------
         None
@@ -530,7 +536,7 @@ class HyperLogLog:
             File path to the saved .npz file
         shared_memory : bool
             If True, copy registers into shared memory
-            
+
         Returns
         -------
         HyperLogLog
@@ -546,6 +552,12 @@ class HyperLogLog:
         try:
             if self.shm:
                 try:
+                    # Need to explicity del the arrays since they are sharing the
+                    # memory block. Without this you get the MemoryError
+                    # "cannot close exported pointers exist"
+                    del self.registers
+                    gc.collect()
+                    sleep(0.25)
                     self.shm.close()
                     self.shm.unlink()
                 except Exception as exc:
@@ -556,6 +568,9 @@ class HyperLogLog:
         try:
             if self.existing_shm:
                 try:
+                    del self.registers
+                    gc.collect()
+                    sleep(0.25)
                     self.existing_shm.close()
                 except Exception as exc:
                     raise MemoryError(f"Failed to close existing_shm: {exc}")

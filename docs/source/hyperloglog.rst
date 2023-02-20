@@ -26,37 +26,35 @@ Usage
 
 ::
 
-    import numpy as np
-    from sketchnu.hyperloglog import HyperLogLog, save, load
+    from sketchnu.hyperloglog import HyperLogLog
 
-    # Create 100k random 12-byte keys
-    keys = [bytes(r) for r in np.random.randint(0, 256, (100000, 12), np.uint8)]
-    n_keys = len(set(keys))  # Just in case we have duplicate keys
+    hll = HyperLogLog(p=16, seed=0)  # Default settings
 
-    # Instantiate a HyperLogLog with precision 16
-    hll = HyperLogLog(p=16, seed=0)
-    for key in keys:
-        hll.add(key)
-    
-    n_keys_estimated = hll.query()
-    error = (n_keys_estimated - n_keys) / n_keys * 100
-    print(f'Relative Error = {error:.2f}%')
+    # Add one key
+    hll.add(b"abcd")
 
-    # Create another set of 100k keys. This time with 13-bytes each
-    keys2 = [bytes(r) for r in np.random.randint(0, 256, (100000, 13), np.uint8)]
+    # Add multiple keys as an iterable
+    hll.update([b"1234", b"4321"])
 
-    # Instantiate a second HyperLogLog using defaults (p=16, seed=0)
+    # Add multiple keys as a dict
+    # Dict values are irrelevant for this sketch and ignored
+    hll.update({b"4321": 4, b"ab23": 10})
+
+    # Query for the current estimated cardinality
+    est_cardinality = hll.query()
+    print(f"{est_cardinality=:.2f}. True cardinality = 4")
+
     hll2 = HyperLogLog()
-    for key in keys2:
-        hll2.add(key)
-    
-    # Merge the second into the first
-    hll.merge(hll2)
-    print(f'New count is {hll.query():.2f}')
+    hll2.update([b"12cd", b"1234"])
 
-    # Save to disk
-    save(hll, '/path/to/save/hll.npz')
-    hll_load = load('/path/to/save/hll.npz')
+    # Merge two HyperLogLog's together; must have same p & seed
+    hll.merge(hll2)
+    est_cardinality = hll.query()
+    print(f"After merging, {est_cardinality=:.2f}. True cardinality = 5")
+
+    # Save to disk; load from disk
+    hll.save("/path/to/save/hll.npz")
+    hll_load = HyperLogLog.load("/path/to/save/hll.npz")
 
 The Details
 -----------
@@ -109,18 +107,17 @@ Testing
 
 Given that these are probablistic in nature, writing traditional software tests
 is a bit challenging. We have written statistical tests that should pass the
-vast majority of the time. The tests can be found in tests.py
+vast majority of the time. The tests can be found in tests/test_hyperloglog.py
 
-The first, :code:`test_hll_update`, uses a t-test to test the null hypothesis
-that the mean of the difference between the true cardinality and the estimated
-(bias corrected if within the appropriate range) is 0. The HyperLogLog's
+We test the low, medium, and high range of HyperLogLog using a t-test to test the
+null hypothesis that the mean of the difference between the true cardinality and the
+estimated (bias corrected if within the appropriate range) is 0. The HyperLogLog's
 estimated cardinality "is asymptotically almost unbiased". Despite this, even
-low values typically pass the test. We use a confidence level of 99% to reject
-the null hypothesis. The test asserts that we should fail to reject the null
+low values typically pass the test. We use a confidence level of 99.9% to reject
+the null hypothesis. The tests assert that we should fail to reject the null
 hypothesis.
 
-The second, :code:`test_hll_merge`, uses a t-test to test the null hypothesis
-that the mean of the difference between the true count and the estimated count
-after merging two HyperLogLogs is 0. A confidence level of 99% is used to
-reject the null hypothesis. The test asserts that we should fail to reject the
-null hypothesis.
+We also use a t-test to test the null hypothesis that the mean of the difference
+between the true count and the estimated count after merging two HyperLogLogs is 0.
+A confidence level of 99.9% is used to reject the null hypothesis. The test asserts
+that we should fail to reject the null hypothesis.

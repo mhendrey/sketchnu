@@ -18,22 +18,18 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 Helper functions to aid in parallelizating the creation of sketches using Python's
-:code:`multiprocessing`. Also includes :code:`setup_logger` to log statements to both
-the console and a log file.
+:code:`multiprocessing`.
 """
 from datetime import datetime
 import gc
 import logging
-from logging.handlers import RotatingFileHandler
 from multiprocessing import get_context, Queue
-from multiprocessing import shared_memory
-from multiprocessing.shared_memory import SharedMemory
-from time import sleep
 import numpy as np
 import psutil
+from time import sleep
 from typing import Callable, Dict, Iterable, List, Tuple, Union
 
-from sketchnu.countmin import CountMin, CountMinLinear, CountMinLog16, CountMinLog8
+from sketchnu.countmin import CountMin, CountMinLinear
 from sketchnu.heavyhitters import HeavyHitters
 from sketchnu.hyperloglog import HyperLogLog
 
@@ -52,7 +48,7 @@ def attach_shared_memory(sketch_type: str, sketch_args: Dict, shm_name: str):
     shm_name : str
         Name of a shared memory block that already exist. The new sketch will
         attach to this block.
-    
+
     Returns
     -------
     local_sketch : CountMinLinear | CountMinLog16 | CountMinLog8 | HeavyHitters | HyperLogLog
@@ -71,64 +67,6 @@ def attach_shared_memory(sketch_type: str, sketch_args: Dict, shm_name: str):
     local_sketch.attach_existing_shm(shm_name)
 
     return local_sketch
-
-
-def setup_logger(
-    log_console_level: int = logging.INFO,
-    log_file_level: int = logging.DEBUG,
-    max_bytes: int = 104857600,
-    backup_count: int = 5,
-    log_file: str = "sketchnu.log",
-):
-    """
-    Create a logger that goes to both the console and a rotating log file.
-
-    Parameters
-    ----------
-    log_console_level : int, optional
-        Minimum log level to send to the console. Default is logging.INFO
-    log_file_level : int, optional
-        Minimum log level to send to the log file. Default is logging.DEBUG
-    max_bytes : int, optional
-        Rotate file log once it has gotten to this size. Default is 100MB
-    backup_count : int, optional
-        Maximum number of old log files to keep. Default is 5
-    log_file : str, optional
-        Name of the log file. Default is sketchnu.log
-    
-    Returns
-    -------
-    logging.Logger
-        Logger with the specified levels
-
-    """
-    logger = logging.getLogger("sketchnu")
-    logger.setLevel(logging.DEBUG)
-
-    # We have already set up this logger before. Don't add more handlers
-    # Just set the levels that were requested and return it
-    if len(logger.handlers) == 2:
-        logger.handlers[0].setLevel(log_console_level)
-        logger.handlers[1].setLevel(log_file_level)
-        return logger
-
-    formatter = logging.Formatter(
-        "%(asctime)s %(name)s %(levelname)s: %(message)s", "%Y-%m-%d %H:%M:%S"
-    )
-
-    # Set up the console logging
-    console = logging.StreamHandler()
-    console.setLevel(log_console_level)
-    console.setFormatter(formatter)
-    logger.addHandler(console)
-
-    # Set up a file logger
-    fh = RotatingFileHandler(log_file, maxBytes=max_bytes, backupCount=backup_count)
-    fh.setLevel(log_file_level)
-    fh.setFormatter(formatter)
-    logger.addHandler(fh)
-
-    return logger
 
 
 def _fill_queue(
@@ -152,29 +90,19 @@ def _fill_queue(
     return None
 
 
-def _log_worker(
-    log_queue: Queue,
-    log_console_level: int,
-    log_file_level: int,
-    max_bytes: int,
-    backup_count: int,
-    log_file: str,
-):
+def _log_worker(log_queue: Queue):
     """
     Worker that will log statements placed onto the log_queue
 
     Parameters
     ----------
-    logger : logging.Logger
     log_queue : multiprocessing.Queue
 
     Returns
     -------
     None
     """
-    logger = setup_logger(
-        log_console_level, log_file_level, max_bytes, backup_count, log_file,
-    )
+    logger = logging.getLogger(__name__)
     while True:
         q_item = log_queue.get()
         # Process log message
@@ -302,39 +230,43 @@ def _worker(
 
 def parallel_add(
     items: Iterable,
-    process_q_item: Callable[..., Iterable[Iterable[bytes]]],
+    process_q_item: Callable[..., Iterable[Union[Iterable[bytes], Dict[bytes, int]]]],
     n_workers: int = None,
     ngram: int = None,
     cms_args: Dict = None,
     hh_args: Dict = None,
     hll_args: Dict = None,
-    log_file: str = "sketchnu.log",
-    log_console_level: int = logging.INFO,
-    log_file_level: int = logging.DEBUG,
-    max_bytes: int = 104857600,
-    backup_count: int = 5,
     **kwargs,
 ):
     """
     Places `items` onto a queue to be processed by `n_workers` independent spawned
     processes. The function `process_q_item` takes a single item and returns an
-    Iterable of records with each record being an Iterable of keys (bytes) to be added
+    Iterable of records with each record being an either an Iterable of keys (bytes)
+    or a dictionary with key=byte, value=number to times to add that key to be added
     to the sketch(s). The \*\*kwargs are passed along to `process_q_item` to allow for
     any needed additional parameters. Once all items have been processed, the
     `n_workers` sketch(s) are merged with the final result(s) being returned.
 
-    You must provide at least `hll_args` or `cms_args`. If you provide both, then both
-    types of sketches will be processed at the same time while going over the data just
-    once.
+    **Note**
+    If your data has duplicate keys within a q_item, you will likely see better
+    performance if `process_q_item` does ```yield Counter(keys)``` instead of just
+    ```yield keys```
+
+    You must provide at least `cms_args` | `hh_args` | `hll_args`. If you provide more
+    than one, then the requested sketches will be processed at the same time while
+    going over the data just once.
 
     Parameters
     ----------
     items : Iterable
         A generator or list of items that will be placed onto a queue and then worked
         by one of the workers in a separate spawned process.
-    process_q_item : Callable[..., Iterable[Iterable[bytes]]]
+    process_q_item : Callable[...,Iterable[Union[Iterable[bytes],Dict[bytes,int]]]]
         Function that turns an item from the queue into an Iterable of records with
-        each record being an Iterable of keys (bytes) to be added to the sketch(s).
+        each record being an Iterable of keys (bytes) to be added to the sketch(s)
+        or a Dict[key=bytes, value=int] to add each key multiple times to the
+        sketch(s). Using a Dict is often faster if data has multiple entries for a
+        given key.
     n_workers : int, optional
         Number of workers to use. Each will update their own sketches which will then
         get merged together to achieve the final sketch(s). If None (default), then set
@@ -351,23 +283,13 @@ def parallel_add(
     hll_args : Dict, optional
         Dictionary containing arguments to instantiate a HyperLogLog. If None (default)
         then don't create a sketch of this type.
-    log_file : str, optional
-        Filepath to write the logs. Default is sketchnu.log
-    log_console_level : int, optional
-        Minimum log level to send to the console. Default is INFO
-    log_file_level : int, optional
-        Minimum log level to send to log_file. Default is DEBUG
-    max_bytes: int = 104857600,
-        Maximum size of log file before rolling
-    backup_count: int = 5,
-        Maximum number of log rotating log files to keep
     \*\*kwargs :
         Keyword arguments that get passed to `process_q_item` function
-    
+
     Returns
     -------
     The final sketch(s). If doing more than one sketch, then they are returned as a
-    tuple in alphabetical order
+    tuple in alphabetical order: cms, hh, hll
     """
     if (cms_args is None) and (hh_args is None) and (hll_args is None):
         raise ValueError("You forgot to provide any sketch arguments")
@@ -384,14 +306,7 @@ def parallel_add(
     # Set up logging
     log_process = ctx.Process(
         target=_log_worker,
-        args=(
-            log_queue,
-            log_console_level,
-            log_file_level,
-            max_bytes,
-            backup_count,
-            log_file,
-        ),
+        args=(log_queue,),
     )
     log_process.start()
 
@@ -432,9 +347,6 @@ def parallel_add(
             )
         )
         workers[i].start()
-
-    # Wait until the queue is finished being populated
-    # fill_queue_process.join()
 
     # Monitor for workers that exit badly
     any_none = True
@@ -528,7 +440,7 @@ def _merge_worker(sketch1: Tuple[str, Dict, str], sketch2: Tuple[str, Dict, str]
         "hll" | "cms", the arguments to instantiate a new sketch using HyperLogLog() or
         CountMin(), and the name of the shared memory block that the new sketch will
         attach to.
-    
+
     Returns
     -------
     None
@@ -538,15 +450,7 @@ def _merge_worker(sketch1: Tuple[str, Dict, str], sketch2: Tuple[str, Dict, str]
     s1 = attach_shared_memory(*sketch1)
     s2 = attach_shared_memory(*sketch2)
 
-    print(
-        f"_merge_worker: Before merge() avail = {psutil.virtual_memory().available/1024**3:.3f}"
-    )
-
     s1.merge(s2)
-
-    print(
-        f"_merge_worker: After merge() avail = {psutil.virtual_memory().available/1024**3:.3f}"
-    )
 
     # Clean up
     del s1
@@ -561,14 +465,14 @@ def parallel_merging(sketch_array: List, log_queue: Queue):
     Merge an array of sketches in successive rounds of pairing. This will use
     at most len(sketch_array) // 2 processes. After merging, the final sketch
     is returned.
-    
+
     Parameters
     ----------
     sketch_array : List
         Array containing sketches to be merged together
     log_queue : Queue
         Log statements to a log Queue
-    
+
     Returns
     -------
     CountMinLinear | CountMinLog16 | CountMinLog8 | HyperLogLog

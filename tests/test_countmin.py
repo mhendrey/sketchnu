@@ -99,6 +99,9 @@ def test_n_added_linear(width: int = 25, depth: int = 8):
     cms = CountMin("linear", width, depth)
     cms.update(data_stream)
     assert cms.n_added() == len(data_stream)
+    # Now check that using a dictionary works too
+    cms.update(Counter(data_stream))
+    assert cms.n_added() == (2 * len(data_stream))
 
 
 def test_n_added_log16(width: int = 25, depth: int = 8):
@@ -115,6 +118,9 @@ def test_n_added_log16(width: int = 25, depth: int = 8):
     cms = CountMin("log16", width, depth)
     cms.update(data_stream)
     assert cms.n_added() == len(data_stream)
+    # Now check that using a dictionary works too
+    cms.update(Counter(data_stream))
+    assert cms.n_added() == (2 * len(data_stream))
 
 
 def test_n_added_log8(width: int = 25, depth: int = 8):
@@ -131,6 +137,9 @@ def test_n_added_log8(width: int = 25, depth: int = 8):
     cms = CountMin("log8", width, depth)
     cms.update(data_stream)
     assert cms.n_added() == len(data_stream)
+    # Now check that using a dictionary works too
+    cms.update(Counter(data_stream))
+    assert cms.n_added() == (2 * len(data_stream))
 
 
 def test_query_linear(width: int = 25, depth: int = 8):
@@ -145,7 +154,7 @@ def test_query_linear(width: int = 25, depth: int = 8):
         Depth of the sketch. Default is 8
     """
     cms = CountMin("linear", width, depth)
-    cms.update(data_stream[:100])
+    cms.update(data_stream[:5000])
     assert cms.query(data_stream[0]) == cms[data_stream[0]]
 
 
@@ -181,7 +190,7 @@ def test_query_log8(width: int = 25, depth: int = 8):
     assert cms.query(data_stream[0]) == cms[data_stream[0]]
 
 
-def test_update_linear(width: int = 25, depth: int = 8):
+def test_update_linear_list(width: int = 25, depth: int = 8):
     """
     Test that the count-min sketch error quarantees hold. We first assert that
     all estimates are greater than or equal to the true count.  Then we assert
@@ -215,7 +224,41 @@ def test_update_linear(width: int = 25, depth: int = 8):
     ), f"Exceeded the limit too often, {n_over_max}"
 
 
-def test_update_log16(
+def test_update_linear_dict(width: int = 25, depth: int = 8):
+    """
+    Test that the count-min sketch error quarantees hold. We first assert that
+    all estimates are greater than or equal to the true count.  Then we assert
+    that with a probability of at least `1 - exp(-depth)` that:
+
+        estimate <= true + N * exp(1) / width
+
+    where `N` is the total number of elements added to the sketch.
+
+    Parameters
+    ----------
+    width : int, optional
+        Width of the sketch. Default is 25 (same as vocab_size)
+    depth : int, optional
+        Depth of the sketch. Default is 8
+    """
+    cms = CountMin("linear", width, depth)
+    true_count = Counter(data_stream)
+    cms.update(true_count)
+
+    error = np.zeros(vocab_size)
+    for i, data in enumerate(vocab):
+        error[i] = cms.query(data) - true_count[data]
+
+    max_error = cms.n_added() * np.exp(1) / width
+    n_over_max = error[error > max_error].shape[0]
+
+    assert error.min() >= 0.0, f"Minimum error, {error.min():.3f} is negative"
+    assert (n_over_max / n_data) < np.exp(
+        -depth
+    ), f"Exceeded the limit too often, {n_over_max}"
+
+
+def test_update_log16_list(
     width: int = 200,
     depth: int = 8,
     max_count: int = 4294967295,
@@ -277,7 +320,69 @@ def test_update_log16(
             assert t_value < t_stat, f"t-value {t_value:.4} is above {t_stat}"
 
 
-def test_update_log8(
+def test_update_log16_dict(
+    width: int = 200,
+    depth: int = 8,
+    max_count: int = 4294967295,
+    num_reserved: int = 1023,
+    n_trials: int = 20,
+    t_stat: float = 3.291,
+):
+    """
+    Uses a t-test to test the null hypothesis that the mean of the
+    difference between the true count and estimated count is 0. Uses a
+    confidence level of 99.9% to reject the null hypotheses. The test asserts
+    that we should fail to reject the null hypothesis.
+
+    A log counter has an unbiased estimator of `n` with a variance of
+    `(x-1)n(n + 1)/2`, where `x` is the log base.
+
+    This test is for the updating log counters and not for the count-min sketch
+    itself. In order to limit the errors introduced by collisions in the
+    count-min sketch, we set the width >> vocab_size.
+
+    Parameters
+    ----------
+    width : int, optional
+        Width of the count-min sketch. Default is much larger than vocab_size to avoid
+        collisions in vocab elements. Default is 200
+    depth : int, optional
+        Depth of the count-min sketch. Default is 8
+    max_count : int, optional
+        Maximum value that each log counter can store. Default is 2^32 - 1
+    num_reserved : int, optional
+        Perform linear counting for values [0, num_reserved]. After that use log
+        counters. This gives more precise estimates for the number of times a key
+        is seen for counts <= num_reserved. Default is 1023. This must be less than
+        65,535 (2^16 - 1).
+    n_trials : int, optional
+        Number of different experiments to run. Default is 20
+    t_stat : float, optional
+        t-test statistic which sets the confidence interval. Default corresponds
+        to 99.9%. Default is 3.291
+    """
+    # Randomly select n_trials keys. Test above & below the num_reserved
+    keys = np.random.choice(vocab, n_trials, replace=False).tolist()
+    for c in [500, 25000]:
+        cms = CountMin("log16", width, depth, max_count, num_reserved)
+        true_count = Counter()
+        for _ in range(c):
+            true_count.update(keys)
+        cms.update(true_count)
+
+        error = np.zeros(n_trials)
+        for i, key in enumerate(keys):
+            error[i] = cms.query(key) - true_count[key]
+
+        if error.std() == 0.0:
+            assert error.mean() == 0.0, f"std = 0, but mean !=0, {error.mean():.3f}"
+        else:
+            t_value = np.abs(error.mean() / (error.std() / np.sqrt(n_trials)))
+            # 99.9% confidence level
+            assert t_value < t_stat, f"t-value {t_value:.4} is above {t_stat}"
+
+
+def test_update_log8_list(
     width: int = 200,
     depth: int = 8,
     max_count: int = 4294967295,
@@ -326,6 +431,68 @@ def test_update_log8(
         for _ in range(c):
             cms.update(keys)
             true_count.update(keys)
+
+        error = np.zeros(n_trials)
+        for i, key in enumerate(keys):
+            error[i] = cms.query(key) - true_count[key]
+
+        if error.std() == 0.0:
+            assert error.mean() == 0.0, f"std = 0, but mean !=0, {error.mean():.3f}"
+        else:
+            t_value = np.abs(error.mean() / (error.std() / np.sqrt(n_trials)))
+            # 99.9% confidence level
+            assert t_value < t_stat, f"t-value {t_value:.4} is above {t_stat}"
+
+
+def test_update_log8_dict(
+    width: int = 200,
+    depth: int = 8,
+    max_count: int = 4294967295,
+    num_reserved: int = 15,
+    n_trials: int = 20,
+    t_stat: float = 3.291,
+):
+    """
+    Uses a t-test to test the null hypothesis that the mean of the
+    difference between the true count and estimated count is 0. Uses a
+    confidence level of 99.9% to reject the null hypotheses. The test asserts
+    that we should fail to reject the null hypothesis.
+
+    A log counter has an unbiased estimator of `n` with a variance of
+    `(x-1)n(n + 1)/2`, where `x` is the log base.
+
+    This test is for the updating log counters and not for the count-min sketch
+    itself. In order to limit the errors introduced by collisions in the
+    count-min sketch, we set the width >> vocab_size.
+
+    Parameters
+    ----------
+    width : int, optional
+        Width of the count-min sketch. Default is much larger than vocab_size to avoid
+        collisions in vocab elements. Default is 200
+    depth : int, optional
+        Depth of the count-min sketch. Default is 8
+    max_count : int, optional
+        Maximum value that each log counter can store. Default is 2^32 - 1
+    num_reserved : int, optional
+        Perform linear counting for values [0, num_reserved]. After that use log
+        counters. This gives more precise estimates for the number of times a key
+        is seen for counts <= num_reserved. Default is 15. This must be less than
+        255 (2^8 - 1).
+    n_trials : int, optional
+        Number of different experiments to run. Default is 20
+    t_stat : float, optional
+        t-test statistic which sets the confidence interval. Default corresponds
+        to 99.9%. Default is 3.291
+    """
+    # Randomly select n_trials keys. Test above & below the num_reserved
+    keys = np.random.choice(vocab, n_trials, replace=False).tolist()
+    for c in [12, 25000]:
+        cms = CountMin("log8", width, depth, max_count, num_reserved)
+        true_count = Counter()
+        for _ in range(c):
+            true_count.update(keys)
+        cms.update(true_count)
 
         error = np.zeros(n_trials)
         for i, key in enumerate(keys):
@@ -597,10 +764,8 @@ def test_max_count_log16(width: int = 25, depth: int = 8, max_count: int = 10000
         Default is 100,000
     """
     cms = CountMin("log16", width, depth, max_count)
-    for _ in range(int(max_count * 1.25)):
-        cms.update(vocab)
-
     for key in vocab:
+        cms.add(key, max_count * 2)
         assert cms[key] == pytest.approx(max_count)
 
 
@@ -620,10 +785,8 @@ def test_max_count_log8(width: int = 25, depth: int = 8, max_count: int = 1000):
         Default is 1000
     """
     cms = CountMin("log8", width, depth, max_count)
-    for _ in range(int(max_count * 2.0)):
-        cms.update(vocab)
-
     for key in vocab:
+        cms.add(key, max_count * 2)
         assert cms[key] == pytest.approx(max_count)
 
 
@@ -648,14 +811,13 @@ def test_num_reserved_log16(
         Perform linear counting from [0, num_reserved+1]. Default is 50
     """
     cms = CountMin("log16", width, depth, max_count, num_reserved)
-    for _ in range(num_reserved + 1):
-        cms.update(vocab)
     for key in vocab:
+        cms.add(key, num_reserved + 1)
         assert cms[key] == pytest.approx(num_reserved + 1)
 
-    cms.update(vocab)
     # Assert that we are now approximating
     for key in vocab:
+        cms.add(key)
         assert cms[key] != pytest.approx(num_reserved + 2)
 
 
@@ -680,14 +842,13 @@ def test_num_reserved_log8(
         Perform linear counting from [0, num_reserved+1]. Default is 50
     """
     cms = CountMin("log8", width, depth, max_count, num_reserved)
-    for _ in range(num_reserved + 1):
-        cms.update(vocab)
     for key in vocab:
+        cms.add(key, num_reserved + 1)
         assert cms[key] == pytest.approx(num_reserved + 1)
 
-    cms.update(vocab)
     # Assert that we are now approximating
     for key in vocab:
+        cms.add(key)
         assert cms[key] != pytest.approx(num_reserved + 2)
 
 
@@ -701,9 +862,12 @@ if __name__ == "__main__":
     test_query_linear()
     test_query_log16()
     test_query_log8()
-    test_update_linear()
-    test_update_log16()
-    test_update_log8()
+    test_update_linear_list()
+    test_update_linear_dict()
+    test_update_log16_list()
+    test_update_log16_dict()
+    test_update_log8_list()
+    test_update_log8_dict()
     test_update_ngram_linear()
     test_update_ngram_log16()
     test_update_ngram_log8()
