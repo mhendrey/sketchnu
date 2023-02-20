@@ -40,17 +40,22 @@ data_stream1 = np.random.choice(vocab, n_data, p=zipf_p).tolist()
 data_stream2 = np.random.choice(vocab, n_data, p=zipf_p).tolist()
 
 
-def process_q_item(q_item: Iterable, batch_size: int):
+def process_q_item_list(q_item: Iterable, batch_size: int):
     for i in range(0, len(q_item), batch_size):
         yield q_item[i : i + batch_size]
 
 
-def test_parallel_add(tmp_path: Path, batch_size: int = 100):
+def process_q_item_dict(q_item: Iterable, batch_size: int):
+    for i in range(0, len(q_item), batch_size):
+        yield Counter(q_item[i : i + batch_size])
+
+
+def test_parallel_add_list(tmp_path: Path, batch_size: int = 100):
     """
     Test that parallel processing provides the same answers as single threaded. For cms
     we make it wide enough so that the answers are the same for all keys. For hh, the
     order in which things are added can change the values in lhh_count, so we just test
-    that we get the same set of keys from parallel & single threaded. We also in sure
+    that we get the same set of keys from parallel & single threaded. We also ensure
     that the n_records() in cms & hh are properly recorded.
 
     Parameters
@@ -70,7 +75,7 @@ def test_parallel_add(tmp_path: Path, batch_size: int = 100):
 
     cms, hh, hll = parallel_add(
         [data_stream1, data_stream2],
-        process_q_item,
+        process_q_item_list,
         n_workers=2,
         cms_args=cms_args,
         hh_args=hh_args,
@@ -97,4 +102,59 @@ def test_parallel_add(tmp_path: Path, batch_size: int = 100):
     hll_single = HyperLogLog(**hll_args)
     hll_single.update(data_stream1)
     hll_single.update(data_stream2)
+    assert hll.query() == hll_single.query()
+
+
+def test_parallel_add_dict(tmp_path: Path, batch_size: int = 100):
+    """
+    Test that parallel processing provides the same answers as single threaded. For cms
+    we make it wide enough so that the answers are the same for all keys. For hh, the
+    order in which things are added can change the values in lhh_count, so we just test
+    that we get the same set of keys from parallel & single threaded. We also ensure
+    that the n_records() in cms & hh are properly recorded.
+
+    Parameters
+    ----------
+    tmp_path : Path
+        Temporary directory to write the log file
+    batch_size : int, optional
+        A record is a batch from the data stream of this size. Default is 100
+    """
+    cms_args = {"cms_type": "linear", "width": 10000, "depth": 8}
+    hh_args = {"width": 70, "depth": 4, "max_key_len": 8}
+    hll_args = {"p": 16}
+
+    true_count = Counter(data_stream1)
+    true_count.update(data_stream2)
+    n_records = int(n_data * 2 / batch_size)
+
+    cms, hh, hll = parallel_add(
+        [data_stream1, data_stream2],
+        process_q_item_dict,
+        n_workers=2,
+        cms_args=cms_args,
+        hh_args=hh_args,
+        hll_args=hll_args,
+        log_file=tmp_path / "sketchnu.log",
+        batch_size=batch_size,
+    )
+
+    cms_single = CountMin(**cms_args)
+    cms_single.update(Counter(data_stream1))
+    cms_single.update(Counter(data_stream2))
+    assert cms.n_records() == n_records
+    for i, v in enumerate(vocab):
+        assert cms[v] == cms_single[v], f"Failed on {i+1} out of {len(vocab)}, {cms[v]}"
+
+    hh_single = HeavyHitters(**hh_args)
+    hh_single.update(Counter(data_stream1))
+    hh_single.update(Counter(data_stream2))
+    hh_topk = set([k for k, _ in hh.query(500)])
+    hh_single_topk = set([k for k, _ in hh_single.query(500)])
+    assert hh.n_records() == n_records
+    assert hh_topk == hh_single_topk
+
+    hll_single = HyperLogLog(**hll_args)
+    hll_single.update(Counter(data_stream1))
+    hll_single.update(Counter(data_stream2))
     assert hll.query() == hll_single.query()

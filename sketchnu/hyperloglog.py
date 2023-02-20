@@ -34,7 +34,9 @@ To get a HyperLogLog with precision of 16 and seed 0::
     hll.query()
 
 """
+import gc
 from multiprocessing.shared_memory import SharedMemory
+from time import sleep
 from numba import njit, uint8, uint64, float64, types
 import numpy as np
 from pathlib import Path
@@ -550,6 +552,12 @@ class HyperLogLog:
         try:
             if self.shm:
                 try:
+                    # Need to explicity del the arrays since they are sharing the
+                    # memory block. Without this you get the MemoryError
+                    # "cannot close exported pointers exist"
+                    del self.registers
+                    gc.collect()
+                    sleep(0.25)
                     self.shm.close()
                     self.shm.unlink()
                 except Exception as exc:
@@ -560,6 +568,9 @@ class HyperLogLog:
         try:
             if self.existing_shm:
                 try:
+                    del self.registers
+                    gc.collect()
+                    sleep(0.25)
                     self.existing_shm.close()
                 except Exception as exc:
                     raise MemoryError(f"Failed to close existing_shm: {exc}")

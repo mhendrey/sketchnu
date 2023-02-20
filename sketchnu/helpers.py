@@ -52,7 +52,7 @@ def attach_shared_memory(sketch_type: str, sketch_args: Dict, shm_name: str):
     shm_name : str
         Name of a shared memory block that already exist. The new sketch will
         attach to this block.
-    
+
     Returns
     -------
     local_sketch : CountMinLinear | CountMinLog16 | CountMinLog8 | HeavyHitters | HyperLogLog
@@ -95,7 +95,7 @@ def setup_logger(
         Maximum number of old log files to keep. Default is 5
     log_file : str, optional
         Name of the log file. Default is sketchnu.log
-    
+
     Returns
     -------
     logging.Logger
@@ -173,7 +173,11 @@ def _log_worker(
     None
     """
     logger = setup_logger(
-        log_console_level, log_file_level, max_bytes, backup_count, log_file,
+        log_console_level,
+        log_file_level,
+        max_bytes,
+        backup_count,
+        log_file,
     )
     while True:
         q_item = log_queue.get()
@@ -318,14 +322,20 @@ def parallel_add(
     """
     Places `items` onto a queue to be processed by `n_workers` independent spawned
     processes. The function `process_q_item` takes a single item and returns an
-    Iterable of records with each record being an Iterable of keys (bytes) to be added
+    Iterable of records with each record being an either an Iterable of keys (bytes)
+    or a dictionary with key=byte, value=number to times to add that key to be added
     to the sketch(s). The \*\*kwargs are passed along to `process_q_item` to allow for
     any needed additional parameters. Once all items have been processed, the
     `n_workers` sketch(s) are merged with the final result(s) being returned.
 
-    You must provide at least `hll_args` or `cms_args`. If you provide both, then both
-    types of sketches will be processed at the same time while going over the data just
-    once.
+    **Note**
+    If your data has duplicate keys within a q_item, you will likely see better
+    performance if `process_q_item` does ```yield Counter(keys)``` instead of just
+    ```yield keys```
+
+    You must provide at least `cms_args` | `hh_args` | `hll_args`. If you provide more
+    than one, then the requested sketches will be processed at the same time while
+    going over the data just once.
 
     Parameters
     ----------
@@ -334,7 +344,10 @@ def parallel_add(
         by one of the workers in a separate spawned process.
     process_q_item : Callable[..., Iterable[Iterable[bytes]]]
         Function that turns an item from the queue into an Iterable of records with
-        each record being an Iterable of keys (bytes) to be added to the sketch(s).
+        each record being an Iterable of keys (bytes) to be added to the sketch(s)
+        or a Dict[key=bytes, value=int] to add each key multiple times to the
+        sketch(s). Using a Dict is often faster if data has multiple entries for a
+        given key.
     n_workers : int, optional
         Number of workers to use. Each will update their own sketches which will then
         get merged together to achieve the final sketch(s). If None (default), then set
@@ -363,11 +376,11 @@ def parallel_add(
         Maximum number of log rotating log files to keep
     \*\*kwargs :
         Keyword arguments that get passed to `process_q_item` function
-    
+
     Returns
     -------
     The final sketch(s). If doing more than one sketch, then they are returned as a
-    tuple in alphabetical order
+    tuple in alphabetical order: cms, hh, hll
     """
     if (cms_args is None) and (hh_args is None) and (hll_args is None):
         raise ValueError("You forgot to provide any sketch arguments")
@@ -432,9 +445,6 @@ def parallel_add(
             )
         )
         workers[i].start()
-
-    # Wait until the queue is finished being populated
-    # fill_queue_process.join()
 
     # Monitor for workers that exit badly
     any_none = True
@@ -528,7 +538,7 @@ def _merge_worker(sketch1: Tuple[str, Dict, str], sketch2: Tuple[str, Dict, str]
         "hll" | "cms", the arguments to instantiate a new sketch using HyperLogLog() or
         CountMin(), and the name of the shared memory block that the new sketch will
         attach to.
-    
+
     Returns
     -------
     None
@@ -561,14 +571,14 @@ def parallel_merging(sketch_array: List, log_queue: Queue):
     Merge an array of sketches in successive rounds of pairing. This will use
     at most len(sketch_array) // 2 processes. After merging, the final sketch
     is returned.
-    
+
     Parameters
     ----------
     sketch_array : List
         Array containing sketches to be merged together
     log_queue : Queue
         Log statements to a log Queue
-    
+
     Returns
     -------
     CountMinLinear | CountMinLog16 | CountMinLog8 | HyperLogLog
