@@ -1,9 +1,9 @@
 Helper Functions
 ================
 
-We have written a few helper functions to aid in parallelizing the creation of the one
+We have written a few helper functions to aid in parallelizing the creation of one
 or more of the sketches. The functions will spin up multiple independent workers, each
-of which has its own sketch to add its portion of the data to be processed. Once all
+of which has its own sketch(s) to add its portion of the data to be processed. Once all
 the data has been processed, then the individual sketches will be merged efficiently in
 successive rounds of merging to achieve the final sketch for each type.
 
@@ -15,7 +15,9 @@ if you don't want that type of sketch.
 
 The :code:`parallel_add` function takes a user-defined function, :code:`process_q_item`,
 which turns an item from the queue into an iterable of records with each record being
-an iterable of elements (bytes) that are to be added to the sketch.
+an iterable of elements (bytes) that are to be added to the sketch or a Dict whose keys
+are the bytes and values are the counts associated with that key. Using the Dict method
+will be faster if the average number of counts for a given key is greater than 1.
 
 When using :code:`parallel_add`, the sketches are placed into shared memory which then
 subprocess can access to parallelize the data processing, but also during the
@@ -35,6 +37,7 @@ iterable of bytes.
 
 ::
 
+    from collections import Counter
     import logging
     from pathlib import Path
     from sketchnu.helpers import parallel_add
@@ -48,7 +51,9 @@ iterable of bytes.
         with open(filepath) as f:
             for line in f:
                 line = line.strip()
-                record = [w.encode('utf-8') for w in line.split()]
+                record = Counter(
+                    [w.encode('utf-8') for w in line.split()]
+                )
                 yield record
     
     cms_args = {"cms_type": "linear", "width": 2**20}

@@ -50,41 +50,51 @@ Usage
 
 ::
 
-    import numpy as np
-    from sketchnu.countmin import CountMin, save, load
+    from collections import Counter
+    from sketchnu.countmin import CountMin, load
 
-    # Create 100k random 2-byte keys
-    keys = [bytes(r) for r in np.random.randint(0, 256, (100000, 2), np.uint8)]
+    # Create a data stream
+    stream = [b"abc", b"abc", b"abc", b"123", b"123", b"321"]
 
     # Instantiate a linear cms with width = 2**17 and depth = 8
-    cms = CountMin('linear', width=2**17, depth=8)
-    for key in keys:
-        cms.add(key)
+    cms = CountMin("linear", width=2**17, depth=8)
 
-    # Get the number of times the first element was seen
-    n_key_0 = cms.query(keys[0])
+    # Add a single key
+    cms.add(b"key")
 
-    # You can also get the estimated count with
-    n_key_0 = cms[keys[0]]
+    # Add a single key multiple times; faster than calling add(key) multiple times
+    cms.add(b"key", 5)
 
-    print(f'{keys[0]} was seen {n_key_0} times')
-    
+    # Add multiple keys as an iterable
+    cms.update(stream)
+
+    # Add multiple keys as a dict
+    # Typically much faster than update([]) assuming any given key appears multiple
+    # times in the data stream
+    cms.update(Counter(stream))
+
+    # Query for the estimated number of times a given key has been seen
+    n_abc = cms.query(b"abc")
+    n_123 = cms[b"123"]
+
+    print(f"{n_abc=:} , {n_123=:}")
+
     # Instantiate a second count-min sketch with same parameters
-    cms2 = CountMin('linear', width=2**17)
-    for key in keys:
-        cms2.add(key)
+    cms2 = CountMin(**cms.args)
+    # Add the stream to this sketch
+    cms2.update(Counter(stream))
     
     # Merge the second into the first
     cms.merge(cms2)
-    n_key_0_merge = cms.query(keys[0])
-    print(f'{keys[0]} now seen {n_key_0_merge} times after merging')
+    n_abc = cms[b"abc"]
+    print(f"{n_abc=:} after merging")
 
     # Get the total number of elements added to the sketches
-    print(f'Total elements added = {cms.n_added()}')
+    print(f"Total elements added = {cms.n_added()}")
 
     # Save to disk
-    save(cms, '/path/to/save/cms.npz')
-    cms_load = load('/path/to/save/cms.npz')
+    cms.save("/path/to/save/cms.npz")
+    cms_load = load("/path/to/save/cms.npz")
 
 The Details
 -----------
@@ -186,27 +196,23 @@ Testing
 
 Given that these are probablistic in nature, writing traditional software tests
 is a bit challenging. We have written statistical tests that should pass the
-vast majority of the time. The tests can be found in tests.py
+vast majority of the time. The tests can be found in tests/test_countmin.py
 
-We start by testing that the error guarantees are met for the linear cms. This
-test is found in :code:`test_cms_linear()`.
+We start by testing that the error guarantees are met for the linear cms.
 
 For the log8 and log16 versions, we have two separate tests. The first is checking
 that the log updating provides an unbiased estimate. In order to limit the biased
-errors introduced by collisions in the count-min sketch, we set the width equal
-to the total number of elements inserterd times 3. This means that with a
-probability of at least 1 - exp(-d) that the estimate <= true + exp(1) / 3. We
-use a t-test to test the null hypothesis that the mean of the difference
-between the true count and the estimated count is 0. The test asserts that we
-should fail to reject the null hypothesis at a 99% confidence level. These
-tests are located in :code:`test_cms_log8_update()` and
-:code:`test_cms_log16_update()`.
+errors introduced by collisions in the count-min sketch, we set the width to be eight
+times the number of unique keys inserted into the sketch. We use a t-test to test the
+null hypothesis that the mean of the difference between the true count and the
+estimated count is 0. The test asserts that we should fail to reject the null
+hypothesis at a 99.9% confidence level. These tests are located in
+:code:`test_update_log8_?()` and :code:`test_update_log16_?()`, where we have a test
+for both adding keys as a list and adding keys as a dictionary.
 
-The second test ensures that merging two count-min sketches together give an
+The second set of tests ensures that merging two count-min sketches together give an
 unbiased estimate. Again, to limit the biased errors introduced by collisions
-in the count-min sketch, we set the width equal to the total number of elements
-inserted times 3. We use a t-test to test the null hypothesis that the mean
-of the difference between the true count and estimated count is 0. The test
-asserts that we should fail to reject the null hypothesisat a 99% confidence
-level. These tests are in :code:`test_cms_log8_merge()` and
-:code:`test_cms_log16_merge()`.
+in the count-min sketch, we set the width = 8 x n_unique_keys. We use a t-test to
+test the null hypothesis that the mean of the difference between the true count and
+estimated count is 0. The test asserts that we should fail to reject the null
+hypothesisat a 99.9% confidence level. These tests are in :code:`test_merge_?()`.

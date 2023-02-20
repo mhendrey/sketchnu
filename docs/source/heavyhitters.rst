@@ -41,6 +41,7 @@ Usage
 
 ::
 
+    from collections import Counter
     import numpy as np
     from sketchnu.heavyhitters import HeavyHitters
 
@@ -58,21 +59,32 @@ Usage
         return p / p.sum()
     
     # Number of distinct elements in stream
-    vocab_size = 10000
+    vocab_size = 10_000
     # Size of the data stream
-    N = 100000
+    N = 100_000
     # Zipf distribution with slope of -1
     probs = zipf(vocab_size)
-    vocab = [f"{i:05}".encode("utf-8") for i in range(vocab_size)]
+    vocab = [f"{i:04}".encode("utf-8") for i in range(vocab_size)]
 
     stream = np.random.choice(vocab, N, p=probs).tolist()
+
     hh = HeavyHitters(
         width=100,
         depth=4,        # Default is 4
-        max_key_len=5,  # Each vocab member is just 5-bytes
+        max_key_len=4,  # Each vocab member is just 4-bytes
         phi=0.01,       # Defaults to 1 / width
     )
-    hh.update(stream)
+
+    # Add a single key to the sketch
+    hh.add(vocab[0])
+
+    # Add a single key multiple times to the sketch
+    hh.add(vocab[0], 3)
+
+    # Add a stream as a Dict; 
+    hh.update(Counter(stream))
+    # You could also just do hh.update(stream), but calling Counter is nearly
+    # 9x faster in this example.
 
     # Get the top 10 most frequent elements whose counts >= phi * N
     result = hh.query(10)
@@ -86,16 +98,23 @@ Usage
 
     # Instantiate a second heavy-hitter with same parameters
     hh2 = HeavyHitters(**hh.args)
-    # Add same elements more elements from a similar stream
+
+    # Add some more elements from a similar stream
     stream = np.random.choice(vocab, N, p=probs).tolist()
-    hh2.update(stream)
+
+    hh2.update(Counter(stream))
     # Now merge
     hh.merge(hh2)
 
     # Notice counts ~2x from before merge
-    result_merge = hh.query(10) 
+    result_merge = hh.query(5) 
 
     print(result_merge)
+
+    # Save to disk
+    hh.save("/path/to/save/hh.npz")
+    hh_load = HeavyHitters.load("/path/to/save/hh.npz")
+
 
 The Details
 -----------
