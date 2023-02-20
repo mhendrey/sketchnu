@@ -28,10 +28,10 @@ Processing Systems **31**, (2018).
 from collections import Counter
 import gc
 from multiprocessing.shared_memory import SharedMemory
-from time import sleep
 from numba import njit, uint8, uint32, uint64, types, prange
 import numpy as np
 from pathlib import Path
+from time import sleep
 from typing import Dict, List, Tuple, Union
 
 from sketchnu.hashes import fasthash64
