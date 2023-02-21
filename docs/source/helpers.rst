@@ -42,6 +42,8 @@ iterable of bytes.
     from pathlib import Path
     from sketchnu.helpers import parallel_add
 
+    logging.basicConfig(level=logging.DEBUG)
+
     input_dir = Path('/path/to/text/files')
     files = input_dir.iterdir()
 

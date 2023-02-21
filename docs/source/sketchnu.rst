@@ -38,10 +38,3 @@ sketchnu.hashes
    :undoc-members:
    :show-inheritance:
 
-sketchnu.tests
---------------
-
-.. automodule:: sketchnu.tests
-   :members:
-   :undoc-members:
-   :show-inheritance:
