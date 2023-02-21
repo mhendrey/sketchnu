@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HyperLogLog++ &mdash; sketchnu 1.2.2 documentation</title><link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Count-Min Sketch" href="countmin.html" />
+    <link rel="prev" title="Documentation" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            sketchnu
+              <img src="_static/logo.png" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                1.2.2
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">HyperLogLog++</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#the-basics">The Basics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#usage">Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#the-details">The Details</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#testing">Testing</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="countmin.html">Count-Min Sketch</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="countmin.html#the-basics">The Basics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="countmin.html#usage">Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="countmin.html#the-details">The Details</a></li>
+<li class="toctree-l2"><a class="reference internal" href="countmin.html#testing">Testing</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="heavyhitters.html">Heavy-Hitters</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="heavyhitters.html#the-basics">The Basics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="heavyhitters.html#usage">Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="heavyhitters.html#the-details">The Details</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="helpers.html">Helper Functions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="helpers.html#usage">Usage</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="hashes.html">Hash Functions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="hashes.html#fasthash">FastHash</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="hashes.html#usage">Usage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="hashes.html#testing">Testing</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="hashes.html#murmurhash3">MurmurHash3</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="hashes.html#id1">Usage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="hashes.html#id2">Testing</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="sketchnu.html">sketchnu.hyperloglog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sketchnu.html#module-sketchnu.countmin">sketchnu.countmin</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sketchnu.html#module-sketchnu.heavyhitters">sketchnu.heavyhitters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sketchnu.html#module-sketchnu.helpers">sketchnu.helpers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sketchnu.html#module-sketchnu.hashes">sketchnu.hashes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sketchnu.html#sketchnu-tests">sketchnu.tests</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Admin</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="license.html">License</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="license.html#license-requirements">License Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="license.html#license-notices">License notices</a></li>
+<li class="toctree-l2"><a class="reference internal" href="license.html#copyright">Copyright</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="help.html">Help</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">sketchnu</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">HyperLogLog++</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/hyperloglog.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="hyperloglog">
+<h1>HyperLogLog++<a class="headerlink" href="#hyperloglog" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="the-basics">
+<h2>The Basics<a class="headerlink" href="#the-basics" title="Permalink to this headline">¶</a></h2>
+<p>A sketch that estimates the number of unique elements (cardinality) that have
+been added into the sketch.</p>
+<p>A HyperLogLog is initialized with a given precision, <cite>p</cite>, which specifies the
+number of registers, <cite>m=2**p</cite>, used. The larger the <cite>p</cite>, the more accurate the
+estimated cardinality. This implementation allows for precision between [7,16].</p>
+<p>When adding an element (bytes), the element is hashed to a 64-bit unsigned
+integer. The first <cite>p</cite> bits are used to determine which register to use and the
+remaining 64-<cite>p</cite> bits are used to update the register if needed. Each register
+simply keeps track of the maximum number of leading zero bits seen so far. This
+value is what allows for the estimation of the cardinality.</p>
+<p>The HyperLogLog is implemented as a Numba class. The convenience function
+<code class="code docutils literal notranslate"><span class="pre">HyperLogLog()</span></code> is the recommended way to instantiate a HyperLogLog object. The
+Numba class itself is called <code class="code docutils literal notranslate"><span class="pre">HyperLogLog_nu</span></code>.</p>
+</div>
+<div class="section" id="usage">
+<h2>Usage<a class="headerlink" href="#usage" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sketchnu.hyperloglog</span> <span class="kn">import</span> <span class="n">HyperLogLog</span>
+
+<span class="n">hll</span> <span class="o">=</span> <span class="n">HyperLogLog</span><span class="p">(</span><span class="n">p</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>  <span class="c1"># Default settings</span>
+
+<span class="c1"># Add one key</span>
+<span class="n">hll</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="sa">b</span><span class="s2">&quot;abcd&quot;</span><span class="p">)</span>
+
+<span class="c1"># Add multiple keys as an iterable</span>
+<span class="n">hll</span><span class="o">.</span><span class="n">update</span><span class="p">([</span><span class="sa">b</span><span class="s2">&quot;1234&quot;</span><span class="p">,</span> <span class="sa">b</span><span class="s2">&quot;4321&quot;</span><span class="p">])</span>
+
+<span class="c1"># Add multiple keys as a dict</span>
+<span class="c1"># Dict values are irrelevant for this sketch and ignored</span>
+<span class="n">hll</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="sa">b</span><span class="s2">&quot;4321&quot;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span> <span class="sa">b</span><span class="s2">&quot;ab23&quot;</span><span class="p">:</span> <span class="mi">10</span><span class="p">})</span>
+
+<span class="c1"># Query for the current estimated cardinality</span>
+<span class="n">est_cardinality</span> <span class="o">=</span> <span class="n">hll</span><span class="o">.</span><span class="n">query</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;{est_cardinality=:.2f}. True cardinality = 4&quot;</span><span class="p">)</span>
+
+<span class="n">hll2</span> <span class="o">=</span> <span class="n">HyperLogLog</span><span class="p">()</span>
+<span class="n">hll2</span><span class="o">.</span><span class="n">update</span><span class="p">([</span><span class="sa">b</span><span class="s2">&quot;12cd&quot;</span><span class="p">,</span> <span class="sa">b</span><span class="s2">&quot;1234&quot;</span><span class="p">])</span>
+
+<span class="c1"># Merge two HyperLogLog&#39;s together; must have same p &amp; seed</span>
+<span class="n">hll</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">hll2</span><span class="p">)</span>
+<span class="n">est_cardinality</span> <span class="o">=</span> <span class="n">hll</span><span class="o">.</span><span class="n">query</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;After merging, {est_cardinality=:.2f}. True cardinality = 5&quot;</span><span class="p">)</span>
+
+<span class="c1"># Save to disk; load from disk</span>
+<span class="n">hll</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">&quot;/path/to/save/hll.npz&quot;</span><span class="p">)</span>
+<span class="n">hll_load</span> <span class="o">=</span> <span class="n">HyperLogLog</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;/path/to/save/hll.npz&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="the-details">
+<h2>The Details<a class="headerlink" href="#the-details" title="Permalink to this headline">¶</a></h2>
+<p>HyperLogLog is a sketch algorithm that estimates the number of distinct elements,
+cardinality, of large datasets. The HyperLogLog algorithm was described in
+<a class="reference external" href="http://algo.inria.fr/flajolet/Publications/FlFuGaMe07.pdf">“HyperLogLog: the analysis of a near-optimal cardinality estimation algorithm”</a> by Flajolet, Fusy,
+Gandouet, and Meunier in 2007, which itself was an improvement over the LogLog
+algorithm. The authors prove that the HyperLogLog’s estimated cardinality
+“is asymptotically almost unbiased”.</p>
+<p>An improvement to HyperLogLog, HyperLogLog++, was proposed in the 2018 paper
+<a class="reference external" href="https://stefanheule.com/papers/edbt13-hyperloglog.pdf">“HyperLogLog in Practice: Algorithmic Engineering of a State of the Art
+Cardinality Estimation Algorithm”</a>
+by Heule, Nunkesser, and Hall. This paper is the basis for the implementation
+found here.</p>
+<p>The HyperLogLog++ algorithm addressed two shortcomings found in HyperLogLog. The
+original algorithm used a 32-bit hash function which then resulted in hash
+collisions when the cardinality of the dataset approached 2**32 ~ 4 billion. This was
+easily addressed by switching to a 64-bit hash function. We use FastHash64 which
+has also been implemented in Numba as a part of this package.</p>
+<p>The second issue was a bias in the estimated cardinality when the cardinality is
+low. The HyperLogLog++ algorithm fixes this by experimentally estimating the
+bias and then using this bias correction when the cardinality is within an
+experimentally determined range. We use the predetermined threshold given in the
+Heule et al. paper, but we have run our own experiments to determine the bias.
+You can find this code in the hll_bias_experiment.py. The estimate and bias
+values are stored in the hll_constants.py file. This file contains the new
+values we have determined as well as the original values from the paper. The
+authors’ provided value were taken from <a class="reference external" href="http://goo.gl/iU8Ig">http://goo.gl/iU8Ig</a>.</p>
+<p>The authors’ had also implemented a sparse representation which can reduce the
+required memory when the cardinality is low. That has <strong>not</strong> been implemented
+in this package.</p>
+<p>We thank the people behind the Python package,
+<a class="reference external" href="http://ekzhu.com/datasketch/index.html">datasketch</a>, which was an inspiration
+to our efforts and helpful in seeing a Python implementation of the algorithm.</p>
+<p>A simple timeit comparison resulted in:</p>
+<ul class="simple">
+<li><p>Adding 1M keys: We are 3.8x faster than datasketch’s HyperLogLogPlusPlus</p></li>
+<li><p>Estimating: We are 4.8x faster than datasketch’s HyperLogLogPlusPlus</p></li>
+</ul>
+</div>
+<div class="section" id="testing">
+<h2>Testing<a class="headerlink" href="#testing" title="Permalink to this headline">¶</a></h2>
+<p>Given that these are probablistic in nature, writing traditional software tests
+is a bit challenging. We have written statistical tests that should pass the
+vast majority of the time. The tests can be found in tests/test_hyperloglog.py</p>
+<p>We test the low, medium, and high range of HyperLogLog using a t-test to test the
+null hypothesis that the mean of the difference between the true cardinality and the
+estimated (bias corrected if within the appropriate range) is 0. The HyperLogLog’s
+estimated cardinality “is asymptotically almost unbiased”. Despite this, even
+low values typically pass the test. We use a confidence level of 99.9% to reject
+the null hypothesis. The tests assert that we should fail to reject the null
+hypothesis.</p>
+<p>We also use a t-test to test the null hypothesis that the mean of the difference
+between the true count and the estimated count after merging two HyperLogLogs is 0.
+A confidence level of 99.9% is used to reject the null hypothesis. The test asserts
+that we should fail to reject the null hypothesis.</p>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="Documentation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="countmin.html" class="btn btn-neutral float-right" title="Count-Min Sketch" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Matthew Hendrey.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

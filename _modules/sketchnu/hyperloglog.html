@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>sketchnu.hyperloglog &mdash; sketchnu 1.2.2 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            sketchnu
+              <img src="../../_static/logo.png" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                1.2.2
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../hyperloglog.html">HyperLogLog++</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../hyperloglog.html#the-basics">The Basics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../hyperloglog.html#usage">Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../hyperloglog.html#the-details">The Details</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../hyperloglog.html#testing">Testing</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../countmin.html">Count-Min Sketch</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../countmin.html#the-basics">The Basics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../countmin.html#usage">Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../countmin.html#the-details">The Details</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../countmin.html#testing">Testing</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../heavyhitters.html">Heavy-Hitters</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../heavyhitters.html#the-basics">The Basics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../heavyhitters.html#usage">Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../heavyhitters.html#the-details">The Details</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../helpers.html">Helper Functions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../helpers.html#usage">Usage</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../hashes.html">Hash Functions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../hashes.html#fasthash">FastHash</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../hashes.html#usage">Usage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../hashes.html#testing">Testing</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../hashes.html#murmurhash3">MurmurHash3</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../hashes.html#id1">Usage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../hashes.html#id2">Testing</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../sketchnu.html">sketchnu.hyperloglog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../sketchnu.html#module-sketchnu.countmin">sketchnu.countmin</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../sketchnu.html#module-sketchnu.heavyhitters">sketchnu.heavyhitters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../sketchnu.html#module-sketchnu.helpers">sketchnu.helpers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../sketchnu.html#module-sketchnu.hashes">sketchnu.hashes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../sketchnu.html#sketchnu-tests">sketchnu.tests</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Admin</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../license.html">License</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../license.html#license-requirements">License Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../license.html#license-notices">License notices</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../license.html#copyright">Copyright</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../help.html">Help</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">sketchnu</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">sketchnu.hyperloglog</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for sketchnu.hyperloglog</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Sketchnu has Numba implementations of sketch algorithms and other useful functions </span>
+<span class="sd">that utilize hash functions.</span>
+
+<span class="sd">Copyright (C) 2022 Matthew Hendrey</span>
+
+<span class="sd">This program is free software: you can redistribute it and/or modify</span>
+<span class="sd">it under the terms of the GNU General Public License as published by</span>
+<span class="sd">the Free Software Foundation, either version 3 of the License, or</span>
+<span class="sd">(at your option) any later version.</span>
+
+<span class="sd">This program is distributed in the hope that it will be useful,</span>
+<span class="sd">but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<span class="sd">MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
+<span class="sd">GNU General Public License for more details.</span>
+
+<span class="sd">You should have received a copy of the GNU General Public License</span>
+<span class="sd">along with this program.  If not, see &lt;https://www.gnu.org/licenses/&gt;.</span>
+
+
+<span class="sd">Too many problems with the experimental Numba class. Converting this</span>
+<span class="sd">to a series of Numba functions and a Python class.</span>
+
+<span class="sd">Example</span>
+<span class="sd">-------</span>
+<span class="sd">To get a HyperLogLog with precision of 16 and seed 0::</span>
+
+<span class="sd">    from sketchnu.hyperloglog import HyperLogLog</span>
+
+<span class="sd">    hll = HyperLogLog()</span>
+<span class="sd">    key = &#39;testing&#39;.encode(&#39;utf-8&#39;)</span>
+<span class="sd">    hll.add(key)</span>
+<span class="sd">    # To get a estimated cardinality</span>
+<span class="sd">    hll.query()</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">gc</span>
+<span class="kn">from</span> <span class="nn">multiprocessing.shared_memory</span> <span class="kn">import</span> <span class="n">SharedMemory</span>
+<span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">sleep</span>
+<span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="n">njit</span><span class="p">,</span> <span class="n">uint8</span><span class="p">,</span> <span class="n">uint64</span><span class="p">,</span> <span class="n">float64</span><span class="p">,</span> <span class="n">types</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Union</span>
+
+<span class="kn">from</span> <span class="nn">sketchnu.hashes</span> <span class="kn">import</span> <span class="n">fasthash64</span>
+<span class="kn">from</span> <span class="nn">sketchnu.hll_constants</span> <span class="kn">import</span> <span class="n">sub_algorithm_threshold</span><span class="p">,</span> <span class="n">raw_estimate</span><span class="p">,</span> <span class="n">bias_data</span>
+
+
+<span class="nd">@njit</span><span class="p">(</span><span class="n">float64</span><span class="p">(</span><span class="n">uint64</span><span class="p">,</span> <span class="n">uint64</span><span class="p">))</span>
+<span class="k">def</span> <span class="nf">_linear_counting</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">n_zero</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    If there are registers that are zero, then we do linear_counting to</span>
+<span class="sd">    estimate the cardinality</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    m : int</span>
+<span class="sd">        Number of registers</span>
+<span class="sd">    n_zero : int</span>
+<span class="sd">        Number of registers that equal 0</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    float64</span>
+<span class="sd">        Estimated cardinality when some registers are still zero</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">float64</span><span class="p">(</span><span class="n">m</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">float64</span><span class="p">(</span><span class="n">m</span><span class="p">)</span> <span class="o">/</span> <span class="n">float64</span><span class="p">(</span><span class="n">n_zero</span><span class="p">))</span>
+
+
+<span class="nd">@njit</span><span class="p">(</span><span class="n">float64</span><span class="p">(</span><span class="n">uint8</span><span class="p">[:],</span> <span class="n">uint64</span><span class="p">,</span> <span class="n">float64</span><span class="p">))</span>
+<span class="k">def</span> <span class="nf">_estimation_function</span><span class="p">(</span><span class="n">registers</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">alpha</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Estimated cardinality with no bias correction</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    float64</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">total</span> <span class="o">=</span> <span class="n">float64</span><span class="p">(</span><span class="mf">0.0</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">registers</span><span class="p">:</span>
+        <span class="n">total</span> <span class="o">+=</span> <span class="mf">2.0</span> <span class="o">**</span> <span class="p">(</span><span class="o">-</span><span class="n">float64</span><span class="p">(</span><span class="n">r</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">alpha</span> <span class="o">*</span> <span class="n">float64</span><span class="p">(</span><span class="n">m</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="n">total</span>
+
+
+<span class="nd">@njit</span><span class="p">(</span><span class="n">uint8</span><span class="p">(</span><span class="n">uint64</span><span class="p">))</span>
+<span class="k">def</span> <span class="nf">_n_leading_zeros64</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Calculate the number of leading zeros for a given uint64 integer.</span>
+<span class="sd">    If numba ever gets a uint6 type, then we could replace uint8.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    x : uint64</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    uint8</span>
+<span class="sd">        Number of leading zeros in the bit representation of `x`</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">zero</span> <span class="o">=</span> <span class="n">uint64</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="n">uint8</span><span class="p">(</span><span class="mi">64</span><span class="p">)</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">x</span> <span class="o">&gt;&gt;</span> <span class="n">uint64</span><span class="p">(</span><span class="mi">32</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">y</span> <span class="o">!=</span> <span class="n">zero</span><span class="p">:</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="n">n</span> <span class="o">-</span> <span class="n">uint8</span><span class="p">(</span><span class="mi">32</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">y</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">x</span> <span class="o">&gt;&gt;</span> <span class="n">uint64</span><span class="p">(</span><span class="mi">16</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">y</span> <span class="o">!=</span> <span class="n">zero</span><span class="p">:</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="n">n</span> <span class="o">-</span> <span class="n">uint8</span><span class="p">(</span><span class="mi">16</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">y</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">x</span> <span class="o">&gt;&gt;</span> <span class="n">uint64</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">y</span> <span class="o">!=</span> <span class="n">zero</span><span class="p">:</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="n">n</span> <span class="o">-</span> <span class="n">uint8</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">y</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">x</span> <span class="o">&gt;&gt;</span> <span class="n">uint64</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">y</span> <span class="o">!=</span> <span class="n">zero</span><span class="p">:</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="n">n</span> <span class="o">-</span> <span class="n">uint8</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">y</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">x</span> <span class="o">&gt;&gt;</span> <span class="n">uint64</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">y</span> <span class="o">!=</span> <span class="n">zero</span><span class="p">:</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="n">n</span> <span class="o">-</span> <span class="n">uint8</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">y</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">x</span> <span class="o">&gt;&gt;</span> <span class="n">uint64</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">y</span> <span class="o">!=</span> <span class="n">zero</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">n</span> <span class="o">-</span> <span class="n">uint8</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">n</span> <span class="o">-</span> <span class="n">uint8</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+
+<span class="nd">@njit</span><span class="p">(</span><span class="n">float64</span><span class="p">(</span><span class="n">uint8</span><span class="p">[:],</span> <span class="n">uint64</span><span class="p">,</span> <span class="n">uint64</span><span class="p">,</span> <span class="n">float64</span><span class="p">,</span> <span class="n">float64</span><span class="p">[:],</span> <span class="n">float64</span><span class="p">[:]))</span>
+<span class="k">def</span> <span class="nf">_query</span><span class="p">(</span><span class="n">registers</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">threshold</span><span class="p">,</span> <span class="n">alpha</span><span class="p">,</span> <span class="n">raw_estimate</span><span class="p">,</span> <span class="n">bias_data</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Return the estimated cardinality</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    float</span>
+<span class="sd">        Estimated cardinality of elements added to the HyperLogLog so far</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Get the number of registers that are still zero</span>
+    <span class="n">n_zero</span> <span class="o">=</span> <span class="n">m</span> <span class="o">-</span> <span class="n">uint64</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="n">registers</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="n">n_zero</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="c1"># Start by trying linear counting</span>
+        <span class="n">cardinality</span> <span class="o">=</span> <span class="n">_linear_counting</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">n_zero</span><span class="p">)</span>
+
+        <span class="c1"># If above sub-algorithm threshold, switch to estimation function</span>
+        <span class="c1"># with bias correction</span>
+        <span class="k">if</span> <span class="n">cardinality</span> <span class="o">&gt;</span> <span class="n">threshold</span><span class="p">:</span>
+            <span class="n">est</span> <span class="o">=</span> <span class="n">_estimation_function</span><span class="p">(</span><span class="n">registers</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">alpha</span><span class="p">)</span>
+            <span class="n">bias</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">interp</span><span class="p">(</span><span class="n">est</span><span class="p">,</span> <span class="n">raw_estimate</span><span class="p">,</span> <span class="n">bias_data</span><span class="p">)</span>
+            <span class="n">cardinality</span> <span class="o">=</span> <span class="n">est</span> <span class="o">-</span> <span class="n">bias</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">cardinality</span> <span class="o">=</span> <span class="n">_estimation_function</span><span class="p">(</span><span class="n">registers</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">alpha</span><span class="p">)</span>
+        <span class="c1"># If cardinality is relatively low, then remove estimated bias</span>
+        <span class="k">if</span> <span class="n">cardinality</span> <span class="o">&lt;=</span> <span class="n">float64</span><span class="p">(</span><span class="mi">5</span> <span class="o">*</span> <span class="n">m</span><span class="p">):</span>
+            <span class="n">bias</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">interp</span><span class="p">(</span><span class="n">cardinality</span><span class="p">,</span> <span class="n">raw_estimate</span><span class="p">,</span> <span class="n">bias_data</span><span class="p">)</span>
+            <span class="n">cardinality</span> <span class="o">=</span> <span class="n">cardinality</span> <span class="o">-</span> <span class="n">bias</span>
+
+    <span class="k">return</span> <span class="n">cardinality</span>
+
+
+<span class="nd">@njit</span><span class="p">(</span><span class="n">types</span><span class="o">.</span><span class="n">void</span><span class="p">(</span><span class="n">uint8</span><span class="p">[:],</span> <span class="n">uint64</span><span class="p">,</span> <span class="n">uint64</span><span class="p">,</span> <span class="n">uint64</span><span class="p">,</span> <span class="n">types</span><span class="o">.</span><span class="n">Bytes</span><span class="p">(</span><span class="n">types</span><span class="o">.</span><span class="n">uint8</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;C&quot;</span><span class="p">)))</span>
+<span class="k">def</span> <span class="nf">_add</span><span class="p">(</span><span class="n">registers</span><span class="p">,</span> <span class="n">seed</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Add a single `key` to the HyperLogLog.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    registers : uint8[:]</span>
+<span class="sd">        HyperLogLog&#39;s registers</span>
+<span class="sd">    seed : np.uint64</span>
+<span class="sd">        Seed for hashing</span>
+<span class="sd">    p : np.uint64</span>
+<span class="sd">        HyperLogLog&#39;s precision</span>
+<span class="sd">    m : np.uint64</span>
+<span class="sd">        Size of HyperLogLog&#39;s registers</span>
+<span class="sd">    key : bytes</span>
+<span class="sd">        Element to add to the HyperLogLog</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    None</span>
+<span class="sd">        registers has a side-effect of being updated</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">hash_val</span> <span class="o">=</span> <span class="n">fasthash64</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">seed</span><span class="p">)</span>
+    <span class="c1"># Get the index of the register using the first p bits of the hash</span>
+    <span class="n">reg_idx</span> <span class="o">=</span> <span class="n">hash_val</span> <span class="o">&amp;</span> <span class="n">uint64</span><span class="p">(</span><span class="n">m</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="c1"># Get the remaining bits for getting number of leading zeros</span>
+    <span class="n">bits</span> <span class="o">=</span> <span class="n">hash_val</span> <span class="o">&gt;&gt;</span> <span class="n">p</span>
+
+    <span class="c1"># Get number of leading zeros of the 64-bit bits</span>
+    <span class="c1"># subtract p since the bits is padded with zeros since it is</span>
+    <span class="c1"># just a 64-p bit value.</span>
+    <span class="n">rank</span> <span class="o">=</span> <span class="n">_n_leading_zeros64</span><span class="p">(</span><span class="n">bits</span><span class="p">)</span> <span class="o">-</span> <span class="n">p</span> <span class="o">+</span> <span class="mi">1</span>
+    <span class="n">registers</span><span class="p">[</span><span class="n">reg_idx</span><span class="p">]</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">registers</span><span class="p">[</span><span class="n">reg_idx</span><span class="p">],</span> <span class="n">rank</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="kc">None</span>
+
+
+<span class="nd">@njit</span><span class="p">(</span>
+    <span class="n">types</span><span class="o">.</span><span class="n">void</span><span class="p">(</span>
+        <span class="n">uint8</span><span class="p">[:],</span> <span class="n">uint64</span><span class="p">,</span> <span class="n">uint64</span><span class="p">,</span> <span class="n">uint64</span><span class="p">,</span> <span class="n">types</span><span class="o">.</span><span class="n">Bytes</span><span class="p">(</span><span class="n">types</span><span class="o">.</span><span class="n">uint8</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;C&quot;</span><span class="p">),</span> <span class="n">uint64</span>
+    <span class="p">)</span>
+<span class="p">)</span>
+<span class="k">def</span> <span class="nf">_add_ngram</span><span class="p">(</span><span class="n">registers</span><span class="p">,</span> <span class="n">seed</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">ngram</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Take a given `key` and split it into ngrams of size `ngram` and then</span>
+<span class="sd">    add the ngrams to the sketch. If the `key` length is less than `ngram`</span>
+<span class="sd">    then add the whole `key`</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    registers : uint8[:]</span>
+<span class="sd">    seed : uint64</span>
+<span class="sd">    p : uint64</span>
+<span class="sd">    m : uint64</span>
+<span class="sd">    key : bytes</span>
+<span class="sd">        Element to be shingled before adding to the sketch</span>
+<span class="sd">    ngram : uint64</span>
+<span class="sd">        ngram size</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    None</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">key_len</span> <span class="o">=</span> <span class="n">uint64</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">key</span><span class="p">))</span>
+    <span class="k">if</span> <span class="n">key_len</span> <span class="o">&lt;=</span> <span class="n">ngram</span><span class="p">:</span>
+        <span class="n">_add</span><span class="p">(</span><span class="n">registers</span><span class="p">,</span> <span class="n">seed</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">key_len</span> <span class="o">-</span> <span class="p">(</span><span class="n">ngram</span> <span class="o">-</span> <span class="n">uint64</span><span class="p">(</span><span class="mi">1</span><span class="p">))):</span>
+            <span class="n">_add</span><span class="p">(</span><span class="n">registers</span><span class="p">,</span> <span class="n">seed</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">key</span><span class="p">[</span><span class="n">i</span> <span class="p">:</span> <span class="n">i</span> <span class="o">+</span> <span class="n">ngram</span><span class="p">])</span>
+
+
+<span class="nd">@njit</span><span class="p">(</span><span class="n">types</span><span class="o">.</span><span class="n">void</span><span class="p">(</span><span class="n">uint8</span><span class="p">[:],</span> <span class="n">uint8</span><span class="p">[:],</span> <span class="n">uint64</span><span class="p">))</span>
+<span class="k">def</span> <span class="nf">_merge</span><span class="p">(</span><span class="n">registers</span><span class="p">,</span> <span class="n">other_registers</span><span class="p">,</span> <span class="n">m</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Merge other_registers into registers</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    registers : np.ndarray, dtype=uint8</span>
+<span class="sd">        Registers for a HyperLogLog</span>
+<span class="sd">    other_registers : np.ndarray, dtype=uint8</span>
+<span class="sd">        Registers for another HyperLogLog that is merged into the first</span>
+<span class="sd">    m : uint64</span>
+<span class="sd">        Number of elements in both registers and other_registers</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    None</span>
+<span class="sd">        Side-effect that updates `registers`</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">m</span><span class="p">):</span>
+        <span class="n">registers</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">registers</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">other_registers</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+
+
+<div class="viewcode-block" id="HyperLogLog"><a class="viewcode-back" href="../../sketchnu.html#sketchnu.hyperloglog.HyperLogLog">[docs]</a><span class="k">class</span> <span class="nc">HyperLogLog</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Implementation of the HyperLogLog++ algorithm which uses a 64-bit hash function and</span>
+<span class="sd">    corrects bias when cardinality is low.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    p : int</span>
+<span class="sd">        Precision specifies the number of registers (2\*\*p). The larger the p,</span>
+<span class="sd">        the more accurate the estimated cardinality. Must be between [7, 16]</span>
+<span class="sd">    seed : int, optional</span>
+<span class="sd">        Seed passed to the fasthash64 function. Default is 0</span>
+<span class="sd">    shared_memory : bool, optional</span>
+<span class="sd">        If True, then HyperLogLog is placed in shared memory. Needed if</span>
+<span class="sd">        performing multiprocessing as sketchnu.helpers.parallel_add() does.</span>
+<span class="sd">        Default is False.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    p : int</span>
+<span class="sd">        Precision of the HyperLogLog. Must be between [7, 16]</span>
+<span class="sd">    seed : int</span>
+<span class="sd">        Seed passed to hash function</span>
+<span class="sd">    m : int</span>
+<span class="sd">        Number of registers. Equal to 2\*\*p</span>
+<span class="sd">    shared_memory : bool, optional</span>
+<span class="sd">        If True, then HyperLogLog is placed in shared memory. Needed if</span>
+<span class="sd">        performing multiprocessing as sketchnu.helpers.parallel_add() does.</span>
+<span class="sd">        Default is False.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">16</span><span class="p">,</span> <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">shared_memory</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Instantiate a HyperLogLog. This is an implementation of the HyperLogLog++</span>
+<span class="sd">        algorithm which uses a 64-bit hash function and corrects bias when cardinality</span>
+<span class="sd">        is low.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        p : int</span>
+<span class="sd">            Precision specifies the number of registers (2**p). The larger the p,</span>
+<span class="sd">            the more accurate the estimated cardinality. Must be between [7, 16]</span>
+<span class="sd">        seed : int, optional</span>
+<span class="sd">            Seed passed to the fasthash64 function. Default is 0</span>
+<span class="sd">        shared_memory : bool, optional</span>
+<span class="sd">            If True, then HyperLogLog is placed in shared memory. Needed if</span>
+<span class="sd">            performing multiprocessing as sketchnu.helpers.parallel_add() does.</span>
+<span class="sd">            Default is False.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        HyperLogLog</span>
+<span class="sd">            The Python class for the HyperLogLog with specified p and seed.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">p</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">uint64</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">seed</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">uint64</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">p</span> <span class="o">&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">uint64</span><span class="p">(</span><span class="mi">16</span><span class="p">)</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">p</span> <span class="o">&lt;</span> <span class="n">np</span><span class="o">.</span><span class="n">uint64</span><span class="p">(</span><span class="mi">7</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;p must be within [7, 16]&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;p&quot;</span><span class="p">:</span> <span class="n">p</span><span class="p">,</span> <span class="s2">&quot;seed&quot;</span><span class="p">:</span> <span class="n">seed</span><span class="p">}</span>
+
+        <span class="c1"># Total number of registers, 2**p</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">m</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">uint64</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">p</span>
+        <span class="c1"># Registers will hold the maximum number of (leading zeros + 1) seen</span>
+        <span class="c1"># for each of the m registers</span>
+        <span class="k">if</span> <span class="n">shared_memory</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">shm</span> <span class="o">=</span> <span class="n">SharedMemory</span><span class="p">(</span><span class="n">create</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">m</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">registers</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">frombuffer</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">shm</span><span class="o">.</span><span class="n">buf</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">registers</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">m</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">alpha</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">(</span><span class="mf">0.7213</span> <span class="o">/</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="mf">1.079</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">m</span><span class="p">))</span>
+
+        <span class="c1"># Using [p-7] since we start with p = 7.</span>
+        <span class="c1"># Gave IndexError: only integers are valid indices</span>
+        <span class="c1"># Didn&#39;t like having np.uint64 and int mixed together</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">threshold</span> <span class="o">=</span> <span class="n">sub_algorithm_threshold</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="p">)</span> <span class="o">-</span> <span class="mi">7</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bias_data</span> <span class="o">=</span> <span class="n">bias_data</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="p">)</span> <span class="o">-</span> <span class="mi">7</span><span class="p">,</span> <span class="p">:]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">raw_estimate</span> <span class="o">=</span> <span class="n">raw_estimate</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="p">)</span> <span class="o">-</span> <span class="mi">7</span><span class="p">,</span> <span class="p">:]</span>
+
+<div class="viewcode-block" id="HyperLogLog.add"><a class="viewcode-back" href="../../sketchnu.html#sketchnu.hyperloglog.HyperLogLog.add">[docs]</a>    <span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Add a single key to the HyperLogLog.</span>
+
+<span class="sd">        Note</span>
+<span class="sd">        ----</span>
+<span class="sd">        Currently, the numba.typed.List needed for the update() are quite slow.</span>
+<span class="sd">        Speedtest show that you are better off looping through the keys in</span>
+<span class="sd">        python and add(key) instead of update(numba.typed.List(keys)). Taking</span>
+<span class="sd">        just over twice as long.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        key : bytes</span>
+<span class="sd">            Element to add to the HyperLogLog</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">_add</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">registers</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">seed</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">m</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="HyperLogLog.update"><a class="viewcode-back" href="../../sketchnu.html#sketchnu.hyperloglog.HyperLogLog.update">[docs]</a>    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">keys</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">bytes</span><span class="p">],</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">bytes</span><span class="p">,</span> <span class="nb">int</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Given a list of keys, update the HyperLogLog. This follows the</span>
+<span class="sd">        convention of collections.Counter in that keys should be a list of</span>
+<span class="sd">        keys or a dictionary whose keys are the keys. For this sketch, the</span>
+<span class="sd">        value of the dictionary is ignored since it doesn&#39;t make sense to</span>
+<span class="sd">        put the same key in multiple times.</span>
+
+<span class="sd">        Note</span>
+<span class="sd">        ----</span>
+<span class="sd">        Currently, the numba.typed.List needed for the update() are quite slow.</span>
+<span class="sd">        Speedtest show that you are better off looping through the keys in</span>
+<span class="sd">        python and add(key) instead of update(numba.typed.List(keys)). Taking</span>
+<span class="sd">        just over twice as long. If repeated adding the same keys, then update</span>
+<span class="sd">        is faster.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        keys : List[bytes] | Dict[bytes, int]</span>
+<span class="sd">            List of elements to add to the HyperLogLog at once. If a Dict is passed,</span>
+<span class="sd">            then only the Dict.keys() are put into the sketch.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        None</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">keys</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">key</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="HyperLogLog.add_ngram"><a class="viewcode-back" href="../../sketchnu.html#sketchnu.hyperloglog.HyperLogLog.add_ngram">[docs]</a>    <span class="k">def</span> <span class="nf">add_ngram</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">ngram</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Take a given `key` and split it into ngrams of size `ngram` and then</span>
+<span class="sd">        add the ngrams to the sketch. If the `key` length is less than `ngram`</span>
+<span class="sd">        then add the whole `key`</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        key : bytes</span>
+<span class="sd">            Element to be shingled before adding to the sketch</span>
+<span class="sd">        ngram : int</span>
+<span class="sd">            ngram size</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        None</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">ngram</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">uint64</span><span class="p">(</span><span class="n">ngram</span><span class="p">)</span>
+        <span class="n">_add_ngram</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">registers</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">seed</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">m</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">ngram</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="HyperLogLog.update_ngram"><a class="viewcode-back" href="../../sketchnu.html#sketchnu.hyperloglog.HyperLogLog.update_ngram">[docs]</a>    <span class="k">def</span> <span class="nf">update_ngram</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">keys</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">ngram</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Given a list of keys, split each into ngrams of size `ngram`, and then</span>
+<span class="sd">        add them to the sketch.</span>
+
+<span class="sd">        Note</span>
+<span class="sd">        ----</span>
+<span class="sd">        Speed tests show that you are slightly better off looping through the</span>
+<span class="sd">        keys in Python and calling add_ngram() instead of update_ngram(). Used</span>
+<span class="sd">        50k keys, each of 200 bytes, and ngram=4 to find that update_ngram()</span>
+<span class="sd">        was ~ 6% slower. This is significantly better than add() vs. update().</span>
+<span class="sd">        If repeated adding the same keys (for testing), then update_ngram() is</span>
+<span class="sd">        just a little bit faster than add_ngram().</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        keys : List[bytes]</span>
+<span class="sd">            List of elements to be shingled before adding to the sketch.</span>
+<span class="sd">        ngram : int</span>
+<span class="sd">            ngram size</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        None</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Loop through the keys</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">keys</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_ngram</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">ngram</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="HyperLogLog.query"><a class="viewcode-back" href="../../sketchnu.html#sketchnu.hyperloglog.HyperLogLog.query">[docs]</a>    <span class="k">def</span> <span class="nf">query</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return the estimated cardinality</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        float</span>
+<span class="sd">            Estimated cardinality of elements added to the HyperLogLog so far</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">_query</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">registers</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">m</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">threshold</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">alpha</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">raw_estimate</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">bias_data</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="HyperLogLog.merge"><a class="viewcode-back" href="../../sketchnu.html#sketchnu.hyperloglog.HyperLogLog.merge">[docs]</a>    <span class="k">def</span> <span class="nf">merge</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Merge the HyperLogLog `other` into this one.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        other : HyperLogLog</span>
+<span class="sd">            Another HyperLogLog with the same precision and seed</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        None</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        TypeError</span>
+<span class="sd">            If `other` has different precision or seed from this one</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">p</span> <span class="o">!=</span> <span class="n">other</span><span class="o">.</span><span class="n">p</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">seed</span> <span class="o">!=</span> <span class="n">other</span><span class="o">.</span><span class="n">seed</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Precision &amp; seed in other must match self&quot;</span><span class="p">)</span>
+
+        <span class="n">_merge</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">registers</span><span class="p">,</span> <span class="n">other</span><span class="o">.</span><span class="n">registers</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">m</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="HyperLogLog.attach_existing_shm"><a class="viewcode-back" href="../../sketchnu.html#sketchnu.hyperloglog.HyperLogLog.attach_existing_shm">[docs]</a>    <span class="k">def</span> <span class="nf">attach_existing_shm</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">existing_shm_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SharedMemory</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Attach this sketch to an existing shared memory block. Useful when working</span>
+<span class="sd">        within a spawned child process. This creates self.existing_shm which gets</span>
+<span class="sd">        closed when self.__del__ gets called.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        existing_shm_name : str</span>
+<span class="sd">            Name an existing shared memory block to attach this sketch to</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">existing_shm</span> <span class="o">=</span> <span class="n">SharedMemory</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">existing_shm_name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">registers</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">frombuffer</span><span class="p">(</span><span class="n">existing_shm</span><span class="o">.</span><span class="n">buf</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">existing_shm</span> <span class="o">=</span> <span class="n">existing_shm</span></div>
+
+<div class="viewcode-block" id="HyperLogLog.save"><a class="viewcode-back" href="../../sketchnu.html#sketchnu.hyperloglog.HyperLogLog.save">[docs]</a>    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Save the HyperLogLog sketch, hll, to the file, filename</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        filename: str | Path</span>
+<span class="sd">            File to save the hll to disk. This will be a .npz file.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        None</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">savez</span><span class="p">(</span>
+            <span class="n">filename</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">seed</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">uint64</span><span class="p">),</span> <span class="n">hll</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">registers</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="HyperLogLog.load"><a class="viewcode-back" href="../../sketchnu.html#sketchnu.hyperloglog.HyperLogLog.load">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="n">filename</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">],</span> <span class="n">shared_memory</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Load a saved HyperLogLog sketch stored in filename</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        filename: str | Path</span>
+<span class="sd">            File path to the saved .npz file</span>
+<span class="sd">        shared_memory : bool</span>
+<span class="sd">            If True, copy registers into shared memory</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        HyperLogLog</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">with</span> <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span> <span class="k">as</span> <span class="n">npzfile</span><span class="p">:</span>
+            <span class="n">args</span> <span class="o">=</span> <span class="n">npzfile</span><span class="p">[</span><span class="s2">&quot;args&quot;</span><span class="p">]</span>
+            <span class="n">hll</span> <span class="o">=</span> <span class="n">HyperLogLog</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">shared_memory</span><span class="o">=</span><span class="n">shared_memory</span><span class="p">)</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">copyto</span><span class="p">(</span><span class="n">hll</span><span class="o">.</span><span class="n">registers</span><span class="p">,</span> <span class="n">npzfile</span><span class="p">[</span><span class="s2">&quot;hll&quot;</span><span class="p">])</span>
+
+        <span class="k">return</span> <span class="n">hll</span></div>
+
+    <span class="k">def</span> <span class="fm">__del__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">shm</span><span class="p">:</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="c1"># Need to explicity del the arrays since they are sharing the</span>
+                    <span class="c1"># memory block. Without this you get the MemoryError</span>
+                    <span class="c1"># &quot;cannot close exported pointers exist&quot;</span>
+                    <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">registers</span>
+                    <span class="n">gc</span><span class="o">.</span><span class="n">collect</span><span class="p">()</span>
+                    <span class="n">sleep</span><span class="p">(</span><span class="mf">0.25</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">shm</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">shm</span><span class="o">.</span><span class="n">unlink</span><span class="p">()</span>
+                <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">MemoryError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to close &amp; unlink: </span><span class="si">{exc}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+            <span class="k">pass</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">existing_shm</span><span class="p">:</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">registers</span>
+                    <span class="n">gc</span><span class="o">.</span><span class="n">collect</span><span class="p">()</span>
+                    <span class="n">sleep</span><span class="p">(</span><span class="mf">0.25</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">existing_shm</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+                <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">MemoryError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to close existing_shm: </span><span class="si">{exc}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+            <span class="k">pass</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Matthew Hendrey.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

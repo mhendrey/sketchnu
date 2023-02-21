@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Heavy-Hitters &mdash; sketchnu 1.2.2 documentation</title><link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Helper Functions" href="helpers.html" />
+    <link rel="prev" title="Count-Min Sketch" href="countmin.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            sketchnu
+              <img src="_static/logo.png" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                1.2.2
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="hyperloglog.html">HyperLogLog++</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="hyperloglog.html#the-basics">The Basics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hyperloglog.html#usage">Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hyperloglog.html#the-details">The Details</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hyperloglog.html#testing">Testing</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="countmin.html">Count-Min Sketch</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="countmin.html#the-basics">The Basics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="countmin.html#usage">Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="countmin.html#the-details">The Details</a></li>
+<li class="toctree-l2"><a class="reference internal" href="countmin.html#testing">Testing</a></li>
+</ul>
+</li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Heavy-Hitters</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#the-basics">The Basics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#usage">Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#the-details">The Details</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="helpers.html">Helper Functions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="helpers.html#usage">Usage</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="hashes.html">Hash Functions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="hashes.html#fasthash">FastHash</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="hashes.html#usage">Usage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="hashes.html#testing">Testing</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="hashes.html#murmurhash3">MurmurHash3</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="hashes.html#id1">Usage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="hashes.html#id2">Testing</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="sketchnu.html">sketchnu.hyperloglog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sketchnu.html#module-sketchnu.countmin">sketchnu.countmin</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sketchnu.html#module-sketchnu.heavyhitters">sketchnu.heavyhitters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sketchnu.html#module-sketchnu.helpers">sketchnu.helpers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sketchnu.html#module-sketchnu.hashes">sketchnu.hashes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sketchnu.html#sketchnu-tests">sketchnu.tests</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Admin</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="license.html">License</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="license.html#license-requirements">License Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="license.html#license-notices">License notices</a></li>
+<li class="toctree-l2"><a class="reference internal" href="license.html#copyright">Copyright</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="help.html">Help</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">sketchnu</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Heavy-Hitters</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/heavyhitters.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="heavy-hitters">
+<h1>Heavy-Hitters<a class="headerlink" href="#heavy-hitters" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="the-basics">
+<h2>The Basics<a class="headerlink" href="#the-basics" title="Permalink to this headline">¶</a></h2>
+<p>Sketch implementation of the phi-heavy hitters algorithm which identifies all the
+elements in a data stream that are observed in at least phi fraction of the records.
+This assumes that elements have a fat-tailed distribution in the data stream. This is
+an implementation of the Topkapi algorithm.</p>
+<p>Similar to a count-min sketch, a heavy-hitter uses a 2-d array with a given width <cite>w</cite>
+and depth <cite>d</cite>, but unlike a count-min sketch the heavy-hitter must also keep track of
+which elements are associated with a given cell in the 2-d array. The Topkapi algorithm
+does this by adding a byte string (storing the corresponding element) and another
+counter to each cell in the 2-d array. This is in addition to counter associated with
+the count-min sketch.</p>
+<p>When an element is to be added to the sketch, you do the following for each of the <cite>d</cite>
+rows. The element is hashed which identifies which column in the row the element is
+associated with. Increment the count-min sketch counter at that row/column. If the element
+matches the byte string stored in that row/column, then increment the secondary
+counter. If the element does not match the byte string stored in that row/column, then
+decrement the counter. If the counter goes to zero, then set the byte string to be the
+element and increment the secondary counter.</p>
+<p>To identify which elements are the most frequent, a candidate set of elements are taken
+from the 2-d array of elements stored in the byte strings. For each of these elements,
+you query the count-min sketch to determine their relative ranks to each other. Return
+only those elements whose frequency of occurency is greater than or equal to phi in
+sorted decreasing order.</p>
+<p>For practical reasons, the count-min sketch counters are removed in order to reduce the
+memory footprint even more. The secondary counter is then used to estimate the count a
+given element appears in the data stream. This secondary counter’s
+estimate &lt;= true count &lt;= cms estimate. This leads to returning fewer top k elements
+than if the cms was retained. Thus this implementation is a more conservative estimate.</p>
+</div>
+<div class="section" id="usage">
+<h2>Usage<a class="headerlink" href="#usage" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">Counter</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">sketchnu.heavyhitters</span> <span class="kn">import</span> <span class="n">HeavyHitters</span>
+
+<span class="c1"># Generate probabilities from zip distribution</span>
+<span class="c1"># with slope = -s</span>
+<span class="k">def</span> <span class="nf">zipf</span><span class="p">(</span><span class="n">vocab_size</span><span class="p">:</span><span class="nb">int</span><span class="p">,</span> <span class="n">s</span><span class="p">:</span><span class="nb">int</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+    <span class="n">denom</span> <span class="o">=</span> <span class="mf">0.0</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">vocab_size</span><span class="p">):</span>
+        <span class="n">denom</span> <span class="o">+=</span> <span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">**</span> <span class="n">s</span>
+
+    <span class="n">p</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">vocab_size</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">vocab_size</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="n">p</span><span class="p">[</span><span class="n">k</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">k</span> <span class="o">**</span> <span class="n">s</span> <span class="o">/</span> <span class="n">denom</span>
+
+    <span class="k">return</span> <span class="n">p</span> <span class="o">/</span> <span class="n">p</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+
+<span class="c1"># Number of distinct elements in stream</span>
+<span class="n">vocab_size</span> <span class="o">=</span> <span class="mi">10_000</span>
+<span class="c1"># Size of the data stream</span>
+<span class="n">N</span> <span class="o">=</span> <span class="mi">100_000</span>
+<span class="c1"># Zipf distribution with slope of -1</span>
+<span class="n">probs</span> <span class="o">=</span> <span class="n">zipf</span><span class="p">(</span><span class="n">vocab_size</span><span class="p">)</span>
+<span class="n">vocab</span> <span class="o">=</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{i:04}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">vocab_size</span><span class="p">)]</span>
+
+<span class="n">stream</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">vocab</span><span class="p">,</span> <span class="n">N</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="n">probs</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+
+<span class="n">hh</span> <span class="o">=</span> <span class="n">HeavyHitters</span><span class="p">(</span>
+    <span class="n">width</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+    <span class="n">depth</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>        <span class="c1"># Default is 4</span>
+    <span class="n">max_key_len</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>  <span class="c1"># Each vocab member is just 4-bytes</span>
+    <span class="n">phi</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span>       <span class="c1"># Defaults to 1 / width</span>
+<span class="p">)</span>
+
+<span class="c1"># Add a single key to the sketch</span>
+<span class="n">hh</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">vocab</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+<span class="c1"># Add a single key multiple times to the sketch</span>
+<span class="n">hh</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">vocab</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">3</span><span class="p">)</span>
+
+<span class="c1"># Add a stream as a Dict;</span>
+<span class="n">hh</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">Counter</span><span class="p">(</span><span class="n">stream</span><span class="p">))</span>
+<span class="c1"># You could also just do hh.update(stream), but calling Counter is nearly</span>
+<span class="c1"># 9x faster in this example.</span>
+
+<span class="c1"># Get the top 10 most frequent elements whose counts &gt;= phi * N</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">hh</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+
+<span class="c1"># Get the top 10 whose counts &gt;= 800</span>
+<span class="n">r_threshold</span> <span class="o">=</span> <span class="n">hh</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">800</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">r_threshold</span><span class="p">)</span>
+
+<span class="c1"># Instantiate a second heavy-hitter with same parameters</span>
+<span class="n">hh2</span> <span class="o">=</span> <span class="n">HeavyHitters</span><span class="p">(</span><span class="o">**</span><span class="n">hh</span><span class="o">.</span><span class="n">args</span><span class="p">)</span>
+
+<span class="c1"># Add some more elements from a similar stream</span>
+<span class="n">stream</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">vocab</span><span class="p">,</span> <span class="n">N</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="n">probs</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+
+<span class="n">hh2</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">Counter</span><span class="p">(</span><span class="n">stream</span><span class="p">))</span>
+<span class="c1"># Now merge</span>
+<span class="n">hh</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">hh2</span><span class="p">)</span>
+
+<span class="c1"># Notice counts ~2x from before merge</span>
+<span class="n">result_merge</span> <span class="o">=</span> <span class="n">hh</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">result_merge</span><span class="p">)</span>
+
+<span class="c1"># Save to disk</span>
+<span class="n">hh</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">&quot;/path/to/save/hh.npz&quot;</span><span class="p">)</span>
+<span class="n">hh_load</span> <span class="o">=</span> <span class="n">HeavyHitters</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;/path/to/save/hh.npz&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="the-details">
+<h2>The Details<a class="headerlink" href="#the-details" title="Permalink to this headline">¶</a></h2>
+<p>This is an implementation of the topkapi algorithm published from</p>
+<p>A. Mandal, H. Jiang, A. Shrivastava, and V. Sarkar, “Topkapi: Parallel and Fast
+Sketches for Finding Top-K Frequent Elements”, Advances in Neural Information
+Processing Systems <strong>31</strong>, (2018).</p>
+<p>In this paper the authors prove that the topkapi algorithm satisfies the
+phi-heavy hitters with the following guarantees:</p>
+<ul class="simple">
+<li><p>Misses to report an element with frequency &gt;= phi * N with probability at most
+delta / 2</p></li>
+<li><p>Reports an element with frequency &lt;= (phi - eps) * N with probability at most
+delta / 2</p></li>
+</ul>
+<p>where eps = 1 / <cite>w</cite>, eps &lt; phi, delta / 2 = exp(-<cite>d</cite>), and <cite>N</cite> is the total number of
+records added to the sketch. By increasing the width, and thus decreasing eps, you may
+track more elements. By increasing the depth, you decrease the probability that you
+either fail to report an element, or that you include an element that you shouldn’t.</p>
+<p>The proofs of these guarantees used the additional count-min sketch that is part of the
+topkapi algorithm. For practical considerations, the authors note that you can remove
+the count-min sketch to reduce the memory footprint. Instead they suggest using the
+incrementing &amp; decrementing secondary counter as an estimate for the frequency of
+occurrence of any given element. That is how the algorithm has been implemented in this
+package.</p>
+<p>A second practical consideration, that has <strong>not</strong> been implemented here, is to only
+use the elements stored in the first row of the sketch, instead of all the rows, when
+constructing the candidate set of elements. I found that this results in too many
+elements dropping out of the candidate set. This happens because of common elements
+colliding in the first row causing one to beat out the other for that particular column
+bucket. By using all the rows, this reduces the likelihood of this type of error and
+given that the typical depth is 4, the computational cost seems minimal.</p>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="countmin.html" class="btn btn-neutral float-left" title="Count-Min Sketch" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="helpers.html" class="btn btn-neutral float-right" title="Helper Functions" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Matthew Hendrey.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

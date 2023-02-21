@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Helper Functions &mdash; sketchnu 1.2.2 documentation</title><link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Hash Functions" href="hashes.html" />
+    <link rel="prev" title="Heavy-Hitters" href="heavyhitters.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            sketchnu
+              <img src="_static/logo.png" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                1.2.2
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="hyperloglog.html">HyperLogLog++</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="hyperloglog.html#the-basics">The Basics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hyperloglog.html#usage">Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hyperloglog.html#the-details">The Details</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hyperloglog.html#testing">Testing</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="countmin.html">Count-Min Sketch</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="countmin.html#the-basics">The Basics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="countmin.html#usage">Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="countmin.html#the-details">The Details</a></li>
+<li class="toctree-l2"><a class="reference internal" href="countmin.html#testing">Testing</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="heavyhitters.html">Heavy-Hitters</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="heavyhitters.html#the-basics">The Basics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="heavyhitters.html#usage">Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="heavyhitters.html#the-details">The Details</a></li>
+</ul>
+</li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Helper Functions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#usage">Usage</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="hashes.html">Hash Functions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="hashes.html#fasthash">FastHash</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="hashes.html#usage">Usage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="hashes.html#testing">Testing</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="hashes.html#murmurhash3">MurmurHash3</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="hashes.html#id1">Usage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="hashes.html#id2">Testing</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="sketchnu.html">sketchnu.hyperloglog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sketchnu.html#module-sketchnu.countmin">sketchnu.countmin</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sketchnu.html#module-sketchnu.heavyhitters">sketchnu.heavyhitters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sketchnu.html#module-sketchnu.helpers">sketchnu.helpers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sketchnu.html#module-sketchnu.hashes">sketchnu.hashes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sketchnu.html#sketchnu-tests">sketchnu.tests</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Admin</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="license.html">License</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="license.html#license-requirements">License Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="license.html#license-notices">License notices</a></li>
+<li class="toctree-l2"><a class="reference internal" href="license.html#copyright">Copyright</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="help.html">Help</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">sketchnu</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Helper Functions</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/helpers.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="helper-functions">
+<h1>Helper Functions<a class="headerlink" href="#helper-functions" title="Permalink to this headline">¶</a></h1>
+<p>We have written a few helper functions to aid in parallelizing the creation of one
+or more of the sketches. The functions will spin up multiple independent workers, each
+of which has its own sketch(s) to add its portion of the data to be processed. Once all
+the data has been processed, then the individual sketches will be merged efficiently in
+successive rounds of merging to achieve the final sketch for each type.</p>
+<p>The main helper function, <code class="code docutils literal notranslate"><span class="pre">parallel_add</span></code>, can add the data to one or more of the
+sketches at the same time. You just need to specify one or more of <code class="code docutils literal notranslate"><span class="pre">cms_args</span></code>,
+<code class="code docutils literal notranslate"><span class="pre">hh_args</span></code>, or <code class="code docutils literal notranslate"><span class="pre">hll_args</span></code>, which provide the necessary parameters to
+initialize the respective sketch. Simply leave one or two as the default <code class="code docutils literal notranslate"><span class="pre">None</span></code>
+if you don’t want that type of sketch.</p>
+<p>The <code class="code docutils literal notranslate"><span class="pre">parallel_add</span></code> function takes a user-defined function, <code class="code docutils literal notranslate"><span class="pre">process_q_item</span></code>,
+which turns an item from the queue into an iterable of records with each record being
+an iterable of elements (bytes) that are to be added to the sketch or a Dict whose keys
+are the bytes and values are the counts associated with that key. Using the Dict method
+will be faster if the average number of counts for a given key is greater than 1.</p>
+<p>When using <code class="code docutils literal notranslate"><span class="pre">parallel_add</span></code>, the sketches are placed into shared memory which then
+subprocess can access to parallelize the data processing, but also during the
+subsequent call to <code class="code docutils literal notranslate"><span class="pre">parallel_merge</span></code> which combines the different sketches into a
+single final sketch which is what is returned.</p>
+<div class="section" id="usage">
+<h2>Usage<a class="headerlink" href="#usage" title="Permalink to this headline">¶</a></h2>
+<p>Let’s assume that we have a bunch of text files in a directory. Each line in
+a file represents a single record. Each line (record) will be split by white
+space which will then be added to the sketches. Remember that only bytes can
+be added to a sketch, hence the <code class="code docutils literal notranslate"><span class="pre">word.encode('utf-8')</span></code>.</p>
+<p>The <code class="code docutils literal notranslate"><span class="pre">process_q_item()</span></code> method must yield records where each record is an
+iterable of bytes.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">Counter</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span> <span class="nn">sketchnu.helpers</span> <span class="kn">import</span> <span class="n">parallel_add</span>
+
+<span class="n">input_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s1">&#39;/path/to/text/files&#39;</span><span class="p">)</span>
+<span class="n">files</span> <span class="o">=</span> <span class="n">input_dir</span><span class="o">.</span><span class="n">iterdir</span><span class="p">()</span>
+
+<span class="c1"># Define the function that takes a queue item and yields records with each</span>
+<span class="c1"># record a list of elements to be added to the sketch</span>
+<span class="k">def</span> <span class="nf">process_q_item</span><span class="p">(</span><span class="n">filepath</span><span class="p">:</span><span class="nb">str</span><span class="p">):</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filepath</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">line</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+            <span class="n">record</span> <span class="o">=</span> <span class="n">Counter</span><span class="p">(</span>
+                <span class="p">[</span><span class="n">w</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span> <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()]</span>
+            <span class="p">)</span>
+            <span class="k">yield</span> <span class="n">record</span>
+
+<span class="n">cms_args</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;cms_type&quot;</span><span class="p">:</span> <span class="s2">&quot;linear&quot;</span><span class="p">,</span> <span class="s2">&quot;width&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="o">**</span><span class="mi">20</span><span class="p">}</span>
+<span class="n">hh_args</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;width&quot;</span><span class="p">:</span> <span class="mi">50</span><span class="p">,</span> <span class="s2">&quot;max_key_len&quot;</span><span class="p">:</span> <span class="mi">16</span><span class="p">}</span>
+<span class="n">hll_args</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;p&quot;</span><span class="p">:</span> <span class="mi">16</span><span class="p">}</span>
+
+<span class="n">cms</span><span class="p">,</span> <span class="n">hh</span><span class="p">,</span> <span class="n">hll</span> <span class="o">=</span> <span class="n">parallel_add</span><span class="p">(</span>
+    <span class="n">files</span><span class="p">,</span>
+    <span class="n">process_q_item</span><span class="p">,</span>
+    <span class="n">n_workers</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+    <span class="n">cms_args</span><span class="o">=</span><span class="n">cms_args</span><span class="p">,</span>
+    <span class="n">hh_args</span><span class="o">=</span><span class="n">hh_args</span><span class="p">,</span>
+    <span class="n">hll_args</span><span class="o">=</span><span class="n">hll_args</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="c1"># To see total number of elements added</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;A total of {cms.n_added():,} elements have been added&#39;</span><span class="p">)</span>
+<span class="c1"># To see total number of records added</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;{cms.n_records():,} records were processed&#39;</span><span class="p">)</span>
+<span class="c1"># To see how many times had &quot;the&quot; appears in the text</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&#39;the&#39; appears </span><span class="si">{cms[&#39;the&#39;.encode(&#39;utf-8&#39;)]}</span><span class="s2"> times&quot;</span><span class="p">)</span>
+<span class="c1"># To see how many distinct words in all the data</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;{hll.query():.1f} unique words&quot;</span><span class="p">)</span>
+<span class="c1"># To see the most common word</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;{hh.query(1)} is the most commonly seen word&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="heavyhitters.html" class="btn btn-neutral float-left" title="Heavy-Hitters" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="hashes.html" class="btn btn-neutral float-right" title="Hash Functions" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Matthew Hendrey.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

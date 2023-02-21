@@ -1,0 +1,995 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>sketchnu.heavyhitters &mdash; sketchnu 1.2.2 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            sketchnu
+              <img src="../../_static/logo.png" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                1.2.2
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../hyperloglog.html">HyperLogLog++</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../hyperloglog.html#the-basics">The Basics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../hyperloglog.html#usage">Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../hyperloglog.html#the-details">The Details</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../hyperloglog.html#testing">Testing</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../countmin.html">Count-Min Sketch</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../countmin.html#the-basics">The Basics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../countmin.html#usage">Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../countmin.html#the-details">The Details</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../countmin.html#testing">Testing</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../heavyhitters.html">Heavy-Hitters</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../heavyhitters.html#the-basics">The Basics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../heavyhitters.html#usage">Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../heavyhitters.html#the-details">The Details</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../helpers.html">Helper Functions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../helpers.html#usage">Usage</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../hashes.html">Hash Functions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../hashes.html#fasthash">FastHash</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../hashes.html#usage">Usage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../hashes.html#testing">Testing</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../hashes.html#murmurhash3">MurmurHash3</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../hashes.html#id1">Usage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../hashes.html#id2">Testing</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../sketchnu.html">sketchnu.hyperloglog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../sketchnu.html#module-sketchnu.countmin">sketchnu.countmin</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../sketchnu.html#module-sketchnu.heavyhitters">sketchnu.heavyhitters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../sketchnu.html#module-sketchnu.helpers">sketchnu.helpers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../sketchnu.html#module-sketchnu.hashes">sketchnu.hashes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../sketchnu.html#sketchnu-tests">sketchnu.tests</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Admin</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../license.html">License</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../license.html#license-requirements">License Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../license.html#license-notices">License notices</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../license.html#copyright">Copyright</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../help.html">Help</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">sketchnu</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">sketchnu.heavyhitters</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for sketchnu.heavyhitters</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Sketchnu has Numba implementations of sketch algorithms and other useful functions </span>
+<span class="sd">that utilize hash functions.</span>
+
+<span class="sd">Copyright (C) 2022 Matthew Hendrey</span>
+
+<span class="sd">This program is free software: you can redistribute it and/or modify</span>
+<span class="sd">it under the terms of the GNU General Public License as published by</span>
+<span class="sd">the Free Software Foundation, either version 3 of the License, or</span>
+<span class="sd">(at your option) any later version.</span>
+
+<span class="sd">This program is distributed in the hope that it will be useful,</span>
+<span class="sd">but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<span class="sd">MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
+<span class="sd">GNU General Public License for more details.</span>
+
+<span class="sd">You should have received a copy of the GNU General Public License</span>
+<span class="sd">along with this program.  If not, see &lt;https://www.gnu.org/licenses/&gt;.</span>
+
+
+<span class="sd">Numba implementation of the topkapi algorithm from</span>
+
+<span class="sd">A. Mandal, H. Jiang, A. Shrivastava, and V. Sarkar, &quot;Topkapi: Parallel and Fast</span>
+<span class="sd">Sketches for Finding Top-K Frequent Elements&quot;, Advances in Neural Information</span>
+<span class="sd">Processing Systems **31**, (2018).</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">Counter</span>
+<span class="kn">import</span> <span class="nn">gc</span>
+<span class="kn">from</span> <span class="nn">multiprocessing.shared_memory</span> <span class="kn">import</span> <span class="n">SharedMemory</span>
+<span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="n">njit</span><span class="p">,</span> <span class="n">uint8</span><span class="p">,</span> <span class="n">uint32</span><span class="p">,</span> <span class="n">uint64</span><span class="p">,</span> <span class="n">types</span><span class="p">,</span> <span class="n">prange</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">sleep</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span>
+
+<span class="kn">from</span> <span class="nn">sketchnu.hashes</span> <span class="kn">import</span> <span class="n">fasthash64</span>
+
+
+<span class="nd">@njit</span><span class="p">(</span>
+    <span class="n">types</span><span class="o">.</span><span class="n">void</span><span class="p">(</span>
+        <span class="n">uint8</span><span class="p">[:,</span> <span class="p">:,</span> <span class="p">:],</span>
+        <span class="n">uint32</span><span class="p">[:,</span> <span class="p">:],</span>
+        <span class="n">uint8</span><span class="p">[:,</span> <span class="p">:],</span>
+        <span class="n">uint64</span><span class="p">[:],</span>
+        <span class="n">uint64</span><span class="p">,</span>
+        <span class="n">uint64</span><span class="p">,</span>
+        <span class="n">uint64</span><span class="p">,</span>
+        <span class="n">uint32</span><span class="p">,</span>
+        <span class="n">types</span><span class="o">.</span><span class="n">Bytes</span><span class="p">(</span><span class="n">uint8</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;C&quot;</span><span class="p">),</span>
+        <span class="n">uint32</span><span class="p">,</span>
+    <span class="p">)</span>
+<span class="p">)</span>
+<span class="k">def</span> <span class="nf">_add</span><span class="p">(</span>
+    <span class="n">lhh</span><span class="p">,</span>
+    <span class="n">lhh_count</span><span class="p">,</span>
+    <span class="n">key_lens</span><span class="p">,</span>
+    <span class="n">n_added_records</span><span class="p">,</span>
+    <span class="n">width</span><span class="p">,</span>
+    <span class="n">depth</span><span class="p">,</span>
+    <span class="n">max_key_len</span><span class="p">,</span>
+    <span class="n">uint_maxval</span><span class="p">,</span>
+    <span class="n">key</span><span class="p">,</span>
+    <span class="n">value</span><span class="p">,</span>
+<span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Numba function that adds `key` into the sketch</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">key_len</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">uint64</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">key</span><span class="p">))</span>
+
+    <span class="c1"># Handle different key sizes</span>
+    <span class="k">if</span> <span class="n">key_len</span> <span class="o">==</span> <span class="n">max_key_len</span><span class="p">:</span>
+        <span class="n">key_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">frombuffer</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">uint8</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">key_len</span> <span class="o">&lt;</span> <span class="n">max_key_len</span><span class="p">:</span>
+        <span class="n">key_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">max_key_len</span><span class="p">,</span> <span class="n">uint8</span><span class="p">)</span>
+        <span class="n">key_array</span><span class="p">[:</span><span class="n">key_len</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">frombuffer</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">uint8</span><span class="p">)</span>
+    <span class="c1"># Only use the first max_key_len bytes if key is too long</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">key</span> <span class="o">=</span> <span class="n">key</span><span class="p">[:</span><span class="n">max_key_len</span><span class="p">]</span>
+        <span class="n">key_len</span> <span class="o">=</span> <span class="n">max_key_len</span>
+        <span class="n">key_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">frombuffer</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">uint8</span><span class="p">)</span>
+
+    <span class="n">n_added_records</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+=</span> <span class="n">uint64</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">depth</span><span class="p">):</span>
+        <span class="n">col</span> <span class="o">=</span> <span class="n">fasthash64</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">row</span><span class="p">)</span> <span class="o">%</span> <span class="n">width</span>
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">key_array</span> <span class="o">==</span> <span class="n">lhh</span><span class="p">[</span><span class="n">row</span><span class="p">,</span> <span class="n">col</span><span class="p">]):</span>
+            <span class="k">if</span> <span class="n">value</span> <span class="o">&lt;</span> <span class="n">uint_maxval</span> <span class="o">-</span> <span class="n">lhh_count</span><span class="p">[</span><span class="n">row</span><span class="p">,</span> <span class="n">col</span><span class="p">]:</span>
+                <span class="n">lhh_count</span><span class="p">[</span><span class="n">row</span><span class="p">,</span> <span class="n">col</span><span class="p">]</span> <span class="o">+=</span> <span class="n">value</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">lhh_count</span><span class="p">[</span><span class="n">row</span><span class="p">,</span> <span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">uint_maxval</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">value</span> <span class="o">&gt;</span> <span class="n">lhh_count</span><span class="p">[</span><span class="n">row</span><span class="p">,</span> <span class="n">col</span><span class="p">]:</span>
+                <span class="n">lhh</span><span class="p">[</span><span class="n">row</span><span class="p">,</span> <span class="n">col</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">key_array</span>
+                <span class="n">lhh_count</span><span class="p">[</span><span class="n">row</span><span class="p">,</span> <span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span> <span class="o">-</span> <span class="n">lhh_count</span><span class="p">[</span><span class="n">row</span><span class="p">,</span> <span class="n">col</span><span class="p">]</span>
+                <span class="n">key_lens</span><span class="p">[</span><span class="n">row</span><span class="p">,</span> <span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">uint8</span><span class="p">(</span><span class="n">key_len</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">lhh_count</span><span class="p">[</span><span class="n">row</span><span class="p">,</span> <span class="n">col</span><span class="p">]</span> <span class="o">-=</span> <span class="n">value</span>
+
+
+<span class="nd">@njit</span><span class="p">(</span>
+    <span class="n">types</span><span class="o">.</span><span class="n">void</span><span class="p">(</span>
+        <span class="n">uint8</span><span class="p">[:,</span> <span class="p">:,</span> <span class="p">:],</span>
+        <span class="n">uint32</span><span class="p">[:,</span> <span class="p">:],</span>
+        <span class="n">uint8</span><span class="p">[:,</span> <span class="p">:],</span>
+        <span class="n">uint64</span><span class="p">[:],</span>
+        <span class="n">uint64</span><span class="p">,</span>
+        <span class="n">uint64</span><span class="p">,</span>
+        <span class="n">uint64</span><span class="p">,</span>
+        <span class="n">uint32</span><span class="p">,</span>
+        <span class="n">types</span><span class="o">.</span><span class="n">Bytes</span><span class="p">(</span><span class="n">uint8</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;C&quot;</span><span class="p">),</span>
+        <span class="n">uint64</span><span class="p">,</span>
+    <span class="p">)</span>
+<span class="p">)</span>
+<span class="k">def</span> <span class="nf">_add_ngram</span><span class="p">(</span>
+    <span class="n">lhh</span><span class="p">,</span>
+    <span class="n">lhh_count</span><span class="p">,</span>
+    <span class="n">key_lens</span><span class="p">,</span>
+    <span class="n">n_added_records</span><span class="p">,</span>
+    <span class="n">width</span><span class="p">,</span>
+    <span class="n">depth</span><span class="p">,</span>
+    <span class="n">max_key_len</span><span class="p">,</span>
+    <span class="n">uint_maxval</span><span class="p">,</span>
+    <span class="n">key</span><span class="p">,</span>
+    <span class="n">ngram</span><span class="p">,</span>
+<span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Numba function that shingles `key` into ngrams of size `ngram` and then adds each</span>
+<span class="sd">    ngram into the sketch</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">key_len</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">uint64</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">key</span><span class="p">))</span>
+    <span class="k">if</span> <span class="n">key_len</span> <span class="o">&lt;=</span> <span class="n">ngram</span><span class="p">:</span>
+        <span class="n">_add</span><span class="p">(</span>
+            <span class="n">lhh</span><span class="p">,</span>
+            <span class="n">lhh_count</span><span class="p">,</span>
+            <span class="n">key_lens</span><span class="p">,</span>
+            <span class="n">n_added_records</span><span class="p">,</span>
+            <span class="n">width</span><span class="p">,</span>
+            <span class="n">depth</span><span class="p">,</span>
+            <span class="n">max_key_len</span><span class="p">,</span>
+            <span class="n">uint_maxval</span><span class="p">,</span>
+            <span class="n">key</span><span class="p">,</span>
+            <span class="n">uint32</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span>
+        <span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">key_len</span> <span class="o">-</span> <span class="p">(</span><span class="n">ngram</span> <span class="o">-</span> <span class="n">uint64</span><span class="p">(</span><span class="mi">1</span><span class="p">))):</span>
+            <span class="n">_add</span><span class="p">(</span>
+                <span class="n">lhh</span><span class="p">,</span>
+                <span class="n">lhh_count</span><span class="p">,</span>
+                <span class="n">key_lens</span><span class="p">,</span>
+                <span class="n">n_added_records</span><span class="p">,</span>
+                <span class="n">width</span><span class="p">,</span>
+                <span class="n">depth</span><span class="p">,</span>
+                <span class="n">max_key_len</span><span class="p">,</span>
+                <span class="n">uint_maxval</span><span class="p">,</span>
+                <span class="n">key</span><span class="p">[</span><span class="n">i</span> <span class="p">:</span> <span class="n">i</span> <span class="o">+</span> <span class="n">ngram</span><span class="p">],</span>
+                <span class="n">uint32</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span>
+            <span class="p">)</span>
+
+
+<span class="nd">@njit</span><span class="p">(</span>
+    <span class="n">types</span><span class="o">.</span><span class="n">void</span><span class="p">(</span>
+        <span class="n">uint8</span><span class="p">[:,</span> <span class="p">:,</span> <span class="p">:],</span>
+        <span class="n">uint32</span><span class="p">[:,</span> <span class="p">:],</span>
+        <span class="n">uint8</span><span class="p">[:,</span> <span class="p">:],</span>
+        <span class="n">uint64</span><span class="p">[:],</span>
+        <span class="n">uint64</span><span class="p">,</span>
+        <span class="n">uint64</span><span class="p">,</span>
+        <span class="n">uint32</span><span class="p">,</span>
+        <span class="n">uint8</span><span class="p">[:,</span> <span class="p">:,</span> <span class="p">:],</span>
+        <span class="n">uint32</span><span class="p">[:,</span> <span class="p">:],</span>
+        <span class="n">uint8</span><span class="p">[:,</span> <span class="p">:],</span>
+        <span class="n">uint64</span><span class="p">[:],</span>
+    <span class="p">),</span>
+    <span class="n">parallel</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="k">def</span> <span class="nf">_merge</span><span class="p">(</span>
+    <span class="n">lhh</span><span class="p">,</span>
+    <span class="n">lhh_count</span><span class="p">,</span>
+    <span class="n">key_lens</span><span class="p">,</span>
+    <span class="n">n_added_records</span><span class="p">,</span>
+    <span class="n">width</span><span class="p">,</span>
+    <span class="n">depth</span><span class="p">,</span>
+    <span class="n">uint_maxval</span><span class="p">,</span>
+    <span class="n">other_lhh</span><span class="p">,</span>
+    <span class="n">other_lhh_count</span><span class="p">,</span>
+    <span class="n">other_key_lens</span><span class="p">,</span>
+    <span class="n">other_n_added_records</span><span class="p">,</span>
+<span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Numba function to merge the second heavy hitter sketch into the first</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">prange</span><span class="p">(</span><span class="n">depth</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">width</span><span class="p">):</span>
+            <span class="n">keys_match</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">lhh</span><span class="p">[</span><span class="n">row</span><span class="p">,</span> <span class="n">col</span><span class="p">]</span> <span class="o">==</span> <span class="n">other_lhh</span><span class="p">[</span><span class="n">row</span><span class="p">,</span> <span class="n">col</span><span class="p">]))</span> <span class="ow">and</span> <span class="p">(</span>
+                <span class="n">key_lens</span><span class="p">[</span><span class="n">row</span><span class="p">,</span> <span class="n">col</span><span class="p">]</span> <span class="o">==</span> <span class="n">other_key_lens</span><span class="p">[</span><span class="n">row</span><span class="p">,</span> <span class="n">col</span><span class="p">]</span>
+            <span class="p">)</span>
+            <span class="k">if</span> <span class="n">keys_match</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">other_lhh_count</span><span class="p">[</span><span class="n">row</span><span class="p">,</span> <span class="n">col</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">uint_maxval</span> <span class="o">-</span> <span class="n">lhh_count</span><span class="p">[</span><span class="n">row</span><span class="p">,</span> <span class="n">col</span><span class="p">]:</span>
+                    <span class="n">lhh_count</span><span class="p">[</span><span class="n">row</span><span class="p">,</span> <span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">uint_maxval</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">lhh_count</span><span class="p">[</span><span class="n">row</span><span class="p">,</span> <span class="n">col</span><span class="p">]</span> <span class="o">+=</span> <span class="n">other_lhh_count</span><span class="p">[</span><span class="n">row</span><span class="p">,</span> <span class="n">col</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">lhh_count</span><span class="p">[</span><span class="n">row</span><span class="p">,</span> <span class="n">col</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">other_lhh_count</span><span class="p">[</span><span class="n">row</span><span class="p">,</span> <span class="n">col</span><span class="p">]:</span>
+                    <span class="n">lhh_count</span><span class="p">[</span><span class="n">row</span><span class="p">,</span> <span class="n">col</span><span class="p">]</span> <span class="o">-=</span> <span class="n">other_lhh_count</span><span class="p">[</span><span class="n">row</span><span class="p">,</span> <span class="n">col</span><span class="p">]</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">lhh</span><span class="p">[</span><span class="n">row</span><span class="p">,</span> <span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">other_lhh</span><span class="p">[</span><span class="n">row</span><span class="p">,</span> <span class="n">col</span><span class="p">]</span>
+                    <span class="n">key_lens</span><span class="p">[</span><span class="n">row</span><span class="p">,</span> <span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">other_key_lens</span><span class="p">[</span><span class="n">row</span><span class="p">,</span> <span class="n">col</span><span class="p">]</span>
+                    <span class="n">lhh_count</span><span class="p">[</span><span class="n">row</span><span class="p">,</span> <span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+                        <span class="n">other_lhh_count</span><span class="p">[</span><span class="n">row</span><span class="p">,</span> <span class="n">col</span><span class="p">]</span> <span class="o">-</span> <span class="n">lhh_count</span><span class="p">[</span><span class="n">row</span><span class="p">,</span> <span class="n">col</span><span class="p">]</span>
+                    <span class="p">)</span>
+
+    <span class="c1"># Merge the special counters</span>
+    <span class="n">n_added_records</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+=</span> <span class="n">other_n_added_records</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">n_added_records</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+=</span> <span class="n">other_n_added_records</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+
+<span class="nd">@njit</span><span class="p">(</span>
+    <span class="n">uint32</span><span class="p">(</span>
+        <span class="n">uint8</span><span class="p">[:,</span> <span class="p">:,</span> <span class="p">:],</span>
+        <span class="n">uint32</span><span class="p">[:,</span> <span class="p">:],</span>
+        <span class="n">uint64</span><span class="p">,</span>
+        <span class="n">uint64</span><span class="p">,</span>
+        <span class="n">uint64</span><span class="p">,</span>
+        <span class="n">types</span><span class="o">.</span><span class="n">Bytes</span><span class="p">(</span><span class="n">uint8</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;C&quot;</span><span class="p">),</span>
+        <span class="n">uint8</span><span class="p">,</span>
+    <span class="p">)</span>
+<span class="p">)</span>
+<span class="k">def</span> <span class="nf">_max_count</span><span class="p">(</span><span class="n">lhh</span><span class="p">,</span> <span class="n">lhh_count</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">depth</span><span class="p">,</span> <span class="n">max_key_len</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">key_len</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Numba function to provide the estimated count for the given `key`</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">key_len</span> <span class="o">==</span> <span class="n">max_key_len</span><span class="p">:</span>
+        <span class="n">key_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">frombuffer</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">uint8</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">key_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">max_key_len</span><span class="p">,</span> <span class="n">uint8</span><span class="p">)</span>
+        <span class="n">key_array</span><span class="p">[:</span><span class="n">key_len</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">frombuffer</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">uint8</span><span class="p">)</span>
+
+    <span class="n">max_count</span> <span class="o">=</span> <span class="n">uint32</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">depth</span><span class="p">):</span>
+        <span class="n">col</span> <span class="o">=</span> <span class="n">fasthash64</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">row</span><span class="p">)</span> <span class="o">%</span> <span class="n">width</span>
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">key_array</span> <span class="o">==</span> <span class="n">lhh</span><span class="p">[</span><span class="n">row</span><span class="p">,</span> <span class="n">col</span><span class="p">])</span> <span class="ow">and</span> <span class="n">lhh_count</span><span class="p">[</span><span class="n">row</span><span class="p">,</span> <span class="n">col</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">max_count</span><span class="p">:</span>
+            <span class="n">max_count</span> <span class="o">=</span> <span class="n">lhh_count</span><span class="p">[</span><span class="n">row</span><span class="p">,</span> <span class="n">col</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">max_count</span>
+
+
+<div class="viewcode-block" id="HeavyHitters"><a class="viewcode-back" href="../../sketchnu.html#sketchnu.heavyhitters.HeavyHitters">[docs]</a><span class="k">class</span> <span class="nc">HeavyHitters</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Sketch implementation of the phi-heavy hitters algorithm which identifies all the</span>
+<span class="sd">    keys in a data stream that are observed in at least phi fraction of the records.</span>
+<span class="sd">    This assumes that keys have a fat-tailed distribution in the data stream. This is</span>
+<span class="sd">    an implementation of the Topkapi algorithm.</span>
+
+<span class="sd">    The parameter phi must be greater than 1 / width of the sketch for the theoretical</span>
+<span class="sd">    guarantees to be valid. The theoretical guarantees use a count-min sketch to</span>
+<span class="sd">    estimate the frequency of any given key. For practical reasons, the paper suggests</span>
+<span class="sd">    dropping the count-min sketch to save space. In this case you use the lhh_count as</span>
+<span class="sd">    an estimate of the frequency of occurence for a given key. Note that</span>
+<span class="sd">    lhh_count &lt;= true count &lt;= cms. So when we call the query function we are doing a</span>
+<span class="sd">    more conservative estimate which corresponds to a higher phi. If you are feeling</span>
+<span class="sd">    like you want to squeeze more out of the sketch you can provide a lower threshold</span>
+<span class="sd">    (= phi * n_added()) when calling the query() function.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    width : int</span>
+<span class="sd">        Width of the heavy hitters sketch. Must be non-negative</span>
+<span class="sd">    depth : int, optional</span>
+<span class="sd">        Depth of the heavy hitters sketch. Must be non-negative. Default is 4</span>
+<span class="sd">    max_key_len : int, optional</span>
+<span class="sd">        Maximum number of bytes any given key may have. Must be less than 256.</span>
+<span class="sd">        Default is 16</span>
+<span class="sd">    phi : float, optional</span>
+<span class="sd">        When generating the candidate set of heavy hitters, only keys whose estimated</span>
+<span class="sd">        frequency of occurrence (lhh_count) &gt;= phi * n_added() will be added to the</span>
+<span class="sd">        candidate set. Default of None is set to 1 / width.</span>
+<span class="sd">    shared_memory : bool, optional</span>
+<span class="sd">        If True, then sketch is placed in shared memory. Needed if performing</span>
+<span class="sd">        multiprocessing as sketchnu.helpers.parallel_add() does. Default is False</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    width : np.uint64</span>
+<span class="sd">        Width of the 2-d array of counters of the sketch</span>
+<span class="sd">    depth : np.uint64</span>
+<span class="sd">        Depth of the 2-d array of counters of the sketch</span>
+<span class="sd">    max_key_len : np.uint64</span>
+<span class="sd">        Maximum number of bytes any given key may have. Must be less than 256</span>
+<span class="sd">    phi : np.float64</span>
+<span class="sd">        When generating the candidate set of heavy hitters, only keys whose estimated</span>
+<span class="sd">        frequency of occurrence (lhh_count) &gt;= phi * n_added() will be added to the</span>
+<span class="sd">        candidate set. Default of None is set to 1 / width.</span>
+<span class="sd">    lhh : np.ndarray, shape=(depth, width, max_key_len), dtype=np.uint8</span>
+<span class="sd">        Storing the keys associated with each bucket in the 2-d array of counters. Keys</span>
+<span class="sd">        are stored as numpy arrays, as opposed to 2-d list of bytes, in order for numba</span>
+<span class="sd">        to be able to process them. If a given key has fewer bytes than max_len_key,</span>
+<span class="sd">        then right padded with 0s.</span>
+<span class="sd">    lhh_count : np.ndarray, shape=(depth, width), dtype=np.uint32</span>
+<span class="sd">        Store the counts associated with keys stored in lhh.</span>
+<span class="sd">    key_lens : np.ndarray, shape=(depth, width), dtype=np.uint8</span>
+<span class="sd">        The length of each of the keys stored in lhh</span>
+<span class="sd">    n_added_records : np.ndarray, shape=(2,), dtype=np.uint64</span>
+<span class="sd">        1-d array that holds two special counters. The first is the number of elements</span>
+<span class="sd">        that have been added to the sketch. Useful for calculating error limits. The</span>
+<span class="sd">        second is used by helpers.parallel_add() to keep track of the number of records</span>
+<span class="sd">        that have been processed.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">width</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">depth</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span>
+        <span class="n">max_key_len</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">16</span><span class="p">,</span>
+        <span class="n">phi</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">shared_memory</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize a heavy hitters sketch</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        width : int</span>
+<span class="sd">            Width of the heavy hitters sketch. Must be non-negative</span>
+<span class="sd">        depth : int, optional</span>
+<span class="sd">            Depth of the heavy hitters sketch. Must be non-negative. Default is 4</span>
+<span class="sd">        max_key_len : int, optional</span>
+<span class="sd">            Maximum number of bytes any given key may have. Must be less than 256.</span>
+<span class="sd">            Default is 16</span>
+<span class="sd">        phi : float, optional</span>
+<span class="sd">            When generating the candidate set of heavy hitters, only keys whose</span>
+<span class="sd">            estimated frequency of occurrence (lhh_count) &gt;= phi * n_added() will be</span>
+<span class="sd">            added to the candidate set. Default of None is set to 1 / width.</span>
+<span class="sd">        shared_memory : bool, optional</span>
+<span class="sd">            If True, then sketch is placed in shared memory. Needed if performing</span>
+<span class="sd">            multiprocessing as sketchnu.helpers.parallel_add() does. Default is False</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        HeavyHitters</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">int_types</span> <span class="o">=</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">int8</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">uint32</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">uint64</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">int64</span><span class="p">)</span>
+        <span class="n">float_types</span> <span class="o">=</span> <span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">width</span> <span class="o">&lt;=</span> <span class="mi">0</span> <span class="ow">or</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="n">int_types</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;{width=:}. Must be an integer greater than 0&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">depth</span> <span class="o">&lt;=</span> <span class="mi">0</span> <span class="ow">or</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">depth</span><span class="p">,</span> <span class="n">int_types</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;{depth=:}. Must be an integer greater than 0&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="p">(</span>
+            <span class="n">max_key_len</span> <span class="o">&lt;=</span> <span class="mi">0</span>
+            <span class="ow">or</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">max_key_len</span><span class="p">,</span> <span class="n">int_types</span><span class="p">)</span>
+            <span class="ow">or</span> <span class="n">max_key_len</span> <span class="o">&gt;</span> <span class="mi">255</span>
+        <span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;{max_key_len=:}. Must be an integer [1, 255]&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">phi</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">phi</span><span class="p">,</span> <span class="n">float_types</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;{phi=:}. Must be None or a positive float&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">phi</span><span class="p">,</span> <span class="n">float_types</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">phi</span> <span class="o">&lt;=</span> <span class="mf">0.0</span> <span class="ow">or</span> <span class="n">phi</span> <span class="o">&gt;=</span> <span class="mf">1.0</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;{phi=:}. Must be float between (0.0, 1.0)&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">shared_memory</span><span class="p">,</span> <span class="nb">bool</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;{type(shared_memory)=:}. Must be a boolean&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">uint64</span><span class="p">(</span><span class="n">width</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">depth</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">uint64</span><span class="p">(</span><span class="n">depth</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_key_len</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">uint64</span><span class="p">(</span><span class="n">max_key_len</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">phi</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">phi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">phi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">(</span><span class="n">phi</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">uint_maxval</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">uint32</span><span class="p">(</span><span class="mi">2</span><span class="o">**</span><span class="mi">32</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;width&quot;</span><span class="p">:</span> <span class="n">width</span><span class="p">,</span>
+            <span class="s2">&quot;depth&quot;</span><span class="p">:</span> <span class="n">depth</span><span class="p">,</span>
+            <span class="s2">&quot;max_key_len&quot;</span><span class="p">:</span> <span class="n">max_key_len</span><span class="p">,</span>
+            <span class="s2">&quot;phi&quot;</span><span class="p">:</span> <span class="n">phi</span><span class="p">,</span>
+        <span class="p">}</span>
+
+        <span class="c1"># Store the value of n_added_records[0] when query was last run</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">candidate_set</span> <span class="o">=</span> <span class="n">Counter</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_added_sort</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">threshold_sort</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">uint32</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+        <span class="c1"># Number of bytes needed for lhh, lhh_count, n_added_records</span>
+        <span class="n">lhh_nbytes</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">max_key_len</span> <span class="o">*</span> <span class="n">width</span> <span class="o">*</span> <span class="n">depth</span><span class="p">)</span>
+        <span class="n">lhh_count_nbytes</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="mi">4</span> <span class="o">*</span> <span class="n">width</span> <span class="o">*</span> <span class="n">depth</span><span class="p">)</span>
+        <span class="n">key_lens_nbytes</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="mi">1</span> <span class="o">*</span> <span class="n">width</span> <span class="o">*</span> <span class="n">depth</span><span class="p">)</span>
+        <span class="n">n_added_nbytes</span> <span class="o">=</span> <span class="mi">8</span> <span class="o">*</span> <span class="mi">2</span>
+
+        <span class="k">if</span> <span class="n">shared_memory</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">shm</span> <span class="o">=</span> <span class="n">SharedMemory</span><span class="p">(</span>
+                <span class="n">create</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="n">lhh_nbytes</span> <span class="o">+</span> <span class="n">lhh_count_nbytes</span> <span class="o">+</span> <span class="n">key_lens_nbytes</span> <span class="o">+</span> <span class="n">n_added_nbytes</span><span class="p">),</span>
+            <span class="p">)</span>
+            <span class="n">start</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">end</span> <span class="o">=</span> <span class="n">lhh_nbytes</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">lhh</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">frombuffer</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">shm</span><span class="o">.</span><span class="n">buf</span><span class="p">[</span><span class="n">start</span><span class="p">:</span><span class="n">end</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">depth</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_key_len</span>
+            <span class="p">)</span>
+            <span class="n">start</span> <span class="o">=</span> <span class="n">end</span>
+            <span class="n">end</span> <span class="o">+=</span> <span class="n">lhh_count_nbytes</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">lhh_count</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">frombuffer</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">shm</span><span class="o">.</span><span class="n">buf</span><span class="p">[</span><span class="n">start</span><span class="p">:</span><span class="n">end</span><span class="p">],</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">uint32</span><span class="p">,</span>
+            <span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">depth</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="p">)</span>
+            <span class="n">start</span> <span class="o">=</span> <span class="n">end</span>
+            <span class="n">end</span> <span class="o">+=</span> <span class="n">key_lens_nbytes</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">key_lens</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">frombuffer</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">shm</span><span class="o">.</span><span class="n">buf</span><span class="p">[</span><span class="n">start</span><span class="p">:</span><span class="n">end</span><span class="p">],</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">,</span>
+            <span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">depth</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="p">)</span>
+            <span class="n">start</span> <span class="o">=</span> <span class="n">end</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">n_added_records</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">frombuffer</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">shm</span><span class="o">.</span><span class="n">buf</span><span class="p">[</span><span class="n">start</span><span class="p">:],</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">uint64</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">lhh</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">depth</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_key_len</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">lhh_count</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">depth</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">uint32</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">key_lens</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">depth</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">n_added_records</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">uint64</span><span class="p">)</span>
+
+<div class="viewcode-block" id="HeavyHitters.query"><a class="viewcode-back" href="../../sketchnu.html#sketchnu.heavyhitters.HeavyHitters.query">[docs]</a>    <span class="k">def</span> <span class="nf">query</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">threshold</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">bytes</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return the top `k` heavy hitters. If new data has been added or if `threshold`</span>
+<span class="sd">        is different from the last time a candidate set was generated, then this will</span>
+<span class="sd">        generate a new candidate set before selecting the top `k`.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        k : int</span>
+<span class="sd">        threshold : int, optional</span>
+<span class="sd">            Only include keys from lhh whose lhh_counts &gt;= `threshold`. Default is None</span>
+<span class="sd">            which then sets threshold to self.phi * self.n_added()</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        List[Tuple[bytes, int]]</span>
+<span class="sd">            Sorted list of the (key, count) of the top `k`. Format is the same as</span>
+<span class="sd">            collections.Counter().most_common().</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">threshold</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">threshold</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">uint32</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">phi</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_added</span><span class="p">())</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">threshold</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">uint32</span><span class="p">(</span><span class="n">threshold</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_added_sort</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_added</span><span class="p">())</span> <span class="ow">or</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">threshold_sort</span> <span class="o">!=</span> <span class="n">threshold</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">generate_candidate_set</span><span class="p">(</span><span class="n">threshold</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">candidate_set</span><span class="o">.</span><span class="n">most_common</span><span class="p">(</span><span class="n">k</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="HeavyHitters.add"><a class="viewcode-back" href="../../sketchnu.html#sketchnu.heavyhitters.HeavyHitters.add">[docs]</a>    <span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Add a single `key` to the heavy hitters sketch and update the counter tracking</span>
+<span class="sd">        total number of keys added to the sketch.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        key : bytes</span>
+<span class="sd">            Element to be added to the sketch</span>
+<span class="sd">        value : int, optional</span>
+<span class="sd">            Number of times to add `key` to the sketch. Default is 1</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">uint_maxval</span><span class="p">)</span>
+        <span class="n">_add</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">lhh</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">lhh_count</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">key_lens</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">n_added_records</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">depth</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">max_key_len</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">uint_maxval</span><span class="p">,</span>
+            <span class="n">key</span><span class="p">,</span>
+            <span class="n">value</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="HeavyHitters.update"><a class="viewcode-back" href="../../sketchnu.html#sketchnu.heavyhitters.HeavyHitters.update">[docs]</a>    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">keys</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">bytes</span><span class="p">],</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">bytes</span><span class="p">,</span> <span class="nb">int</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Add `keys` to the sketch. This follows the convention of collections.Counter</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        keys : List[bytes] | Dict[bytes, int]</span>
+<span class="sd">            List of elements to add to the sketch or a dictionary which can specify the</span>
+<span class="sd">            number of times to add each `key`</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        None</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">keys</span><span class="p">,</span> <span class="n">Dict</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">keys</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">keys</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">key</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="HeavyHitters.add_ngram"><a class="viewcode-back" href="../../sketchnu.html#sketchnu.heavyhitters.HeavyHitters.add_ngram">[docs]</a>    <span class="k">def</span> <span class="nf">add_ngram</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">ngram</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Take a given `key` and shingle it into ngrams of size `ngram` and then</span>
+<span class="sd">        add the ngrams to the sketch. If the `key` length is less than `ngram`</span>
+<span class="sd">        then add the whole `key`</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        key : bytes</span>
+<span class="sd">            Element to be shingled before adding to the sketch</span>
+<span class="sd">        ngram : int</span>
+<span class="sd">            ngram size</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        None</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">ngram</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">uint64</span><span class="p">(</span><span class="n">ngram</span><span class="p">)</span>
+        <span class="n">_add_ngram</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">lhh</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">lhh_count</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">key_lens</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">n_added_records</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">depth</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">max_key_len</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">uint_maxval</span><span class="p">,</span>
+            <span class="n">key</span><span class="p">,</span>
+            <span class="n">ngram</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="HeavyHitters.update_ngram"><a class="viewcode-back" href="../../sketchnu.html#sketchnu.heavyhitters.HeavyHitters.update_ngram">[docs]</a>    <span class="k">def</span> <span class="nf">update_ngram</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">keys</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">bytes</span><span class="p">],</span> <span class="n">ngram</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Given a list of keys, shingle each into ngrams of size `ngram`, and then</span>
+<span class="sd">        add them to the sketch.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        keys : List[bytes]</span>
+<span class="sd">            List of elements to be shingled before adding to the sketch.</span>
+<span class="sd">        ngram : int</span>
+<span class="sd">            ngram size</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        None</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Loop through the keys</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">keys</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_ngram</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">ngram</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="HeavyHitters.merge"><a class="viewcode-back" href="../../sketchnu.html#sketchnu.heavyhitters.HeavyHitters.merge">[docs]</a>    <span class="k">def</span> <span class="nf">merge</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Merge the HeavyHitter sketch `other` into this one.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        other : HeavyHitters</span>
+<span class="sd">            Another HeavyHitters with the same width, depth, max_key_len.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        None</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        TypeError</span>
+<span class="sd">            If `other` has different width, depth, or max_key_len</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">!=</span> <span class="n">other</span><span class="o">.</span><span class="n">width</span>
+            <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">depth</span> <span class="o">!=</span> <span class="n">other</span><span class="o">.</span><span class="n">depth</span>
+            <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_key_len</span> <span class="o">!=</span> <span class="n">other</span><span class="o">.</span><span class="n">max_key_len</span>
+        <span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;self and other have different width | depth | max_key_len&quot;</span><span class="p">)</span>
+
+        <span class="n">_merge</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">lhh</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">lhh_count</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">key_lens</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">n_added_records</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">depth</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">uint_maxval</span><span class="p">,</span>
+            <span class="n">other</span><span class="o">.</span><span class="n">lhh</span><span class="p">,</span>
+            <span class="n">other</span><span class="o">.</span><span class="n">lhh_count</span><span class="p">,</span>
+            <span class="n">other</span><span class="o">.</span><span class="n">key_lens</span><span class="p">,</span>
+            <span class="n">other</span><span class="o">.</span><span class="n">n_added_records</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="HeavyHitters.save"><a class="viewcode-back" href="../../sketchnu.html#sketchnu.heavyhitters.HeavyHitters.save">[docs]</a>    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Save the sketch to `filename` adding the .npz extension if not already part of</span>
+<span class="sd">        `filename`</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        filename: str | Path</span>
+<span class="sd">            File to save the sketch to disk. This will be a .npz file.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        None</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">savez</span><span class="p">(</span>
+            <span class="n">filename</span><span class="p">,</span>
+            <span class="n">args</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+                <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">depth</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_key_len</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">phi</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span>
+            <span class="p">),</span>
+            <span class="n">lhh</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">lhh</span><span class="p">,</span>
+            <span class="n">lhh_count</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">lhh_count</span><span class="p">,</span>
+            <span class="n">key_lens</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">key_lens</span><span class="p">,</span>
+            <span class="n">n_added_records</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_added_records</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="HeavyHitters.load"><a class="viewcode-back" href="../../sketchnu.html#sketchnu.heavyhitters.HeavyHitters.load">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="n">filename</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">],</span> <span class="n">shared_memory</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Load a saved HeavyHitters stored in `filename`</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        filename : str | Path</span>
+<span class="sd">            File path to the saved .npz file</span>
+<span class="sd">        shared_memory : bool, optional</span>
+<span class="sd">            If True, load into shared memory. Default is False.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        HeavyHitters</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">with</span> <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span> <span class="k">as</span> <span class="n">npzfile</span><span class="p">:</span>
+            <span class="n">args</span> <span class="o">=</span> <span class="n">npzfile</span><span class="p">[</span><span class="s2">&quot;args&quot;</span><span class="p">]</span>
+            <span class="n">width</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">uint64</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="n">depth</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">uint64</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+            <span class="n">max_key_len</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">uint64</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+            <span class="n">phi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
+            <span class="n">hh</span> <span class="o">=</span> <span class="n">HeavyHitters</span><span class="p">(</span>
+                <span class="n">width</span><span class="p">,</span> <span class="n">depth</span><span class="p">,</span> <span class="n">max_key_len</span><span class="p">,</span> <span class="n">phi</span><span class="p">,</span> <span class="n">shared_memory</span><span class="o">=</span><span class="n">shared_memory</span>
+            <span class="p">)</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">copyto</span><span class="p">(</span><span class="n">hh</span><span class="o">.</span><span class="n">lhh</span><span class="p">,</span> <span class="n">npzfile</span><span class="p">[</span><span class="s2">&quot;lhh&quot;</span><span class="p">])</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">copyto</span><span class="p">(</span><span class="n">hh</span><span class="o">.</span><span class="n">lhh_count</span><span class="p">,</span> <span class="n">npzfile</span><span class="p">[</span><span class="s2">&quot;lhh_count&quot;</span><span class="p">])</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">copyto</span><span class="p">(</span><span class="n">hh</span><span class="o">.</span><span class="n">key_lens</span><span class="p">,</span> <span class="n">npzfile</span><span class="p">[</span><span class="s2">&quot;key_lens&quot;</span><span class="p">])</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">copyto</span><span class="p">(</span><span class="n">hh</span><span class="o">.</span><span class="n">n_added_records</span><span class="p">,</span> <span class="n">npzfile</span><span class="p">[</span><span class="s2">&quot;n_added_records&quot;</span><span class="p">])</span>
+
+        <span class="n">hh</span><span class="o">.</span><span class="n">generate_candidate_set</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="n">hh</span></div>
+
+<div class="viewcode-block" id="HeavyHitters.attach_existing_shm"><a class="viewcode-back" href="../../sketchnu.html#sketchnu.heavyhitters.HeavyHitters.attach_existing_shm">[docs]</a>    <span class="k">def</span> <span class="nf">attach_existing_shm</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">existing_shm_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Attach this sketch to an existing shared memory block. Useful when working</span>
+<span class="sd">        within a spawned child process. This creates self.existing_shm which gets</span>
+<span class="sd">        closed when self.__del__ gets called.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        existing_shm_name : str</span>
+<span class="sd">            Name of an existing shared memory block to attach this sketch to</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">existing_shm</span> <span class="o">=</span> <span class="n">SharedMemory</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">existing_shm_name</span><span class="p">)</span>
+
+        <span class="n">start</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">end</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lhh</span><span class="o">.</span><span class="n">nbytes</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lhh</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">frombuffer</span><span class="p">(</span><span class="n">existing_shm</span><span class="o">.</span><span class="n">buf</span><span class="p">[</span><span class="n">start</span><span class="p">:</span><span class="n">end</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">depth</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_key_len</span>
+        <span class="p">)</span>
+        <span class="n">start</span> <span class="o">=</span> <span class="n">end</span>
+        <span class="n">end</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lhh_count</span><span class="o">.</span><span class="n">nbytes</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lhh_count</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">frombuffer</span><span class="p">(</span>
+            <span class="n">existing_shm</span><span class="o">.</span><span class="n">buf</span><span class="p">[</span><span class="n">start</span><span class="p">:</span><span class="n">end</span><span class="p">],</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">uint32</span><span class="p">,</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">depth</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="p">)</span>
+        <span class="n">start</span> <span class="o">=</span> <span class="n">end</span>
+        <span class="n">end</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">key_lens</span><span class="o">.</span><span class="n">nbytes</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">key_lens</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">frombuffer</span><span class="p">(</span>
+            <span class="n">existing_shm</span><span class="o">.</span><span class="n">buf</span><span class="p">[</span><span class="n">start</span><span class="p">:</span><span class="n">end</span><span class="p">],</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">,</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">depth</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="p">)</span>
+        <span class="n">start</span> <span class="o">=</span> <span class="n">end</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_added_records</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">frombuffer</span><span class="p">(</span>
+            <span class="n">existing_shm</span><span class="o">.</span><span class="n">buf</span><span class="p">[</span><span class="n">start</span><span class="p">:],</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">uint64</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Now create class member to hold this so __del__ can clean up for us</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">existing_shm</span> <span class="o">=</span> <span class="n">existing_shm</span></div>
+
+<div class="viewcode-block" id="HeavyHitters.n_added"><a class="viewcode-back" href="../../sketchnu.html#sketchnu.heavyhitters.HeavyHitters.n_added">[docs]</a>    <span class="k">def</span> <span class="nf">n_added</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">uint64</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This special counter is used to track the total number of elements</span>
+<span class="sd">        that have been added to the sketch. Useful to check the error guarantees.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        np.uint64</span>
+<span class="sd">            The number of elements that have been added to the sketch.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_added_records</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="HeavyHitters.n_records"><a class="viewcode-back" href="../../sketchnu.html#sketchnu.heavyhitters.HeavyHitters.n_records">[docs]</a>    <span class="k">def</span> <span class="nf">n_records</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">uint64</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This special counter is used by the sketchnu.helpers.parallel_add() to</span>
+<span class="sd">        keep track of the number of records that have been added to the sketch.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        np.uint64</span>
+<span class="sd">            The number of records that have been added to the sketch.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_added_records</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="HeavyHitters.generate_candidate_set"><a class="viewcode-back" href="../../sketchnu.html#sketchnu.heavyhitters.HeavyHitters.generate_candidate_set">[docs]</a>    <span class="k">def</span> <span class="nf">generate_candidate_set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">threshold</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generate a candidate set of heavy hitters. Only keys in `lhh` whose</span>
+<span class="sd">        corresponding counts in `lhh_count` are greater the `threshold` are included.</span>
+<span class="sd">        Contrary to the paper, we all the rows instead of just the first one. This</span>
+<span class="sd">        seems like a small price to pay to not lose candidates due to hash collisions.</span>
+<span class="sd">        The candidate set is a collections.Counter stored in self.candidate_set</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        threshold : int, optional</span>
+<span class="sd">            If None (default), then uses `threshold` provided during instantiation</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">threshold</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">threshold</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">uint32</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">phi</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_added</span><span class="p">())</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">threshold</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">uint32</span><span class="p">(</span><span class="n">threshold</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_added_sort</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_added</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">threshold_sort</span> <span class="o">=</span> <span class="n">threshold</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">candidate_set</span> <span class="o">=</span> <span class="n">Counter</span><span class="p">()</span>
+
+        <span class="c1"># Generate candidate list</span>
+        <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">depth</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">column</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="p">):</span>
+                <span class="c1"># No key associated with this column, so skip</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">lhh_count</span><span class="p">[</span><span class="n">row</span><span class="p">,</span> <span class="n">column</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="k">continue</span>
+
+                <span class="n">key_len</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">key_lens</span><span class="p">[</span><span class="n">row</span><span class="p">,</span> <span class="n">column</span><span class="p">]</span>
+                <span class="n">key</span> <span class="o">=</span> <span class="nb">bytes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lhh</span><span class="p">[</span><span class="n">row</span><span class="p">,</span> <span class="n">column</span><span class="p">,</span> <span class="p">:</span><span class="n">key_len</span><span class="p">])</span>
+                <span class="c1"># Only need to do this once for each key</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">candidate_set</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">max_count</span> <span class="o">=</span> <span class="n">_max_count</span><span class="p">(</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">lhh</span><span class="p">,</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">lhh_count</span><span class="p">,</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="p">,</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">depth</span><span class="p">,</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">max_key_len</span><span class="p">,</span>
+                        <span class="n">key</span><span class="p">,</span>
+                        <span class="n">key_len</span><span class="p">,</span>
+                    <span class="p">)</span>
+
+                    <span class="k">if</span> <span class="n">max_count</span> <span class="o">&gt;=</span> <span class="n">threshold</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">candidate_set</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">max_count</span></div>
+
+    <span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return estimated number of times key was observed in the stream</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        key : bytes</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        int</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">key_len</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+        <span class="n">max_count</span> <span class="o">=</span> <span class="n">_max_count</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">lhh</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">lhh_count</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">depth</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">max_key_len</span><span class="p">,</span>
+            <span class="n">key</span><span class="p">,</span>
+            <span class="n">key_len</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">max_count</span>
+
+    <span class="k">def</span> <span class="fm">__del__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">shm</span><span class="p">:</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="c1"># Need to explicitly del the arrays since they are sharing the</span>
+                    <span class="c1"># memory block. Without this you get the MemoryError</span>
+                    <span class="c1"># &quot;cannot close exported pointers exist&quot;</span>
+                    <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">lhh</span>
+                    <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">lhh_count</span>
+                    <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">key_lens</span>
+                    <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_added_records</span>
+                    <span class="n">gc</span><span class="o">.</span><span class="n">collect</span><span class="p">()</span>
+                    <span class="n">sleep</span><span class="p">(</span><span class="mf">0.25</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">shm</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">shm</span><span class="o">.</span><span class="n">unlink</span><span class="p">()</span>
+                <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">MemoryError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to close &amp; unlink: </span><span class="si">{exc}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+            <span class="k">pass</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">existing_shm</span><span class="p">:</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">lhh</span>
+                    <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">lhh_count</span>
+                    <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">key_lens</span>
+                    <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_added_records</span>
+                    <span class="n">gc</span><span class="o">.</span><span class="n">collect</span><span class="p">()</span>
+                    <span class="n">sleep</span><span class="p">(</span><span class="mf">0.25</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">existing_shm</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+                <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">MemoryError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to close existing_shm: </span><span class="si">{exc}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+            <span class="k">pass</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Matthew Hendrey.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

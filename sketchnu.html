@@ -1,0 +1,1901 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>sketchnu.hyperloglog &mdash; sketchnu 1.2.2 documentation</title><link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="License" href="license.html" />
+    <link rel="prev" title="&lt;no title&gt;" href="modules.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            sketchnu
+              <img src="_static/logo.png" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                1.2.2
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="hyperloglog.html">HyperLogLog++</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="hyperloglog.html#the-basics">The Basics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hyperloglog.html#usage">Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hyperloglog.html#the-details">The Details</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hyperloglog.html#testing">Testing</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="countmin.html">Count-Min Sketch</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="countmin.html#the-basics">The Basics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="countmin.html#usage">Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="countmin.html#the-details">The Details</a></li>
+<li class="toctree-l2"><a class="reference internal" href="countmin.html#testing">Testing</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="heavyhitters.html">Heavy-Hitters</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="heavyhitters.html#the-basics">The Basics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="heavyhitters.html#usage">Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="heavyhitters.html#the-details">The Details</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="helpers.html">Helper Functions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="helpers.html#usage">Usage</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="hashes.html">Hash Functions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="hashes.html#fasthash">FastHash</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="hashes.html#usage">Usage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="hashes.html#testing">Testing</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="hashes.html#murmurhash3">MurmurHash3</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="hashes.html#id1">Usage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="hashes.html#id2">Testing</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">API</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">sketchnu.hyperloglog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#module-sketchnu.countmin">sketchnu.countmin</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#module-sketchnu.heavyhitters">sketchnu.heavyhitters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#module-sketchnu.helpers">sketchnu.helpers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#module-sketchnu.hashes">sketchnu.hashes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#sketchnu-tests">sketchnu.tests</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Admin</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="license.html">License</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="license.html#license-requirements">License Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="license.html#license-notices">License notices</a></li>
+<li class="toctree-l2"><a class="reference internal" href="license.html#copyright">Copyright</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="help.html">Help</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">sketchnu</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">&lt;no title&gt;</a></li>
+      <li class="breadcrumb-item active">sketchnu.hyperloglog</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/sketchnu.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="module-sketchnu.hyperloglog">
+<span id="sketchnu-hyperloglog"></span><h1>sketchnu.hyperloglog<a class="headerlink" href="#module-sketchnu.hyperloglog" title="Permalink to this headline">¶</a></h1>
+<p>Sketchnu has Numba implementations of sketch algorithms and other useful functions
+that utilize hash functions.</p>
+<p>Copyright (C) 2022 Matthew Hendrey</p>
+<p>This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.</p>
+<p>This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.</p>
+<p>You should have received a copy of the GNU General Public License
+along with this program.  If not, see &lt;<a class="reference external" href="https://www.gnu.org/licenses/">https://www.gnu.org/licenses/</a>&gt;.</p>
+<p>Too many problems with the experimental Numba class. Converting this
+to a series of Numba functions and a Python class.</p>
+<p class="rubric">Example</p>
+<p>To get a HyperLogLog with precision of 16 and seed 0:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sketchnu.hyperloglog</span> <span class="kn">import</span> <span class="n">HyperLogLog</span>
+
+<span class="n">hll</span> <span class="o">=</span> <span class="n">HyperLogLog</span><span class="p">()</span>
+<span class="n">key</span> <span class="o">=</span> <span class="s1">&#39;testing&#39;</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+<span class="n">hll</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+<span class="c1"># To get a estimated cardinality</span>
+<span class="n">hll</span><span class="o">.</span><span class="n">query</span><span class="p">()</span>
+</pre></div>
+</div>
+<dl class="class">
+<dt id="sketchnu.hyperloglog.HyperLogLog">
+<em class="property">class </em><code class="sig-prename descclassname">sketchnu.hyperloglog.</code><code class="sig-name descname">HyperLogLog</code><span class="sig-paren">(</span><em class="sig-param">p: int = 16</em>, <em class="sig-param">seed: int = 0</em>, <em class="sig-param">shared_memory: bool = False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sketchnu/hyperloglog.html#HyperLogLog"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sketchnu.hyperloglog.HyperLogLog" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Implementation of the HyperLogLog++ algorithm which uses a 64-bit hash function and
+corrects bias when cardinality is low.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>p</strong> (<em>int</em>) – Precision specifies the number of registers (2**p). The larger the p,
+the more accurate the estimated cardinality. Must be between [7, 16]</p></li>
+<li><p><strong>seed</strong> (<em>int</em><em>, </em><em>optional</em>) – Seed passed to the fasthash64 function. Default is 0</p></li>
+<li><p><strong>shared_memory</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, then HyperLogLog is placed in shared memory. Needed if
+performing multiprocessing as sketchnu.helpers.parallel_add() does.
+Default is False.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="attribute">
+<dt id="sketchnu.hyperloglog.HyperLogLog.p">
+<code class="sig-name descname">p</code><a class="headerlink" href="#sketchnu.hyperloglog.HyperLogLog.p" title="Permalink to this definition">¶</a></dt>
+<dd><p>Precision of the HyperLogLog. Must be between [7, 16]</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="sketchnu.hyperloglog.HyperLogLog.seed">
+<code class="sig-name descname">seed</code><a class="headerlink" href="#sketchnu.hyperloglog.HyperLogLog.seed" title="Permalink to this definition">¶</a></dt>
+<dd><p>Seed passed to hash function</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="sketchnu.hyperloglog.HyperLogLog.m">
+<code class="sig-name descname">m</code><a class="headerlink" href="#sketchnu.hyperloglog.HyperLogLog.m" title="Permalink to this definition">¶</a></dt>
+<dd><p>Number of registers. Equal to 2**p</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="sketchnu.hyperloglog.HyperLogLog.shared_memory">
+<code class="sig-name descname">shared_memory</code><a class="headerlink" href="#sketchnu.hyperloglog.HyperLogLog.shared_memory" title="Permalink to this definition">¶</a></dt>
+<dd><p>If True, then HyperLogLog is placed in shared memory. Needed if
+performing multiprocessing as sketchnu.helpers.parallel_add() does.
+Default is False.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>bool, optional</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="sketchnu.hyperloglog.HyperLogLog.add">
+<code class="sig-name descname">add</code><span class="sig-paren">(</span><em class="sig-param">key: bytes</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="_modules/sketchnu/hyperloglog.html#HyperLogLog.add"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sketchnu.hyperloglog.HyperLogLog.add" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a single key to the HyperLogLog.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Currently, the numba.typed.List needed for the update() are quite slow.
+Speedtest show that you are better off looping through the keys in
+python and add(key) instead of update(numba.typed.List(keys)). Taking
+just over twice as long.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>key</strong> (<em>bytes</em>) – Element to add to the HyperLogLog</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="sketchnu.hyperloglog.HyperLogLog.add_ngram">
+<code class="sig-name descname">add_ngram</code><span class="sig-paren">(</span><em class="sig-param">key: bytes</em>, <em class="sig-param">ngram: int</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="_modules/sketchnu/hyperloglog.html#HyperLogLog.add_ngram"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sketchnu.hyperloglog.HyperLogLog.add_ngram" title="Permalink to this definition">¶</a></dt>
+<dd><p>Take a given <cite>key</cite> and split it into ngrams of size <cite>ngram</cite> and then
+add the ngrams to the sketch. If the <cite>key</cite> length is less than <cite>ngram</cite>
+then add the whole <cite>key</cite></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>key</strong> (<em>bytes</em>) – Element to be shingled before adding to the sketch</p></li>
+<li><p><strong>ngram</strong> (<em>int</em>) – ngram size</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="sketchnu.hyperloglog.HyperLogLog.attach_existing_shm">
+<code class="sig-name descname">attach_existing_shm</code><span class="sig-paren">(</span><em class="sig-param">existing_shm_name: str</em><span class="sig-paren">)</span> &#x2192; multiprocessing.shared_memory.SharedMemory<a class="reference internal" href="_modules/sketchnu/hyperloglog.html#HyperLogLog.attach_existing_shm"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sketchnu.hyperloglog.HyperLogLog.attach_existing_shm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Attach this sketch to an existing shared memory block. Useful when working
+within a spawned child process. This creates self.existing_shm which gets
+closed when self.__del__ gets called.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>existing_shm_name</strong> (<em>str</em>) – Name an existing shared memory block to attach this sketch to</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="sketchnu.hyperloglog.HyperLogLog.load">
+<em class="property">static </em><code class="sig-name descname">load</code><span class="sig-paren">(</span><em class="sig-param">filename: Union[str, pathlib.Path], shared_memory: bool = False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sketchnu/hyperloglog.html#HyperLogLog.load"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sketchnu.hyperloglog.HyperLogLog.load" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load a saved HyperLogLog sketch stored in filename</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename</strong> (<em>str | Path</em>) – File path to the saved .npz file</p></li>
+<li><p><strong>shared_memory</strong> (<em>bool</em>) – If True, copy registers into shared memory</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#sketchnu.hyperloglog.HyperLogLog" title="sketchnu.hyperloglog.HyperLogLog">HyperLogLog</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="sketchnu.hyperloglog.HyperLogLog.merge">
+<code class="sig-name descname">merge</code><span class="sig-paren">(</span><em class="sig-param">other</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="_modules/sketchnu/hyperloglog.html#HyperLogLog.merge"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sketchnu.hyperloglog.HyperLogLog.merge" title="Permalink to this definition">¶</a></dt>
+<dd><p>Merge the HyperLogLog <cite>other</cite> into this one.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>other</strong> (<a class="reference internal" href="#sketchnu.hyperloglog.HyperLogLog" title="sketchnu.hyperloglog.HyperLogLog"><em>HyperLogLog</em></a>) – Another HyperLogLog with the same precision and seed</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>TypeError</strong> – If <cite>other</cite> has different precision or seed from this one</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="sketchnu.hyperloglog.HyperLogLog.query">
+<code class="sig-name descname">query</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; float<a class="reference internal" href="_modules/sketchnu/hyperloglog.html#HyperLogLog.query"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sketchnu.hyperloglog.HyperLogLog.query" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the estimated cardinality</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Estimated cardinality of elements added to the HyperLogLog so far</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="sketchnu.hyperloglog.HyperLogLog.save">
+<code class="sig-name descname">save</code><span class="sig-paren">(</span><em class="sig-param">filename: Union[str, pathlib.Path]</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="_modules/sketchnu/hyperloglog.html#HyperLogLog.save"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sketchnu.hyperloglog.HyperLogLog.save" title="Permalink to this definition">¶</a></dt>
+<dd><p>Save the HyperLogLog sketch, hll, to the file, filename</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>filename</strong> (<em>str | Path</em>) – File to save the hll to disk. This will be a .npz file.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="sketchnu.hyperloglog.HyperLogLog.update">
+<code class="sig-name descname">update</code><span class="sig-paren">(</span><em class="sig-param">keys: Union[List[bytes], Dict[bytes, int]]</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="_modules/sketchnu/hyperloglog.html#HyperLogLog.update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sketchnu.hyperloglog.HyperLogLog.update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given a list of keys, update the HyperLogLog. This follows the
+convention of collections.Counter in that keys should be a list of
+keys or a dictionary whose keys are the keys. For this sketch, the
+value of the dictionary is ignored since it doesn’t make sense to
+put the same key in multiple times.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Currently, the numba.typed.List needed for the update() are quite slow.
+Speedtest show that you are better off looping through the keys in
+python and add(key) instead of update(numba.typed.List(keys)). Taking
+just over twice as long. If repeated adding the same keys, then update
+is faster.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>keys</strong> (<em>List</em><em>[</em><em>bytes</em><em>] </em><em>| Dict</em><em>[</em><em>bytes</em><em>, </em><em>int</em><em>]</em>) – List of elements to add to the HyperLogLog at once. If a Dict is passed,
+then only the Dict.keys() are put into the sketch.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="sketchnu.hyperloglog.HyperLogLog.update_ngram">
+<code class="sig-name descname">update_ngram</code><span class="sig-paren">(</span><em class="sig-param">keys: bytes</em>, <em class="sig-param">ngram: int</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="_modules/sketchnu/hyperloglog.html#HyperLogLog.update_ngram"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sketchnu.hyperloglog.HyperLogLog.update_ngram" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given a list of keys, split each into ngrams of size <cite>ngram</cite>, and then
+add them to the sketch.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Speed tests show that you are slightly better off looping through the
+keys in Python and calling add_ngram() instead of update_ngram(). Used
+50k keys, each of 200 bytes, and ngram=4 to find that update_ngram()
+was ~ 6% slower. This is significantly better than add() vs. update().
+If repeated adding the same keys (for testing), then update_ngram() is
+just a little bit faster than add_ngram().</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>keys</strong> (<em>List</em><em>[</em><em>bytes</em><em>]</em>) – List of elements to be shingled before adding to the sketch.</p></li>
+<li><p><strong>ngram</strong> (<em>int</em>) – ngram size</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-sketchnu.countmin">
+<span id="sketchnu-countmin"></span><h1>sketchnu.countmin<a class="headerlink" href="#module-sketchnu.countmin" title="Permalink to this headline">¶</a></h1>
+<p>Sketchnu has Numba implementations of sketch algorithms and other useful functions
+that utilize hash functions.</p>
+<p>Copyright (C) 2022 Matthew Hendrey</p>
+<p>This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.</p>
+<p>This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.</p>
+<p>You should have received a copy of the GNU General Public License
+along with this program.  If not, see &lt;<a class="reference external" href="https://www.gnu.org/licenses/">https://www.gnu.org/licenses/</a>&gt;.</p>
+<p>Too many problems with the experimental Numba class. Converting this
+to a series of Numba functions and a Python classes.</p>
+<p>Implementation of count-min sketch using Numba. Three different types have been coded,
+but all use conservative updating to help reduce errors. The three types are</p>
+<ul class="simple">
+<li><p>linear : Uses 32-bit linear counters</p></li>
+<li><p>log16 : Uses 16-bit log counters</p></li>
+<li><p>log8 : Uses 8-bit log counters</p></li>
+</ul>
+<p>Each type is implemented as a Python class, but uses numba functions under the hood
+where possible (and faster). The convenience function, <code class="code docutils literal notranslate"><span class="pre">CountMin()</span></code> is the
+recommended way to instantiate a count-min sketch. The Python classes are
+<code class="code docutils literal notranslate"><span class="pre">CountMinLinear</span></code>, <code class="code docutils literal notranslate"><span class="pre">CountMinLog16</span></code>, and <code class="code docutils literal notranslate"><span class="pre">CountMinLog8</span></code>.</p>
+<p class="rubric">Example</p>
+<p>To get a linear CountMin with width = 2**20</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sketchnu.countmin</span> <span class="kn">import</span> <span class="n">CountMin</span>
+
+<span class="n">width</span> <span class="o">=</span> <span class="mi">2</span><span class="o">**</span><span class="mi">20</span>
+<span class="n">cms</span> <span class="o">=</span> <span class="n">CountMin</span><span class="p">(</span><span class="s2">&quot;linear&quot;</span><span class="p">,</span> <span class="n">width</span><span class="p">)</span>
+<span class="n">key</span> <span class="o">=</span> <span class="s2">&quot;testing&quot;</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
+<span class="n">cms</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+<span class="c1"># To get an estimated count for that key use either</span>
+<span class="n">cms</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+<span class="n">cms</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>Each count-min sketch implementation has two special counters that are stored in the
+attribute <code class="code docutils literal notranslate"><span class="pre">n_added_records</span></code> which is a 1-d array with two elements. The first
+records the total number of elements added to the count-min sketch. This is useful when
+calculating the error guarantees. Its value can be retrieved with <code class="code docutils literal notranslate"><span class="pre">n_added()</span></code>.
+The second element is used by <code class="code docutils literal notranslate"><span class="pre">helpers.parallel_add()</span></code> to store the number of
+records added to the sketch. This value is needed when using a count-min sketch to
+calculate the tf-idf value for a given record. The idf piece needs the number of
+records which have a given key, i.e. document frequency. This can be provided directly
+by the count-min sketch. But you also need to know the total number of records. This
+value can be retrieved by <code class="code docutils literal notranslate"><span class="pre">n_records()</span></code> if you use <code class="code docutils literal notranslate"><span class="pre">helpers.parallel_add()</span></code>
+to create the count-min sketch.</p>
+<dl class="function">
+<dt id="sketchnu.countmin.CountMin">
+<code class="sig-prename descclassname">sketchnu.countmin.</code><code class="sig-name descname">CountMin</code><span class="sig-paren">(</span><em class="sig-param">cms_type: str</em>, <em class="sig-param">width: int</em>, <em class="sig-param">depth: int = 8</em>, <em class="sig-param">max_count: int = 4294967295</em>, <em class="sig-param">num_reserved: int = None</em>, <em class="sig-param">shared_memory: bool = False</em><span class="sig-paren">)</span> &#x2192; Union[sketchnu.countmin.CountMinLinear, sketchnu.countmin.CountMinLog16, sketchnu.countmin.CountMinLog8]<a class="reference internal" href="_modules/sketchnu/countmin.html#CountMin"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sketchnu.countmin.CountMin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convenience function to instantiate a count-min sketch of the given type.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cms_type</strong> (<em>str</em>) – Must be ‘linear’ | ‘log16’ | ‘log8’</p></li>
+<li><p><strong>width</strong> (<em>int</em>) – Width of the count-min sketch. Best if you keep width &gt;= n_unique/2</p></li>
+<li><p><strong>depth</strong> (<em>int</em><em>, </em><em>optional</em>) – Depth of the count-min sketch. Sets the number of different hash
+functions used. Probability of exceeding error limits is determined by
+the depth, exp(-depth). Default is 8 which should be fine for most
+circumstances.</p></li>
+<li><p><strong>max_count</strong> (<em>int</em><em>, </em><em>optional</em>) – Maximum value the count a given element may reach. Not used by ‘linear’
+type. Default is 2**32 - 1 (4,294,967,295) to match linear type.</p></li>
+<li><p><strong>num_reserved</strong> (<em>int</em><em>, </em><em>optional</em>) – Perform linear counting for values [0, num_reserved]. After that use
+log counters. This gives more precise estimates for the number of times
+an element is seen for counts &lt;= num_reserved. Not used by the ‘linear’
+type. Default is None which uses 15 for log8 and 1023 for log16. This
+must be less than the maximum uint value: 65,535 for log16 and 255
+for log8.</p></li>
+<li><p><strong>shared_memory</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, then count-min sketch is placed in shared memory. Needed if
+performing multiprocessing as sketchnu.helpers.parallel_add() does.
+Default is False.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>cms</strong> – A count-min sketch of the requested type and size</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>CountMinLinear | CountMinLog16 | CountMinLog8</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="class">
+<dt id="sketchnu.countmin.CountMinLinear">
+<em class="property">class </em><code class="sig-prename descclassname">sketchnu.countmin.</code><code class="sig-name descname">CountMinLinear</code><span class="sig-paren">(</span><em class="sig-param">width: int</em>, <em class="sig-param">depth: int = 8</em>, <em class="sig-param">shared_memory: bool = False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sketchnu/countmin.html#CountMinLinear"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sketchnu.countmin.CountMinLinear" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Count-min sketch that uses 32-bit linear counters with conservative updating. A
+given element’s maximum count is 2**32 - 1</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>width</strong> (<em>int</em>) – Width of the count-min sketch. Must be non-negative</p></li>
+<li><p><strong>depth</strong> (<em>int</em><em>, </em><em>optional</em>) – Depth of the count-min sketch. Must be non-negative. Default is 8</p></li>
+<li><p><strong>shared_memory</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, then CountMinLinear is placed in shared memory. Needed if
+performing multiprocessing as sketchnu.helpers.parallel_add() does.
+Default is False.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="attribute">
+<dt id="sketchnu.countmin.CountMinLinear.width">
+<code class="sig-name descname">width</code><a class="headerlink" href="#sketchnu.countmin.CountMinLinear.width" title="Permalink to this definition">¶</a></dt>
+<dd><p>Width of the 2-d array of counters of the count-min sketch</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>np.uint64</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="sketchnu.countmin.CountMinLinear.depth">
+<code class="sig-name descname">depth</code><a class="headerlink" href="#sketchnu.countmin.CountMinLinear.depth" title="Permalink to this definition">¶</a></dt>
+<dd><p>Depth of the 2-d array of counters of the count-min sketch</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>np.uint64</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="sketchnu.countmin.CountMinLinear.shared_memory">
+<code class="sig-name descname">shared_memory</code><a class="headerlink" href="#sketchnu.countmin.CountMinLinear.shared_memory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Whether <cite>cms</cite> and <cite>n_added_records</cite> are attached to a shared memory block</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="sketchnu.countmin.CountMinLinear.cms">
+<code class="sig-name descname">cms</code><a class="headerlink" href="#sketchnu.countmin.CountMinLinear.cms" title="Permalink to this definition">¶</a></dt>
+<dd><p>2-d array of the counters. Shape = (depth, width)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>np.uint32[:,:]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="sketchnu.countmin.CountMinLinear.n_added_records">
+<code class="sig-name descname">n_added_records</code><a class="headerlink" href="#sketchnu.countmin.CountMinLinear.n_added_records" title="Permalink to this definition">¶</a></dt>
+<dd><p>1-d array that holds two special counters. The first is the number of elements
+that have been added to the sketch. Useful for calculating error limits. The
+second is used by helpers.parallel_add() to keep track of the number of records
+that have been processed. Useful if you want to calculate a TF-IDF.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>np.uint64[:]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="sketchnu.countmin.CountMinLinear.add">
+<code class="sig-name descname">add</code><span class="sig-paren">(</span><em class="sig-param">key: bytes</em>, <em class="sig-param">value: int = 1</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="_modules/sketchnu/countmin.html#CountMinLinear.add"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sketchnu.countmin.CountMinLinear.add" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a single key to the count-min sketch and update the counter tracking total
+number of keys added to the count-min sketch. This is in n_added_records[0].</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>key</strong> (<em>bytes</em>) – Element to be added to the sketch</p></li>
+<li><p><strong>value</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of times to add <cite>key</cite> to the sketch. <cite>value</cite> will be capped at
+4,294,967,295 to prevent overflows. Default is 1</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="sketchnu.countmin.CountMinLinear.add_ngram">
+<code class="sig-name descname">add_ngram</code><span class="sig-paren">(</span><em class="sig-param">key: bytes</em>, <em class="sig-param">ngram: int</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="_modules/sketchnu/countmin.html#CountMinLinear.add_ngram"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sketchnu.countmin.CountMinLinear.add_ngram" title="Permalink to this definition">¶</a></dt>
+<dd><p>Take a given <cite>key</cite> and shingle it into ngrams of size <cite>ngram</cite> and then
+add the ngrams to the sketch. If the <cite>key</cite> length is less than <cite>ngram</cite>
+then add the whole <cite>key</cite></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>key</strong> (<em>bytes</em>) – Element to be shingled before adding to the sketch</p></li>
+<li><p><strong>ngram</strong> (<em>int</em>) – ngram size</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="sketchnu.countmin.CountMinLinear.attach_existing_shm">
+<code class="sig-name descname">attach_existing_shm</code><span class="sig-paren">(</span><em class="sig-param">existing_shm_name: str</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="_modules/sketchnu/countmin.html#CountMinLinear.attach_existing_shm"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sketchnu.countmin.CountMinLinear.attach_existing_shm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Attach this sketch to an existing shared memory block. Useful when working
+within a spawned child process. This creates self.existing_shm which gets
+closed when self.__del__ gets called.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>existing_shm_name</strong> (<em>str</em>) – Name of an existing shared memory block to attach this sketch to</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="sketchnu.countmin.CountMinLinear.load">
+<em class="property">static </em><code class="sig-name descname">load</code><span class="sig-paren">(</span><em class="sig-param">filename: Union[str, pathlib.Path], shared_memory: bool = False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sketchnu/countmin.html#CountMinLinear.load"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sketchnu.countmin.CountMinLinear.load" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load a saved CountMinLinear stored in <cite>filename</cite></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename</strong> (<em>str | Path</em>) – File path to the saved .npz file</p></li>
+<li><p><strong>shared_memory</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, load into shared memory. Default is False.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#sketchnu.countmin.CountMinLinear" title="sketchnu.countmin.CountMinLinear">CountMinLinear</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="sketchnu.countmin.CountMinLinear.merge">
+<code class="sig-name descname">merge</code><span class="sig-paren">(</span><em class="sig-param">other</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="_modules/sketchnu/countmin.html#CountMinLinear.merge"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sketchnu.countmin.CountMinLinear.merge" title="Permalink to this definition">¶</a></dt>
+<dd><p>Merge the count-min sketch <cite>other</cite> into this one.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>other</strong> (<a class="reference internal" href="#sketchnu.countmin.CountMinLinear" title="sketchnu.countmin.CountMinLinear"><em>CountMinLinear</em></a>) – Another CountMinLinear with the same width and depth.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>TypeError</strong> – If <cite>other</cite> has different width, depth, or dtype</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="sketchnu.countmin.CountMinLinear.n_added">
+<code class="sig-name descname">n_added</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; numpy.uint64<a class="reference internal" href="_modules/sketchnu/countmin.html#CountMinLinear.n_added"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sketchnu.countmin.CountMinLinear.n_added" title="Permalink to this definition">¶</a></dt>
+<dd><p>This special counter is used to track the total number of elements
+that have been added to the sketch. Useful to check the error guarantees.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The number of elements that have been added to the sketch.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>np.uint64</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="sketchnu.countmin.CountMinLinear.n_records">
+<code class="sig-name descname">n_records</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; numpy.uint64<a class="reference internal" href="_modules/sketchnu/countmin.html#CountMinLinear.n_records"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sketchnu.countmin.CountMinLinear.n_records" title="Permalink to this definition">¶</a></dt>
+<dd><p>This special counter is used by the sketchnu.helpers.parallel_add() to
+keep track of the number of records that have been added to the sketch.
+This can be used as the numerator of the idf piece of a tf-idf.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The number of records that have been added to the sketch.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>np.uint64</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="sketchnu.countmin.CountMinLinear.query">
+<code class="sig-name descname">query</code><span class="sig-paren">(</span><em class="sig-param">key: bytes</em><span class="sig-paren">)</span> &#x2192; int<a class="reference internal" href="_modules/sketchnu/countmin.html#CountMinLinear.query"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sketchnu.countmin.CountMinLinear.query" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return estimated number of times <cite>key</cite> was added into the count-min sketch</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>key</strong> (<em>bytes</em>) – Element whose estimated count you want returned</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="sketchnu.countmin.CountMinLinear.save">
+<code class="sig-name descname">save</code><span class="sig-paren">(</span><em class="sig-param">filename: Union[str, pathlib.Path]</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="_modules/sketchnu/countmin.html#CountMinLinear.save"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sketchnu.countmin.CountMinLinear.save" title="Permalink to this definition">¶</a></dt>
+<dd><p>Save the sketch to <cite>filename</cite></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>filename</strong> (<em>str | Path</em>) – File to save the sketch to disk. This will be a .npz file.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="sketchnu.countmin.CountMinLinear.update">
+<code class="sig-name descname">update</code><span class="sig-paren">(</span><em class="sig-param">keys: Union[List[bytes], Dict[bytes, int]]</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="_modules/sketchnu/countmin.html#CountMinLinear.update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sketchnu.countmin.CountMinLinear.update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add <cite>keys</cite> to the sketch. This follows the convention of collections.Counter</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>keys</strong> (<em>List</em><em>[</em><em>bytes</em><em>] </em><em>| Dict</em><em>[</em><em>bytes</em><em>, </em><em>int</em><em>]</em>) – List of elements to add to the sketch or a dictionary which can specify the
+number of times to add each <cite>key</cite></p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="sketchnu.countmin.CountMinLinear.update_ngram">
+<code class="sig-name descname">update_ngram</code><span class="sig-paren">(</span><em class="sig-param">keys: List[bytes], ngram: int</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="_modules/sketchnu/countmin.html#CountMinLinear.update_ngram"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sketchnu.countmin.CountMinLinear.update_ngram" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given a list of keys, split each into ngrams of size <cite>ngram</cite>, and then
+add them to the sketch.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Current implementation loops through the keys in Python. Speed testing
+showed that converting the list to numba’s typed list was very costly.
+Maybe if that gets faster a pure numba implementation can be done.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>keys</strong> (<em>List</em><em>[</em><em>bytes</em><em>]</em>) – List of elements to be shingled before adding to the sketch.</p></li>
+<li><p><strong>ngram</strong> (<em>int</em>) – ngram size</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="sketchnu.countmin.CountMinLog16">
+<em class="property">class </em><code class="sig-prename descclassname">sketchnu.countmin.</code><code class="sig-name descname">CountMinLog16</code><span class="sig-paren">(</span><em class="sig-param">width: int</em>, <em class="sig-param">depth: int = 8</em>, <em class="sig-param">max_count=4294967295</em>, <em class="sig-param">num_reserved=1023</em>, <em class="sig-param">shared_memory: bool = False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sketchnu/countmin.html#CountMinLog16"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sketchnu.countmin.CountMinLog16" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#sketchnu.countmin.CountMinLinear" title="sketchnu.countmin.CountMinLinear"><code class="xref py py-class docutils literal notranslate"><span class="pre">sketchnu.countmin.CountMinLinear</span></code></a></p>
+<p>Count-min sketch that uses 16-bit log counters with conservative updating.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>width</strong> (<em>int</em>) – Width of the count-min sketch. Must be non-negative.</p></li>
+<li><p><strong>depth</strong> (<em>int</em><em>, </em><em>optional</em>) – Depth of the count-min sketch. Must be non-negative. Default is 8.</p></li>
+<li><p><strong>max_count</strong> (<em>int</em><em>, </em><em>optional</em>) – The maximum value we want to count up to for any given key. Default is
+2**32 -1 (4,294,967,295).</p></li>
+<li><p><strong>num_reserved</strong> (<em>int</em><em>, </em><em>optional</em>) – Perform linear counting for values [0, num_reserved]. After that use log
+counters. This gives more precise estimates for the number of times a key
+is seen for counts &lt;= num_reserved. Default is 1023. This must be less than
+65,535 (2**16 - 1).</p></li>
+<li><p><strong>shared_memory</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, then CountMinLinear is placed in shared memory. Needed if
+performing multiprocessing as sketchnu.helpers.parallel_add() does.
+Default is False.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="attribute">
+<dt id="sketchnu.countmin.CountMinLog16.width">
+<code class="sig-name descname">width</code><a class="headerlink" href="#sketchnu.countmin.CountMinLog16.width" title="Permalink to this definition">¶</a></dt>
+<dd><p>Width of the 2-d array of counters of the count-min sketch</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>np.uint64</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="sketchnu.countmin.CountMinLog16.depth">
+<code class="sig-name descname">depth</code><a class="headerlink" href="#sketchnu.countmin.CountMinLog16.depth" title="Permalink to this definition">¶</a></dt>
+<dd><p>Depth of the 2-d array of counters of the count-min sketch</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>np.uint64</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="sketchnu.countmin.CountMinLog16.max_count">
+<code class="sig-name descname">max_count</code><a class="headerlink" href="#sketchnu.countmin.CountMinLog16.max_count" title="Permalink to this definition">¶</a></dt>
+<dd><p>The maximum value we want to count up to for any given key. Default is
+2**32 -1 (4,294,967,295).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>int, optional</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="sketchnu.countmin.CountMinLog16.num_reserved">
+<code class="sig-name descname">num_reserved</code><a class="headerlink" href="#sketchnu.countmin.CountMinLog16.num_reserved" title="Permalink to this definition">¶</a></dt>
+<dd><p>Perform linear counting for values [0, num_reserved]. After that use log
+counters. This gives more precise estimates for the number of times a key
+is seen for counts &lt;= num_reserved. Default is 1023. This must be less than
+65,535 (2**16 - 1).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>int, optional</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="sketchnu.countmin.CountMinLog16.shared_memory">
+<code class="sig-name descname">shared_memory</code><a class="headerlink" href="#sketchnu.countmin.CountMinLog16.shared_memory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Whether <cite>cms</cite> and <cite>n_added_records</cite> are attached to a shared memory block</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="sketchnu.countmin.CountMinLog16.cms">
+<code class="sig-name descname">cms</code><a class="headerlink" href="#sketchnu.countmin.CountMinLog16.cms" title="Permalink to this definition">¶</a></dt>
+<dd><p>2-d array of the counters. Shape = (depth, width)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>np.uint32[:,:]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="sketchnu.countmin.CountMinLog16.n_added_records">
+<code class="sig-name descname">n_added_records</code><a class="headerlink" href="#sketchnu.countmin.CountMinLog16.n_added_records" title="Permalink to this definition">¶</a></dt>
+<dd><p>1-d array that holds two special counters. The first is the number of elements
+that have been added to the sketch. Useful for calculating error limits. The
+second is used by helpers.parallel_add() to keep track of the number of records
+that have been processed. Useful if you want to calculate a TF-IDF.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>np.uint64[:]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="sketchnu.countmin.CountMinLog16.base">
+<code class="sig-name descname">base</code><a class="headerlink" href="#sketchnu.countmin.CountMinLog16.base" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculated base for the log counters. Depends affected by max_count and
+num_reserved.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>np.float64</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="sketchnu.countmin.CountMinLog16.add">
+<code class="sig-name descname">add</code><span class="sig-paren">(</span><em class="sig-param">key: bytes</em>, <em class="sig-param">value: int = 1</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="_modules/sketchnu/countmin.html#CountMinLog16.add"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sketchnu.countmin.CountMinLog16.add" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a single key to the count-min sketch and update the counter tracking total
+number of keys added to the count-min sketch. This is in n_added_records[0].</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>key</strong> (<em>bytes</em>) – Element to be added to the sketch</p></li>
+<li><p><strong>value</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of times to add <cite>key</cite> to the sketch. Default is 1</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="sketchnu.countmin.CountMinLog16.add_ngram">
+<code class="sig-name descname">add_ngram</code><span class="sig-paren">(</span><em class="sig-param">key: bytes</em>, <em class="sig-param">ngram: int</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="_modules/sketchnu/countmin.html#CountMinLog16.add_ngram"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sketchnu.countmin.CountMinLog16.add_ngram" title="Permalink to this definition">¶</a></dt>
+<dd><p>Take a given <cite>key</cite> and split it into ngrams of size <cite>ngram</cite> and then
+add the ngrams to the sketch. If the <cite>key</cite> length is less than <cite>ngram</cite>
+then add the whole <cite>key</cite></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>key</strong> (<em>bytes</em>) – Element to be shingled before adding to the sketch</p></li>
+<li><p><strong>ngram</strong> (<em>int</em>) – ngram size</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="sketchnu.countmin.CountMinLog16.load">
+<em class="property">static </em><code class="sig-name descname">load</code><span class="sig-paren">(</span><em class="sig-param">filename: Union[str, pathlib.Path], shared_memory: bool = False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sketchnu/countmin.html#CountMinLog16.load"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sketchnu.countmin.CountMinLog16.load" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load a saved CountMinLog16 stored in <cite>filename</cite></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename</strong> (<em>str | Path</em>) – File path to the saved .npz file</p></li>
+<li><p><strong>shared_memory</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, load into shared memory. Default is False.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#sketchnu.countmin.CountMinLog16" title="sketchnu.countmin.CountMinLog16">CountMinLog16</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="sketchnu.countmin.CountMinLog16.merge">
+<code class="sig-name descname">merge</code><span class="sig-paren">(</span><em class="sig-param">other</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="_modules/sketchnu/countmin.html#CountMinLog16.merge"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sketchnu.countmin.CountMinLog16.merge" title="Permalink to this definition">¶</a></dt>
+<dd><p>Merge the count-min sketch <cite>other</cite> into this one.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>other</strong> (<a class="reference internal" href="#sketchnu.countmin.CountMinLog16" title="sketchnu.countmin.CountMinLog16"><em>CountMinLog16</em></a>) – Another CountMinLog16 with the same parameters.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>TypeError</strong> – If <cite>other</cite> has different parameters</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="sketchnu.countmin.CountMinLog16.query">
+<code class="sig-name descname">query</code><span class="sig-paren">(</span><em class="sig-param">key: bytes</em><span class="sig-paren">)</span> &#x2192; float<a class="reference internal" href="_modules/sketchnu/countmin.html#CountMinLog16.query"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sketchnu.countmin.CountMinLog16.query" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return estimated number of times <cite>key</cite> was added into the count-min sketch</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>key</strong> (<em>bytes</em>) – Element whose estimated count you want returned</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="sketchnu.countmin.CountMinLog16.save">
+<code class="sig-name descname">save</code><span class="sig-paren">(</span><em class="sig-param">filename: Union[str, pathlib.Path]</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="_modules/sketchnu/countmin.html#CountMinLog16.save"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sketchnu.countmin.CountMinLog16.save" title="Permalink to this definition">¶</a></dt>
+<dd><p>Save the count-min sketch to <cite>filename</cite></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>filename</strong> (<em>str | Path</em>) – File to save the hll to disk. This will be a .npz file.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="sketchnu.countmin.CountMinLog8">
+<em class="property">class </em><code class="sig-prename descclassname">sketchnu.countmin.</code><code class="sig-name descname">CountMinLog8</code><span class="sig-paren">(</span><em class="sig-param">width: int</em>, <em class="sig-param">depth: int = 8</em>, <em class="sig-param">max_count=4294967295</em>, <em class="sig-param">num_reserved=15</em>, <em class="sig-param">shared_memory: bool = False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sketchnu/countmin.html#CountMinLog8"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sketchnu.countmin.CountMinLog8" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#sketchnu.countmin.CountMinLog16" title="sketchnu.countmin.CountMinLog16"><code class="xref py py-class docutils literal notranslate"><span class="pre">sketchnu.countmin.CountMinLog16</span></code></a></p>
+<p>Count-min sketch that uses 8-bit log counters with conservative updating.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>width</strong> (<em>int</em>) – Width of the count-min sketch. Must be non-negative.</p></li>
+<li><p><strong>depth</strong> (<em>int</em><em>, </em><em>optional</em>) – Depth of the count-min sketch. Must be non-negative. Default is 8.</p></li>
+<li><p><strong>max_count</strong> (<em>int</em><em>, </em><em>optional</em>) – The maximum value we want to count up to for any given key. Default is
+2**32 -1 (4,294,967,295).</p></li>
+<li><p><strong>num_reserved</strong> (<em>int</em><em>, </em><em>optional</em>) – Perform linear counting for values [0, num_reserved]. After that use log
+counters. This gives more precise estimates for the number of times a key
+is seen for counts &lt;= num_reserved. Default is 15. This must be less than
+255 (2**8 - 1).</p></li>
+<li><p><strong>shared_memory</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, then CountMinLinear is placed in shared memory. Needed if
+performing multiprocessing as sketchnu.helpers.parallel_add() does.
+Default is False.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="attribute">
+<dt id="sketchnu.countmin.CountMinLog8.width">
+<code class="sig-name descname">width</code><a class="headerlink" href="#sketchnu.countmin.CountMinLog8.width" title="Permalink to this definition">¶</a></dt>
+<dd><p>Width of the 2-d array of counters of the count-min sketch</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>np.uint64</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="sketchnu.countmin.CountMinLog8.depth">
+<code class="sig-name descname">depth</code><a class="headerlink" href="#sketchnu.countmin.CountMinLog8.depth" title="Permalink to this definition">¶</a></dt>
+<dd><p>Depth of the 2-d array of counters of the count-min sketch</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>np.uint64</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="sketchnu.countmin.CountMinLog8.max_count">
+<code class="sig-name descname">max_count</code><a class="headerlink" href="#sketchnu.countmin.CountMinLog8.max_count" title="Permalink to this definition">¶</a></dt>
+<dd><p>The maximum value we want to count up to for any given key. Default is
+2**32 -1 (4,294,967,295).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>int, optional</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="sketchnu.countmin.CountMinLog8.num_reserved">
+<code class="sig-name descname">num_reserved</code><a class="headerlink" href="#sketchnu.countmin.CountMinLog8.num_reserved" title="Permalink to this definition">¶</a></dt>
+<dd><p>Perform linear counting for values [0, num_reserved]. After that use log
+counters. This gives more precise estimates for the number of times a key
+is seen for counts &lt;= num_reserved. Default is 15. This must be less than
+255 (2**8 - 1).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>int, optional</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="sketchnu.countmin.CountMinLog8.shared_memory">
+<code class="sig-name descname">shared_memory</code><a class="headerlink" href="#sketchnu.countmin.CountMinLog8.shared_memory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Whether <cite>cms</cite> and <cite>n_added_records</cite> are attached to a shared memory block</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="sketchnu.countmin.CountMinLog8.cms">
+<code class="sig-name descname">cms</code><a class="headerlink" href="#sketchnu.countmin.CountMinLog8.cms" title="Permalink to this definition">¶</a></dt>
+<dd><p>2-d array of the counters. Shape = (depth, width)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>np.uint32[:,:]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="sketchnu.countmin.CountMinLog8.n_added_records">
+<code class="sig-name descname">n_added_records</code><a class="headerlink" href="#sketchnu.countmin.CountMinLog8.n_added_records" title="Permalink to this definition">¶</a></dt>
+<dd><p>1-d array that holds two special counters. The first is the number of elements
+that have been added to the sketch. Useful for calculating error limits. The
+second is used by helpers.parallel_add() to keep track of the number of records
+that have been processed. Useful if you want to calculate a TF-IDF.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>np.uint64[:]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="sketchnu.countmin.CountMinLog8.base">
+<code class="sig-name descname">base</code><a class="headerlink" href="#sketchnu.countmin.CountMinLog8.base" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculated base for the log counters. Depends affected by max_count and
+num_reserved.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>np.float64</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="sketchnu.countmin.CountMinLog8.add">
+<code class="sig-name descname">add</code><span class="sig-paren">(</span><em class="sig-param">key: bytes</em>, <em class="sig-param">value: int = 1</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="_modules/sketchnu/countmin.html#CountMinLog8.add"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sketchnu.countmin.CountMinLog8.add" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a single key to the count-min sketch and update the counter tracking total
+number of keys added to the count-min sketch. This is in n_added_records[0].</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>key</strong> (<em>bytes</em>) – Element to be added to the sketch</p></li>
+<li><p><strong>value</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of times to add <cite>key</cite> to the sketch. Default is 1</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="sketchnu.countmin.CountMinLog8.add_ngram">
+<code class="sig-name descname">add_ngram</code><span class="sig-paren">(</span><em class="sig-param">key: bytes</em>, <em class="sig-param">ngram: int</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="_modules/sketchnu/countmin.html#CountMinLog8.add_ngram"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sketchnu.countmin.CountMinLog8.add_ngram" title="Permalink to this definition">¶</a></dt>
+<dd><p>Take a given <cite>key</cite> and split it into ngrams of size <cite>ngram</cite> and then
+add the ngrams to the sketch. If the <cite>key</cite> length is less than <cite>ngram</cite>
+then add the whole <cite>key</cite></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>key</strong> (<em>bytes</em>) – Element to be shingled before adding to the sketch</p></li>
+<li><p><strong>ngram</strong> (<em>int</em>) – ngram size</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="sketchnu.countmin.CountMinLog8.load">
+<em class="property">static </em><code class="sig-name descname">load</code><span class="sig-paren">(</span><em class="sig-param">filename: Union[str, pathlib.Path], shared_memory: bool = False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sketchnu/countmin.html#CountMinLog8.load"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sketchnu.countmin.CountMinLog8.load" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load a saved CountMinLog8 stored in <cite>filename</cite></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename</strong> (<em>str | Path</em>) – File path to the saved .npz file</p></li>
+<li><p><strong>shared_memory</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, load into shared memory. Default is False.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#sketchnu.countmin.CountMinLog8" title="sketchnu.countmin.CountMinLog8">CountMinLog8</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="sketchnu.countmin.CountMinLog8.merge">
+<code class="sig-name descname">merge</code><span class="sig-paren">(</span><em class="sig-param">other</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="_modules/sketchnu/countmin.html#CountMinLog8.merge"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sketchnu.countmin.CountMinLog8.merge" title="Permalink to this definition">¶</a></dt>
+<dd><p>Merge the count-min sketch <cite>other</cite> into this one.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>other</strong> (<a class="reference internal" href="#sketchnu.countmin.CountMinLog8" title="sketchnu.countmin.CountMinLog8"><em>CountMinLog8</em></a>) – Another CountMinLog8 with the same parameters.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>TypeError</strong> – If <cite>other</cite> has different parameters</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="sketchnu.countmin.CountMinLog8.query">
+<code class="sig-name descname">query</code><span class="sig-paren">(</span><em class="sig-param">key: bytes</em><span class="sig-paren">)</span> &#x2192; float<a class="reference internal" href="_modules/sketchnu/countmin.html#CountMinLog8.query"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sketchnu.countmin.CountMinLog8.query" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return estimated number of times <cite>key</cite> was added into the count-min sketch</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>key</strong> (<em>bytes</em>) – Element whose estimated count you want returned</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="sketchnu.countmin.load">
+<code class="sig-prename descclassname">sketchnu.countmin.</code><code class="sig-name descname">load</code><span class="sig-paren">(</span><em class="sig-param">filename: Union[str, pathlib.Path], shared_memory: bool = False</em><span class="sig-paren">)</span> &#x2192; Union[sketchnu.countmin.CountMinLinear, sketchnu.countmin.CountMinLog16, sketchnu.countmin.CountMinLog8]<a class="reference internal" href="_modules/sketchnu/countmin.html#load"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sketchnu.countmin.load" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load a saved count-min sketch stored in <cite>filename</cite></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename</strong> (<em>str | Path</em>) – File path to the saved .npz file</p></li>
+<li><p><strong>shared_memory</strong> (<em>bool</em>) – If True, load into shared memory</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>CountMinLinear | CountMinLog16 | CountMinLog8</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="module-sketchnu.heavyhitters">
+<span id="sketchnu-heavyhitters"></span><h1>sketchnu.heavyhitters<a class="headerlink" href="#module-sketchnu.heavyhitters" title="Permalink to this headline">¶</a></h1>
+<p>Sketchnu has Numba implementations of sketch algorithms and other useful functions
+that utilize hash functions.</p>
+<p>Copyright (C) 2022 Matthew Hendrey</p>
+<p>This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.</p>
+<p>This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.</p>
+<p>You should have received a copy of the GNU General Public License
+along with this program.  If not, see &lt;<a class="reference external" href="https://www.gnu.org/licenses/">https://www.gnu.org/licenses/</a>&gt;.</p>
+<p>Numba implementation of the topkapi algorithm from</p>
+<p>A. Mandal, H. Jiang, A. Shrivastava, and V. Sarkar, “Topkapi: Parallel and Fast
+Sketches for Finding Top-K Frequent Elements”, Advances in Neural Information
+Processing Systems <strong>31</strong>, (2018).</p>
+<dl class="class">
+<dt id="sketchnu.heavyhitters.HeavyHitters">
+<em class="property">class </em><code class="sig-prename descclassname">sketchnu.heavyhitters.</code><code class="sig-name descname">HeavyHitters</code><span class="sig-paren">(</span><em class="sig-param">width: int</em>, <em class="sig-param">depth: int = 4</em>, <em class="sig-param">max_key_len: int = 16</em>, <em class="sig-param">phi: float = None</em>, <em class="sig-param">shared_memory: bool = False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sketchnu/heavyhitters.html#HeavyHitters"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sketchnu.heavyhitters.HeavyHitters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Sketch implementation of the phi-heavy hitters algorithm which identifies all the
+keys in a data stream that are observed in at least phi fraction of the records.
+This assumes that keys have a fat-tailed distribution in the data stream. This is
+an implementation of the Topkapi algorithm.</p>
+<p>The parameter phi must be greater than 1 / width of the sketch for the theoretical
+guarantees to be valid. The theoretical guarantees use a count-min sketch to
+estimate the frequency of any given key. For practical reasons, the paper suggests
+dropping the count-min sketch to save space. In this case you use the lhh_count as
+an estimate of the frequency of occurence for a given key. Note that
+lhh_count &lt;= true count &lt;= cms. So when we call the query function we are doing a
+more conservative estimate which corresponds to a higher phi. If you are feeling
+like you want to squeeze more out of the sketch you can provide a lower threshold
+(= phi * n_added()) when calling the query() function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>width</strong> (<em>int</em>) – Width of the heavy hitters sketch. Must be non-negative</p></li>
+<li><p><strong>depth</strong> (<em>int</em><em>, </em><em>optional</em>) – Depth of the heavy hitters sketch. Must be non-negative. Default is 4</p></li>
+<li><p><strong>max_key_len</strong> (<em>int</em><em>, </em><em>optional</em>) – Maximum number of bytes any given key may have. Must be less than 256.
+Default is 16</p></li>
+<li><p><strong>phi</strong> (<em>float</em><em>, </em><em>optional</em>) – When generating the candidate set of heavy hitters, only keys whose estimated
+frequency of occurrence (lhh_count) &gt;= phi * n_added() will be added to the
+candidate set. Default of None is set to 1 / width.</p></li>
+<li><p><strong>shared_memory</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, then sketch is placed in shared memory. Needed if performing
+multiprocessing as sketchnu.helpers.parallel_add() does. Default is False</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="attribute">
+<dt id="sketchnu.heavyhitters.HeavyHitters.width">
+<code class="sig-name descname">width</code><a class="headerlink" href="#sketchnu.heavyhitters.HeavyHitters.width" title="Permalink to this definition">¶</a></dt>
+<dd><p>Width of the 2-d array of counters of the sketch</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>np.uint64</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="sketchnu.heavyhitters.HeavyHitters.depth">
+<code class="sig-name descname">depth</code><a class="headerlink" href="#sketchnu.heavyhitters.HeavyHitters.depth" title="Permalink to this definition">¶</a></dt>
+<dd><p>Depth of the 2-d array of counters of the sketch</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>np.uint64</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="sketchnu.heavyhitters.HeavyHitters.max_key_len">
+<code class="sig-name descname">max_key_len</code><a class="headerlink" href="#sketchnu.heavyhitters.HeavyHitters.max_key_len" title="Permalink to this definition">¶</a></dt>
+<dd><p>Maximum number of bytes any given key may have. Must be less than 256</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>np.uint64</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="sketchnu.heavyhitters.HeavyHitters.phi">
+<code class="sig-name descname">phi</code><a class="headerlink" href="#sketchnu.heavyhitters.HeavyHitters.phi" title="Permalink to this definition">¶</a></dt>
+<dd><p>When generating the candidate set of heavy hitters, only keys whose estimated
+frequency of occurrence (lhh_count) &gt;= phi * n_added() will be added to the
+candidate set. Default of None is set to 1 / width.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>np.float64</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="sketchnu.heavyhitters.HeavyHitters.lhh">
+<code class="sig-name descname">lhh</code><a class="headerlink" href="#sketchnu.heavyhitters.HeavyHitters.lhh" title="Permalink to this definition">¶</a></dt>
+<dd><p>Storing the keys associated with each bucket in the 2-d array of counters. Keys
+are stored as numpy arrays, as opposed to 2-d list of bytes, in order for numba
+to be able to process them. If a given key has fewer bytes than max_len_key,
+then right padded with 0s.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>np.ndarray, shape=(depth, width, max_key_len), dtype=np.uint8</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="sketchnu.heavyhitters.HeavyHitters.lhh_count">
+<code class="sig-name descname">lhh_count</code><a class="headerlink" href="#sketchnu.heavyhitters.HeavyHitters.lhh_count" title="Permalink to this definition">¶</a></dt>
+<dd><p>Store the counts associated with keys stored in lhh.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>np.ndarray, shape=(depth, width), dtype=np.uint32</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="sketchnu.heavyhitters.HeavyHitters.key_lens">
+<code class="sig-name descname">key_lens</code><a class="headerlink" href="#sketchnu.heavyhitters.HeavyHitters.key_lens" title="Permalink to this definition">¶</a></dt>
+<dd><p>The length of each of the keys stored in lhh</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>np.ndarray, shape=(depth, width), dtype=np.uint8</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="sketchnu.heavyhitters.HeavyHitters.n_added_records">
+<code class="sig-name descname">n_added_records</code><a class="headerlink" href="#sketchnu.heavyhitters.HeavyHitters.n_added_records" title="Permalink to this definition">¶</a></dt>
+<dd><p>1-d array that holds two special counters. The first is the number of elements
+that have been added to the sketch. Useful for calculating error limits. The
+second is used by helpers.parallel_add() to keep track of the number of records
+that have been processed.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>np.ndarray, shape=(2,), dtype=np.uint64</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="sketchnu.heavyhitters.HeavyHitters.add">
+<code class="sig-name descname">add</code><span class="sig-paren">(</span><em class="sig-param">key: bytes</em>, <em class="sig-param">value: int = 1</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="_modules/sketchnu/heavyhitters.html#HeavyHitters.add"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sketchnu.heavyhitters.HeavyHitters.add" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a single <cite>key</cite> to the heavy hitters sketch and update the counter tracking
+total number of keys added to the sketch.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>key</strong> (<em>bytes</em>) – Element to be added to the sketch</p></li>
+<li><p><strong>value</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of times to add <cite>key</cite> to the sketch. Default is 1</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="sketchnu.heavyhitters.HeavyHitters.add_ngram">
+<code class="sig-name descname">add_ngram</code><span class="sig-paren">(</span><em class="sig-param">key: bytes</em>, <em class="sig-param">ngram: int</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="_modules/sketchnu/heavyhitters.html#HeavyHitters.add_ngram"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sketchnu.heavyhitters.HeavyHitters.add_ngram" title="Permalink to this definition">¶</a></dt>
+<dd><p>Take a given <cite>key</cite> and shingle it into ngrams of size <cite>ngram</cite> and then
+add the ngrams to the sketch. If the <cite>key</cite> length is less than <cite>ngram</cite>
+then add the whole <cite>key</cite></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>key</strong> (<em>bytes</em>) – Element to be shingled before adding to the sketch</p></li>
+<li><p><strong>ngram</strong> (<em>int</em>) – ngram size</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="sketchnu.heavyhitters.HeavyHitters.attach_existing_shm">
+<code class="sig-name descname">attach_existing_shm</code><span class="sig-paren">(</span><em class="sig-param">existing_shm_name: str</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="_modules/sketchnu/heavyhitters.html#HeavyHitters.attach_existing_shm"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sketchnu.heavyhitters.HeavyHitters.attach_existing_shm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Attach this sketch to an existing shared memory block. Useful when working
+within a spawned child process. This creates self.existing_shm which gets
+closed when self.__del__ gets called.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>existing_shm_name</strong> (<em>str</em>) – Name of an existing shared memory block to attach this sketch to</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="sketchnu.heavyhitters.HeavyHitters.generate_candidate_set">
+<code class="sig-name descname">generate_candidate_set</code><span class="sig-paren">(</span><em class="sig-param">threshold: int = None</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="_modules/sketchnu/heavyhitters.html#HeavyHitters.generate_candidate_set"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sketchnu.heavyhitters.HeavyHitters.generate_candidate_set" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate a candidate set of heavy hitters. Only keys in <cite>lhh</cite> whose
+corresponding counts in <cite>lhh_count</cite> are greater the <cite>threshold</cite> are included.
+Contrary to the paper, we all the rows instead of just the first one. This
+seems like a small price to pay to not lose candidates due to hash collisions.
+The candidate set is a collections.Counter stored in self.candidate_set</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>threshold</strong> (<em>int</em><em>, </em><em>optional</em>) – If None (default), then uses <cite>threshold</cite> provided during instantiation</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="sketchnu.heavyhitters.HeavyHitters.load">
+<em class="property">static </em><code class="sig-name descname">load</code><span class="sig-paren">(</span><em class="sig-param">filename: Union[str, pathlib.Path], shared_memory: bool = False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sketchnu/heavyhitters.html#HeavyHitters.load"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sketchnu.heavyhitters.HeavyHitters.load" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load a saved HeavyHitters stored in <cite>filename</cite></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename</strong> (<em>str | Path</em>) – File path to the saved .npz file</p></li>
+<li><p><strong>shared_memory</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, load into shared memory. Default is False.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#sketchnu.heavyhitters.HeavyHitters" title="sketchnu.heavyhitters.HeavyHitters">HeavyHitters</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="sketchnu.heavyhitters.HeavyHitters.merge">
+<code class="sig-name descname">merge</code><span class="sig-paren">(</span><em class="sig-param">other</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="_modules/sketchnu/heavyhitters.html#HeavyHitters.merge"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sketchnu.heavyhitters.HeavyHitters.merge" title="Permalink to this definition">¶</a></dt>
+<dd><p>Merge the HeavyHitter sketch <cite>other</cite> into this one.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>other</strong> (<a class="reference internal" href="#sketchnu.heavyhitters.HeavyHitters" title="sketchnu.heavyhitters.HeavyHitters"><em>HeavyHitters</em></a>) – Another HeavyHitters with the same width, depth, max_key_len.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>TypeError</strong> – If <cite>other</cite> has different width, depth, or max_key_len</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="sketchnu.heavyhitters.HeavyHitters.n_added">
+<code class="sig-name descname">n_added</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; numpy.uint64<a class="reference internal" href="_modules/sketchnu/heavyhitters.html#HeavyHitters.n_added"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sketchnu.heavyhitters.HeavyHitters.n_added" title="Permalink to this definition">¶</a></dt>
+<dd><p>This special counter is used to track the total number of elements
+that have been added to the sketch. Useful to check the error guarantees.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The number of elements that have been added to the sketch.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>np.uint64</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="sketchnu.heavyhitters.HeavyHitters.n_records">
+<code class="sig-name descname">n_records</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; numpy.uint64<a class="reference internal" href="_modules/sketchnu/heavyhitters.html#HeavyHitters.n_records"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sketchnu.heavyhitters.HeavyHitters.n_records" title="Permalink to this definition">¶</a></dt>
+<dd><p>This special counter is used by the sketchnu.helpers.parallel_add() to
+keep track of the number of records that have been added to the sketch.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The number of records that have been added to the sketch.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>np.uint64</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="sketchnu.heavyhitters.HeavyHitters.query">
+<code class="sig-name descname">query</code><span class="sig-paren">(</span><em class="sig-param">k: int</em>, <em class="sig-param">threshold: int = None</em><span class="sig-paren">)</span> &#x2192; List[Tuple[bytes, int]]<a class="reference internal" href="_modules/sketchnu/heavyhitters.html#HeavyHitters.query"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sketchnu.heavyhitters.HeavyHitters.query" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the top <cite>k</cite> heavy hitters. If new data has been added or if <cite>threshold</cite>
+is different from the last time a candidate set was generated, then this will
+generate a new candidate set before selecting the top <cite>k</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>k</strong> (<em>int</em>) – </p></li>
+<li><p><strong>threshold</strong> (<em>int</em><em>, </em><em>optional</em>) – Only include keys from lhh whose lhh_counts &gt;= <cite>threshold</cite>. Default is None
+which then sets threshold to self.phi * self.n_added()</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Sorted list of the (key, count) of the top <cite>k</cite>. Format is the same as
+collections.Counter().most_common().</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>List[Tuple[bytes, int]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="sketchnu.heavyhitters.HeavyHitters.save">
+<code class="sig-name descname">save</code><span class="sig-paren">(</span><em class="sig-param">filename: Union[str, pathlib.Path]</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="_modules/sketchnu/heavyhitters.html#HeavyHitters.save"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sketchnu.heavyhitters.HeavyHitters.save" title="Permalink to this definition">¶</a></dt>
+<dd><p>Save the sketch to <cite>filename</cite> adding the .npz extension if not already part of
+<cite>filename</cite></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>filename</strong> (<em>str | Path</em>) – File to save the sketch to disk. This will be a .npz file.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="sketchnu.heavyhitters.HeavyHitters.update">
+<code class="sig-name descname">update</code><span class="sig-paren">(</span><em class="sig-param">keys: Union[List[bytes], Dict[bytes, int]]</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="_modules/sketchnu/heavyhitters.html#HeavyHitters.update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sketchnu.heavyhitters.HeavyHitters.update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add <cite>keys</cite> to the sketch. This follows the convention of collections.Counter</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>keys</strong> (<em>List</em><em>[</em><em>bytes</em><em>] </em><em>| Dict</em><em>[</em><em>bytes</em><em>, </em><em>int</em><em>]</em>) – List of elements to add to the sketch or a dictionary which can specify the
+number of times to add each <cite>key</cite></p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="sketchnu.heavyhitters.HeavyHitters.update_ngram">
+<code class="sig-name descname">update_ngram</code><span class="sig-paren">(</span><em class="sig-param">keys: List[bytes], ngram: int</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="_modules/sketchnu/heavyhitters.html#HeavyHitters.update_ngram"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sketchnu.heavyhitters.HeavyHitters.update_ngram" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given a list of keys, shingle each into ngrams of size <cite>ngram</cite>, and then
+add them to the sketch.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>keys</strong> (<em>List</em><em>[</em><em>bytes</em><em>]</em>) – List of elements to be shingled before adding to the sketch.</p></li>
+<li><p><strong>ngram</strong> (<em>int</em>) – ngram size</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-sketchnu.helpers">
+<span id="sketchnu-helpers"></span><h1>sketchnu.helpers<a class="headerlink" href="#module-sketchnu.helpers" title="Permalink to this headline">¶</a></h1>
+<p>Sketchnu has Numba implementations of sketch algorithms and other useful functions
+that utilize hash functions.</p>
+<p>Copyright (C) 2022 Matthew Hendrey</p>
+<p>This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.</p>
+<p>This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.</p>
+<p>You should have received a copy of the GNU General Public License
+along with this program.  If not, see &lt;<a class="reference external" href="https://www.gnu.org/licenses/">https://www.gnu.org/licenses/</a>&gt;.</p>
+<p>Helper functions to aid in parallelizating the creation of sketches using Python’s
+<code class="code docutils literal notranslate"><span class="pre">multiprocessing</span></code>.</p>
+<dl class="function">
+<dt id="sketchnu.helpers.attach_shared_memory">
+<code class="sig-prename descclassname">sketchnu.helpers.</code><code class="sig-name descname">attach_shared_memory</code><span class="sig-paren">(</span><em class="sig-param">sketch_type: str</em>, <em class="sig-param">sketch_args: Dict</em>, <em class="sig-param">shm_name: str</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sketchnu/helpers.html#attach_shared_memory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sketchnu.helpers.attach_shared_memory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a new sketch and attach it to the shared memory block. Sketch is created by
+passing sketch_args to either CountMin(), HeavyHitters() or HyperLogLog().</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sketch_type</strong> (<em>str</em>) – Specify the type of sketch to create. Must be “cms” | “hh” | “hll”.</p></li>
+<li><p><strong>sketch_args</strong> (<em>Dict</em>) – The associated arguments to instantiante a new sketch.</p></li>
+<li><p><strong>shm_name</strong> (<em>str</em>) – Name of a shared memory block that already exist. The new sketch will
+attach to this block.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>local_sketch</strong> – A local sketch, relative to this process, that is attached to the shared memory
+block of an existing sketch that has shared_memory = True</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>CountMinLinear | CountMinLog16 | CountMinLog8 | HeavyHitters | HyperLogLog</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="sketchnu.helpers.parallel_add">
+<code class="sig-prename descclassname">sketchnu.helpers.</code><code class="sig-name descname">parallel_add</code><span class="sig-paren">(</span><em class="sig-param">items: Iterable, process_q_item: Callable[[...], Iterable[Union[Iterable[bytes], Dict[bytes, int]]]], n_workers: int = None, ngram: int = None, cms_args: Dict = None, hh_args: Dict = None, hll_args: Dict = None, **kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sketchnu/helpers.html#parallel_add"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sketchnu.helpers.parallel_add" title="Permalink to this definition">¶</a></dt>
+<dd><p>Places <cite>items</cite> onto a queue to be processed by <cite>n_workers</cite> independent spawned
+processes. The function <cite>process_q_item</cite> takes a single item and returns an
+Iterable of records with each record being an either an Iterable of keys (bytes)
+or a dictionary with key=byte, value=number to times to add that key to be added
+to the sketch(s). The **kwargs are passed along to <cite>process_q_item</cite> to allow for
+any needed additional parameters. Once all items have been processed, the
+<cite>n_workers</cite> sketch(s) are merged with the final result(s) being returned.</p>
+<p><strong>Note</strong>
+If your data has duplicate keys within a q_item, you will likely see better
+performance if <cite>process_q_item</cite> does <code class="docutils literal notranslate"><span class="pre">`yield</span> <span class="pre">Counter(keys)`</span></code> instead of just
+<code class="docutils literal notranslate"><span class="pre">`yield</span> <span class="pre">keys`</span></code></p>
+<p>You must provide at least <cite>cms_args</cite> | <cite>hh_args</cite> | <cite>hll_args</cite>. If you provide more
+than one, then the requested sketches will be processed at the same time while
+going over the data just once.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>items</strong> (<em>Iterable</em>) – A generator or list of items that will be placed onto a queue and then worked
+by one of the workers in a separate spawned process.</p></li>
+<li><p><strong>process_q_item</strong> (<em>Callable</em><em>[</em><em>..</em><em>,</em><em>Iterable</em><em>[</em><em>Union</em><em>[</em><em>Iterable</em><em>[</em><em>bytes</em><em>]</em><em>,</em><em>Dict</em><em>[</em><em>bytes</em><em>,</em><em>int</em><em>]</em><em>]</em><em>]</em><em>]</em>) – Function that turns an item from the queue into an Iterable of records with
+each record being an Iterable of keys (bytes) to be added to the sketch(s)
+or a Dict[key=bytes, value=int] to add each key multiple times to the
+sketch(s). Using a Dict is often faster if data has multiple entries for a
+given key.</p></li>
+<li><p><strong>n_workers</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of workers to use. Each will update their own sketches which will then
+get merged together to achieve the final sketch(s). If None (default), then set
+to psutil.cpu_count(logical=False)</p></li>
+<li><p><strong>ngram</strong> (<em>int</em><em>, </em><em>optional</em>) – If nonzero, then break each key into ngrams of this size before added to the
+sketch(s)</p></li>
+<li><p><strong>cms_args</strong> (<em>Dict</em><em>, </em><em>optional</em>) – Dictionary containing arguments to instantiate a CountMin.  If None (default)
+then don’t create a sketch of this type.</p></li>
+<li><p><strong>hh_args</strong> (<em>Dict</em><em>, </em><em>optional</em>) – Dictionary containing arguments to instantiate a HeavyHitters. If None (default)
+then don’t create a sketch of this type.</p></li>
+<li><p><strong>hll_args</strong> (<em>Dict</em><em>, </em><em>optional</em>) – Dictionary containing arguments to instantiate a HyperLogLog. If None (default)
+then don’t create a sketch of this type.</p></li>
+<li><p><strong>**kwargs</strong> – Keyword arguments that get passed to <cite>process_q_item</cite> function</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><em>The final sketch(s). If doing more than one sketch, then they are returned as a</em></p></li>
+<li><p><strong>tuple in alphabetical order</strong> (<em>cms, hh, hll</em>)</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="sketchnu.helpers.parallel_merging">
+<code class="sig-prename descclassname">sketchnu.helpers.</code><code class="sig-name descname">parallel_merging</code><span class="sig-paren">(</span><em class="sig-param">sketch_array: List</em>, <em class="sig-param">log_queue: multiprocessing.context.BaseContext.Queue</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sketchnu/helpers.html#parallel_merging"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sketchnu.helpers.parallel_merging" title="Permalink to this definition">¶</a></dt>
+<dd><p>Merge an array of sketches in successive rounds of pairing. This will use
+at most len(sketch_array) // 2 processes. After merging, the final sketch
+is returned.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sketch_array</strong> (<em>List</em>) – Array containing sketches to be merged together</p></li>
+<li><p><strong>log_queue</strong> (<em>Queue</em>) – Log statements to a log Queue</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The final sketch resulting from merging all of the sketches in the
+sketch_array.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>CountMinLinear | CountMinLog16 | CountMinLog8 | HyperLogLog</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="module-sketchnu.hashes">
+<span id="sketchnu-hashes"></span><h1>sketchnu.hashes<a class="headerlink" href="#module-sketchnu.hashes" title="Permalink to this headline">¶</a></h1>
+<p>Sketchnu has Numba implementations of sketch algorithms and other useful functions
+that utilize hash functions.</p>
+<p>Copyright (C) 2022 Matthew Hendrey</p>
+<p>This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.</p>
+<p>This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.</p>
+<p>You should have received a copy of the GNU General Public License
+along with this program.  If not, see &lt;<a class="reference external" href="https://www.gnu.org/licenses/">https://www.gnu.org/licenses/</a>&gt;.</p>
+<p>Numba implementations of the <strong>non-cryptographic</strong> hashing functions
+FastHash (32 &amp; 64-bit) and MurmurHash3 (32-bit). The 64-bit FastHash is used
+in both the HyperLogLog and count-min sketch code.</p>
+<dl class="attribute">
+<dt id="sketchnu.hashes.fasthash32">
+<code class="sig-prename descclassname">sketchnu.hashes.</code><code class="sig-name descname">fasthash32</code><a class="reference internal" href="_modules/sketchnu/hashes.html#fasthash32"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sketchnu.hashes.fasthash32" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the unsigned 32-bit integer FastHash value of <cite>key</cite> with the
+given <cite>seed</cite>. Code adapted from <a class="reference external" href="https://github.com/rurban/smhasher/">https://github.com/rurban/smhasher/</a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>key</strong> (<em>bytes</em>) – Bytes to be hashed</p></li>
+<li><p><strong>seed</strong> (<em>uint64</em>) – Seed to use when hashing</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Unsigned 32-bit integer hash value of <cite>key</cite></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>uint32</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="sketchnu.hashes.fasthash64">
+<code class="sig-prename descclassname">sketchnu.hashes.</code><code class="sig-name descname">fasthash64</code><a class="reference internal" href="_modules/sketchnu/hashes.html#fasthash64"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sketchnu.hashes.fasthash64" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the unsigned 64-bit integer FastHash value of <cite>key</cite> with the
+given <cite>seed</cite>. Code adapted from <a class="reference external" href="https://github.com/rurban/smhasher/">https://github.com/rurban/smhasher/</a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>key</strong> (<em>bytes</em>) – Bytes to be hashed</p></li>
+<li><p><strong>seed</strong> (<em>uint64</em>) – Seed to use when hashing</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Unsigned 64-bit integer hash value of <cite>key</cite></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>uint64</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="sketchnu.hashes.murmur3">
+<code class="sig-prename descclassname">sketchnu.hashes.</code><code class="sig-name descname">murmur3</code><a class="reference internal" href="_modules/sketchnu/hashes.html#murmur3"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sketchnu.hashes.murmur3" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the unsigned 32-bit integer MurmurHash3 value of <cite>key</cite> with the
+given <cite>seed</cite>. Code adapted from <a class="reference external" href="https://github.com/rurban/smhasher/">https://github.com/rurban/smhasher/</a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>key</strong> (<em>bytes</em>) – Bytes to be hashed</p></li>
+<li><p><strong>seed</strong> (<em>uint32</em>) – Seed to use when hashing</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Unsigned 32-bit integer hash value of <cite>key</cite></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>uint32</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="sketchnu-tests">
+<h1>sketchnu.tests<a class="headerlink" href="#sketchnu-tests" title="Permalink to this headline">¶</a></h1>
+</div>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="modules.html" class="btn btn-neutral float-left" title="&lt;no title&gt;" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="license.html" class="btn btn-neutral float-right" title="License" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Matthew Hendrey.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

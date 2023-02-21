@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>sketchnu.helpers &mdash; sketchnu 1.2.2 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            sketchnu
+              <img src="../../_static/logo.png" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                1.2.2
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../hyperloglog.html">HyperLogLog++</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../hyperloglog.html#the-basics">The Basics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../hyperloglog.html#usage">Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../hyperloglog.html#the-details">The Details</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../hyperloglog.html#testing">Testing</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../countmin.html">Count-Min Sketch</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../countmin.html#the-basics">The Basics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../countmin.html#usage">Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../countmin.html#the-details">The Details</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../countmin.html#testing">Testing</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../heavyhitters.html">Heavy-Hitters</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../heavyhitters.html#the-basics">The Basics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../heavyhitters.html#usage">Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../heavyhitters.html#the-details">The Details</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../helpers.html">Helper Functions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../helpers.html#usage">Usage</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../hashes.html">Hash Functions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../hashes.html#fasthash">FastHash</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../hashes.html#usage">Usage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../hashes.html#testing">Testing</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../hashes.html#murmurhash3">MurmurHash3</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../hashes.html#id1">Usage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../hashes.html#id2">Testing</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../sketchnu.html">sketchnu.hyperloglog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../sketchnu.html#module-sketchnu.countmin">sketchnu.countmin</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../sketchnu.html#module-sketchnu.heavyhitters">sketchnu.heavyhitters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../sketchnu.html#module-sketchnu.helpers">sketchnu.helpers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../sketchnu.html#module-sketchnu.hashes">sketchnu.hashes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../sketchnu.html#sketchnu-tests">sketchnu.tests</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Admin</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../license.html">License</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../license.html#license-requirements">License Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../license.html#license-notices">License notices</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../license.html#copyright">Copyright</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../help.html">Help</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">sketchnu</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">sketchnu.helpers</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for sketchnu.helpers</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Sketchnu has Numba implementations of sketch algorithms and other useful functions </span>
+<span class="sd">that utilize hash functions.</span>
+
+<span class="sd">Copyright (C) 2022 Matthew Hendrey</span>
+
+<span class="sd">This program is free software: you can redistribute it and/or modify</span>
+<span class="sd">it under the terms of the GNU General Public License as published by</span>
+<span class="sd">the Free Software Foundation, either version 3 of the License, or</span>
+<span class="sd">(at your option) any later version.</span>
+
+<span class="sd">This program is distributed in the hope that it will be useful,</span>
+<span class="sd">but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<span class="sd">MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
+<span class="sd">GNU General Public License for more details.</span>
+
+<span class="sd">You should have received a copy of the GNU General Public License</span>
+<span class="sd">along with this program.  If not, see &lt;https://www.gnu.org/licenses/&gt;.</span>
+
+<span class="sd">Helper functions to aid in parallelizating the creation of sketches using Python&#39;s</span>
+<span class="sd">:code:`multiprocessing`.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">import</span> <span class="nn">gc</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">from</span> <span class="nn">multiprocessing</span> <span class="kn">import</span> <span class="n">get_context</span><span class="p">,</span> <span class="n">Queue</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">psutil</span>
+<span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">sleep</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span>
+
+<span class="kn">from</span> <span class="nn">sketchnu.countmin</span> <span class="kn">import</span> <span class="n">CountMin</span><span class="p">,</span> <span class="n">CountMinLinear</span>
+<span class="kn">from</span> <span class="nn">sketchnu.heavyhitters</span> <span class="kn">import</span> <span class="n">HeavyHitters</span>
+<span class="kn">from</span> <span class="nn">sketchnu.hyperloglog</span> <span class="kn">import</span> <span class="n">HyperLogLog</span>
+
+
+<div class="viewcode-block" id="attach_shared_memory"><a class="viewcode-back" href="../../sketchnu.html#sketchnu.helpers.attach_shared_memory">[docs]</a><span class="k">def</span> <span class="nf">attach_shared_memory</span><span class="p">(</span><span class="n">sketch_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">sketch_args</span><span class="p">:</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">shm_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Create a new sketch and attach it to the shared memory block. Sketch is created by</span>
+<span class="sd">    passing sketch_args to either CountMin(), HeavyHitters() or HyperLogLog().</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    sketch_type : str</span>
+<span class="sd">        Specify the type of sketch to create. Must be &quot;cms&quot; | &quot;hh&quot; | &quot;hll&quot;.</span>
+<span class="sd">    sketch_args : Dict</span>
+<span class="sd">        The associated arguments to instantiante a new sketch.</span>
+<span class="sd">    shm_name : str</span>
+<span class="sd">        Name of a shared memory block that already exist. The new sketch will</span>
+<span class="sd">        attach to this block.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    local_sketch : CountMinLinear | CountMinLog16 | CountMinLog8 | HeavyHitters | HyperLogLog</span>
+<span class="sd">        A local sketch, relative to this process, that is attached to the shared memory</span>
+<span class="sd">        block of an existing sketch that has shared_memory = True</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">sketch_type</span> <span class="o">==</span> <span class="s2">&quot;cms&quot;</span><span class="p">:</span>
+        <span class="n">local_sketch</span> <span class="o">=</span> <span class="n">CountMin</span><span class="p">(</span><span class="o">**</span><span class="n">sketch_args</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">sketch_type</span> <span class="o">==</span> <span class="s2">&quot;hh&quot;</span><span class="p">:</span>
+        <span class="n">local_sketch</span> <span class="o">=</span> <span class="n">HeavyHitters</span><span class="p">(</span><span class="o">**</span><span class="n">sketch_args</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">sketch_type</span> <span class="o">==</span> <span class="s2">&quot;hll&quot;</span><span class="p">:</span>
+        <span class="n">local_sketch</span> <span class="o">=</span> <span class="n">HyperLogLog</span><span class="p">(</span><span class="o">**</span><span class="n">sketch_args</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;{sketch_type=:} is not handled&quot;</span><span class="p">)</span>
+
+    <span class="n">local_sketch</span><span class="o">.</span><span class="n">attach_existing_shm</span><span class="p">(</span><span class="n">shm_name</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">local_sketch</span></div>
+
+
+<span class="k">def</span> <span class="nf">_fill_queue</span><span class="p">(</span>
+    <span class="n">queue</span><span class="p">:</span> <span class="n">Queue</span><span class="p">,</span> <span class="n">items</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">n_workers</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">log_queue</span><span class="p">:</span> <span class="n">Queue</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Places the items onto the queue and adds poison pill of None for each worker</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">item</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">items</span><span class="p">):</span>
+        <span class="n">queue</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">item_str</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="n">item_str</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="n">i</span><span class="p">)</span>
+        <span class="n">log_queue</span><span class="o">.</span><span class="n">put</span><span class="p">({</span><span class="s2">&quot;level&quot;</span><span class="p">:</span> <span class="s2">&quot;DEBUG&quot;</span><span class="p">,</span> <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{item_str}</span><span class="s2"> placed on the queue&quot;</span><span class="p">})</span>
+
+    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_workers</span><span class="p">):</span>
+        <span class="n">queue</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
+    <span class="n">log_queue</span><span class="o">.</span><span class="n">put</span><span class="p">({</span><span class="s2">&quot;level&quot;</span><span class="p">:</span> <span class="s2">&quot;INFO&quot;</span><span class="p">,</span> <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;All {i+1} items placed on the queue&quot;</span><span class="p">})</span>
+
+    <span class="k">return</span> <span class="kc">None</span>
+
+
+<span class="k">def</span> <span class="nf">_log_worker</span><span class="p">(</span><span class="n">log_queue</span><span class="p">:</span> <span class="n">Queue</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Worker that will log statements placed onto the log_queue</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    log_queue : multiprocessing.Queue</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="n">q_item</span> <span class="o">=</span> <span class="n">log_queue</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+        <span class="c1"># Process log message</span>
+        <span class="k">if</span> <span class="n">q_item</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">level</span> <span class="o">=</span> <span class="n">q_item</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;level&quot;</span><span class="p">)</span>
+                <span class="n">text</span> <span class="o">=</span> <span class="n">q_item</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;text&quot;</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to get level|text from log msg, </span><span class="si">{q_item}</span><span class="s2">. </span><span class="si">{e}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="k">continue</span>
+            <span class="k">if</span> <span class="n">level</span> <span class="o">==</span> <span class="s2">&quot;DEBUG&quot;</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">level</span> <span class="o">==</span> <span class="s2">&quot;INFO&quot;</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">level</span> <span class="o">==</span> <span class="s2">&quot;WARNING&quot;</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">level</span> <span class="o">==</span> <span class="s2">&quot;CRITICAL&quot;</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">level</span> <span class="o">==</span> <span class="s2">&quot;ERROR&quot;</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">level</span> <span class="o">==</span> <span class="s2">&quot;FATAL&quot;</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">fatal</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+
+<span class="k">def</span> <span class="nf">_worker</span><span class="p">(</span>
+    <span class="n">worker_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">sketch</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">,</span>
+    <span class="n">process_q_item</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">bytes</span><span class="p">]],</span>
+    <span class="n">in_queue</span><span class="p">:</span> <span class="n">Queue</span><span class="p">,</span>
+    <span class="n">log_queue</span><span class="p">:</span> <span class="n">Queue</span><span class="p">,</span>
+    <span class="n">ngram</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+<span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Worker takes an item from the queue, uses the function process_q_item()</span>
+<span class="sd">    to return the list of keys to be added to the cms.</span>
+
+<span class="sd">    If sketch is a tuple, then this worker is updating both a cms and hll.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    worker_id : int</span>
+<span class="sd">        Simple integer id for the worker to aid logging</span>
+<span class="sd">    sketch : Tuple</span>
+<span class="sd">        How to instantiated sketch(s) using shared memory. Each element is itself</span>
+<span class="sd">        a tuple with (sketch_type, sketch_args, shm_name) where sketch_type is</span>
+<span class="sd">        &quot;hll&quot; | &quot;cms&quot;, sketch_args are dictionary of arguments to give to HyperLogLog</span>
+<span class="sd">        or CountMin, and shm_name is the name of the shared memory block to attach the</span>
+<span class="sd">        instantiated sketch to.</span>
+<span class="sd">    process_q_item : Callable[..., Iterable[bytes]]</span>
+<span class="sd">        Function that turns an item from the queue into an Iterator of</span>
+<span class="sd">        elements (bytes) to be added to the sketch(s).</span>
+<span class="sd">    in_queue : Queue</span>
+<span class="sd">        Queue containing items to be processed by the workers</span>
+<span class="sd">    log_queue : Queue</span>
+<span class="sd">        Queue to send logging statements to</span>
+<span class="sd">    ngram : int</span>
+<span class="sd">        If 0 or None, then calls sketch.add(key). Otherwise calls</span>
+<span class="sd">        sketch.add_ngram(key, ngram)</span>
+<span class="sd">    \*\*kwargs :</span>
+<span class="sd">        Keyword arguments passed to process_q_item(q_item, \*\*kwargs)</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    None</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">log_queue</span><span class="o">.</span><span class="n">put</span><span class="p">({</span><span class="s2">&quot;level&quot;</span><span class="p">:</span> <span class="s2">&quot;INFO&quot;</span><span class="p">,</span> <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;WORKER </span><span class="si">{worker_id:02}</span><span class="s2"> is starting&quot;</span><span class="p">})</span>
+    <span class="n">n_records</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="c1"># Need to attach shared memory appropriately</span>
+    <span class="n">local_sketches</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">sketch</span><span class="p">:</span>
+        <span class="n">sk</span> <span class="o">=</span> <span class="n">attach_shared_memory</span><span class="p">(</span><span class="o">*</span><span class="n">s</span><span class="p">)</span>
+        <span class="n">local_sketches</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sk</span><span class="p">)</span>
+
+    <span class="n">start</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="n">q_item</span> <span class="o">=</span> <span class="n">in_queue</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+        <span class="c1"># Process a queue_item</span>
+        <span class="k">if</span> <span class="n">q_item</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">keys</span> <span class="ow">in</span> <span class="n">process_q_item</span><span class="p">(</span><span class="n">q_item</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+                <span class="k">for</span> <span class="n">local_sketch</span> <span class="ow">in</span> <span class="n">local_sketches</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">ngram</span><span class="p">:</span>
+                        <span class="n">local_sketch</span><span class="o">.</span><span class="n">update_ngram</span><span class="p">(</span><span class="n">keys</span><span class="p">,</span> <span class="n">ngram</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">local_sketch</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">keys</span><span class="p">)</span>
+                <span class="n">n_records</span> <span class="o">+=</span> <span class="mi">1</span>
+
+            <span class="n">end</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+            <span class="n">speed</span> <span class="o">=</span> <span class="n">n_records</span> <span class="o">/</span> <span class="p">(</span><span class="n">end</span> <span class="o">-</span> <span class="n">start</span><span class="p">)</span><span class="o">.</span><span class="n">total_seconds</span><span class="p">()</span>
+            <span class="n">log_queue</span><span class="o">.</span><span class="n">put</span><span class="p">(</span>
+                <span class="p">{</span>
+                    <span class="s2">&quot;level&quot;</span><span class="p">:</span> <span class="s2">&quot;DEBUG&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;WORKER </span><span class="si">{worker_id:02}</span><span class="s2"> has processed &quot;</span>
+                    <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{n_records:,}</span><span class="s2"> records at </span><span class="si">{speed:.3f}</span><span class="s2"> records/sec&quot;</span><span class="p">,</span>
+                <span class="p">}</span>
+            <span class="p">)</span>
+
+        <span class="c1"># Poison pill received</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Finished processing</span>
+            <span class="k">for</span> <span class="n">local_sketch</span> <span class="ow">in</span> <span class="n">local_sketches</span><span class="p">:</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="c1"># Only the CMS &amp; HH has n_records. Fails if HLL, but we don&#39;t care</span>
+                    <span class="n">local_sketch</span><span class="o">.</span><span class="n">n_added_records</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+=</span> <span class="n">np</span><span class="o">.</span><span class="n">uint64</span><span class="p">(</span><span class="n">n_records</span><span class="p">)</span>
+                <span class="k">except</span><span class="p">:</span>
+                    <span class="k">pass</span>
+                <span class="c1"># This should cleanly unattach the shared memory</span>
+                <span class="k">del</span> <span class="n">local_sketch</span>
+
+            <span class="n">end</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+            <span class="n">speed</span> <span class="o">=</span> <span class="n">n_records</span> <span class="o">/</span> <span class="p">(</span><span class="n">end</span> <span class="o">-</span> <span class="n">start</span><span class="p">)</span><span class="o">.</span><span class="n">total_seconds</span><span class="p">()</span>
+            <span class="n">log_queue</span><span class="o">.</span><span class="n">put</span><span class="p">(</span>
+                <span class="p">{</span>
+                    <span class="s2">&quot;level&quot;</span><span class="p">:</span> <span class="s2">&quot;INFO&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;WORKER </span><span class="si">{worker_id:02}</span><span class="s2"> finished &quot;</span>
+                    <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{n_records:,}</span><span class="s2"> records at </span><span class="si">{speed:.3f}</span><span class="s2"> records/sec&quot;</span><span class="p">,</span>
+                <span class="p">}</span>
+            <span class="p">)</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+
+<div class="viewcode-block" id="parallel_add"><a class="viewcode-back" href="../../sketchnu.html#sketchnu.helpers.parallel_add">[docs]</a><span class="k">def</span> <span class="nf">parallel_add</span><span class="p">(</span>
+    <span class="n">items</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">,</span>
+    <span class="n">process_q_item</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">bytes</span><span class="p">],</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">bytes</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]]],</span>
+    <span class="n">n_workers</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">ngram</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">cms_args</span><span class="p">:</span> <span class="n">Dict</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">hh_args</span><span class="p">:</span> <span class="n">Dict</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">hll_args</span><span class="p">:</span> <span class="n">Dict</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+<span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Places `items` onto a queue to be processed by `n_workers` independent spawned</span>
+<span class="sd">    processes. The function `process_q_item` takes a single item and returns an</span>
+<span class="sd">    Iterable of records with each record being an either an Iterable of keys (bytes)</span>
+<span class="sd">    or a dictionary with key=byte, value=number to times to add that key to be added</span>
+<span class="sd">    to the sketch(s). The \*\*kwargs are passed along to `process_q_item` to allow for</span>
+<span class="sd">    any needed additional parameters. Once all items have been processed, the</span>
+<span class="sd">    `n_workers` sketch(s) are merged with the final result(s) being returned.</span>
+
+<span class="sd">    **Note**</span>
+<span class="sd">    If your data has duplicate keys within a q_item, you will likely see better</span>
+<span class="sd">    performance if `process_q_item` does ```yield Counter(keys)``` instead of just</span>
+<span class="sd">    ```yield keys```</span>
+
+<span class="sd">    You must provide at least `cms_args` | `hh_args` | `hll_args`. If you provide more</span>
+<span class="sd">    than one, then the requested sketches will be processed at the same time while</span>
+<span class="sd">    going over the data just once.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    items : Iterable</span>
+<span class="sd">        A generator or list of items that will be placed onto a queue and then worked</span>
+<span class="sd">        by one of the workers in a separate spawned process.</span>
+<span class="sd">    process_q_item : Callable[...,Iterable[Union[Iterable[bytes],Dict[bytes,int]]]]</span>
+<span class="sd">        Function that turns an item from the queue into an Iterable of records with</span>
+<span class="sd">        each record being an Iterable of keys (bytes) to be added to the sketch(s)</span>
+<span class="sd">        or a Dict[key=bytes, value=int] to add each key multiple times to the</span>
+<span class="sd">        sketch(s). Using a Dict is often faster if data has multiple entries for a</span>
+<span class="sd">        given key.</span>
+<span class="sd">    n_workers : int, optional</span>
+<span class="sd">        Number of workers to use. Each will update their own sketches which will then</span>
+<span class="sd">        get merged together to achieve the final sketch(s). If None (default), then set</span>
+<span class="sd">        to psutil.cpu_count(logical=False)</span>
+<span class="sd">    ngram : int, optional</span>
+<span class="sd">        If nonzero, then break each key into ngrams of this size before added to the</span>
+<span class="sd">        sketch(s)</span>
+<span class="sd">    cms_args : Dict, optional</span>
+<span class="sd">        Dictionary containing arguments to instantiate a CountMin.  If None (default)</span>
+<span class="sd">        then don&#39;t create a sketch of this type.</span>
+<span class="sd">    hh_args : Dict, optional</span>
+<span class="sd">        Dictionary containing arguments to instantiate a HeavyHitters. If None (default)</span>
+<span class="sd">        then don&#39;t create a sketch of this type.</span>
+<span class="sd">    hll_args : Dict, optional</span>
+<span class="sd">        Dictionary containing arguments to instantiate a HyperLogLog. If None (default)</span>
+<span class="sd">        then don&#39;t create a sketch of this type.</span>
+<span class="sd">    \*\*kwargs :</span>
+<span class="sd">        Keyword arguments that get passed to `process_q_item` function</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    The final sketch(s). If doing more than one sketch, then they are returned as a</span>
+<span class="sd">    tuple in alphabetical order: cms, hh, hll</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">cms_args</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">hh_args</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">hll_args</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;You forgot to provide any sketch arguments&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">n_workers</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">n_workers</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">psutil</span><span class="o">.</span><span class="n">cpu_count</span><span class="p">(</span><span class="n">logical</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span>
+    <span class="k">if</span> <span class="n">ngram</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">ngram</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;ngram is </span><span class="si">{ngram}</span><span class="s2">. Must be positive&quot;</span><span class="p">)</span>
+
+    <span class="n">ctx</span> <span class="o">=</span> <span class="n">get_context</span><span class="p">(</span><span class="s2">&quot;spawn&quot;</span><span class="p">)</span>
+    <span class="n">queue</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">Queue</span><span class="p">(</span><span class="mi">3</span> <span class="o">*</span> <span class="n">n_workers</span><span class="p">)</span>
+    <span class="n">log_queue</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">Queue</span><span class="p">()</span>
+
+    <span class="c1"># Set up logging</span>
+    <span class="n">log_process</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">Process</span><span class="p">(</span>
+        <span class="n">target</span><span class="o">=</span><span class="n">_log_worker</span><span class="p">,</span>
+        <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">log_queue</span><span class="p">,),</span>
+    <span class="p">)</span>
+    <span class="n">log_process</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+
+    <span class="c1"># Start process to fill the queue</span>
+    <span class="n">fill_queue_process</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">Process</span><span class="p">(</span>
+        <span class="n">target</span><span class="o">=</span><span class="n">_fill_queue</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">queue</span><span class="p">,</span> <span class="n">items</span><span class="p">,</span> <span class="n">n_workers</span><span class="p">,</span> <span class="n">log_queue</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="n">fill_queue_process</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+
+    <span class="c1"># Create shared memory sketches</span>
+    <span class="n">log_queue</span><span class="o">.</span><span class="n">put</span><span class="p">(</span>
+        <span class="p">{</span><span class="s2">&quot;level&quot;</span><span class="p">:</span> <span class="s2">&quot;INFO&quot;</span><span class="p">,</span> <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;parallel_add: Starting </span><span class="si">{n_workers}</span><span class="s2"> workers&quot;</span><span class="p">}</span>
+    <span class="p">)</span>
+    <span class="n">cms_array</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">hll_array</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">hh_array</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">workers</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_workers</span><span class="p">):</span>
+        <span class="n">sketch</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="n">cms_args</span><span class="p">:</span>
+            <span class="n">cms_array</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">CountMin</span><span class="p">(</span><span class="o">**</span><span class="n">cms_args</span><span class="p">,</span> <span class="n">shared_memory</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+            <span class="c1"># Send sketch type, its args, and shared memory block name</span>
+            <span class="n">sketch</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="s2">&quot;cms&quot;</span><span class="p">,</span> <span class="n">cms_array</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">args</span><span class="p">,</span> <span class="n">cms_array</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">shm</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">hll_args</span><span class="p">:</span>
+            <span class="n">hll_array</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">HyperLogLog</span><span class="p">(</span><span class="o">**</span><span class="n">hll_args</span><span class="p">,</span> <span class="n">shared_memory</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+            <span class="c1"># Send sketch type, its args, and shared memory block name</span>
+            <span class="n">sketch</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="s2">&quot;hll&quot;</span><span class="p">,</span> <span class="n">hll_array</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">args</span><span class="p">,</span> <span class="n">hll_array</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">shm</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">hh_args</span><span class="p">:</span>
+            <span class="n">hh_array</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">HeavyHitters</span><span class="p">(</span><span class="o">**</span><span class="n">hh_args</span><span class="p">,</span> <span class="n">shared_memory</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+            <span class="c1"># Send sketch type, its args, and shared memory block name</span>
+            <span class="n">sketch</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="s2">&quot;hh&quot;</span><span class="p">,</span> <span class="n">hh_array</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">args</span><span class="p">,</span> <span class="n">hh_array</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">shm</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
+        <span class="n">sketch</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">sketch</span><span class="p">)</span>
+        <span class="n">workers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+            <span class="n">ctx</span><span class="o">.</span><span class="n">Process</span><span class="p">(</span>
+                <span class="n">target</span><span class="o">=</span><span class="n">_worker</span><span class="p">,</span>
+                <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">sketch</span><span class="p">,</span> <span class="n">process_q_item</span><span class="p">,</span> <span class="n">queue</span><span class="p">,</span> <span class="n">log_queue</span><span class="p">,</span> <span class="n">ngram</span><span class="p">),</span>
+                <span class="n">kwargs</span><span class="o">=</span><span class="n">kwargs</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+        <span class="n">workers</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+
+    <span class="c1"># Monitor for workers that exit badly</span>
+    <span class="n">any_none</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="k">while</span> <span class="n">any_none</span><span class="p">:</span>
+        <span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">any_none</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">p</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">workers</span><span class="p">):</span>
+            <span class="c1"># Still running</span>
+            <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">exitcode</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">any_none</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="c1"># Finished but with non-zero exit code, which is bad</span>
+            <span class="k">elif</span> <span class="n">p</span><span class="o">.</span><span class="n">exitcode</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Worker </span><span class="si">{i:02}</span><span class="s2"> exited badly. {p.exitcode=:}.&quot;</span>
+                <span class="n">msg</span> <span class="o">=</span> <span class="n">msg</span> <span class="o">+</span> <span class="s2">&quot; Possible OOM error&quot;</span>
+                <span class="k">for</span> <span class="n">worker</span> <span class="ow">in</span> <span class="n">workers</span><span class="p">:</span>
+                    <span class="n">worker</span><span class="o">.</span><span class="n">kill</span><span class="p">()</span>
+                <span class="k">if</span> <span class="n">fill_queue_process</span><span class="o">.</span><span class="n">exitcode</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">fill_queue_process</span><span class="o">.</span><span class="n">kill</span><span class="p">()</span>
+                <span class="c1"># Kill the log worker because it is still going</span>
+                <span class="n">log_process</span><span class="o">.</span><span class="n">kill</span><span class="p">()</span>
+                <span class="c1"># Now close all the queues</span>
+                <span class="n">queue</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+                <span class="n">log_queue</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+    <span class="c1"># Wait until the queue is finished being populated</span>
+    <span class="n">fill_queue_process</span><span class="o">.</span><span class="n">join</span><span class="p">()</span>
+
+    <span class="c1"># Wait for the workers to finish</span>
+    <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">workers</span><span class="p">:</span>
+        <span class="n">p</span><span class="o">.</span><span class="n">join</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="n">cms_args</span><span class="p">:</span>
+        <span class="n">log_queue</span><span class="o">.</span><span class="n">put</span><span class="p">(</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;level&quot;</span><span class="p">:</span> <span class="s2">&quot;INFO&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;parallel_add: Starting successive rounds of merging cms&quot;</span><span class="p">,</span>
+            <span class="p">}</span>
+        <span class="p">)</span>
+        <span class="n">cms_final</span> <span class="o">=</span> <span class="n">parallel_merging</span><span class="p">(</span><span class="n">cms_array</span><span class="p">,</span> <span class="n">log_queue</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">hh_args</span><span class="p">:</span>
+        <span class="n">log_queue</span><span class="o">.</span><span class="n">put</span><span class="p">(</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;level&quot;</span><span class="p">:</span> <span class="s2">&quot;INFO&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;parallel_add: Starting successive rounds of merging hh&quot;</span><span class="p">,</span>
+            <span class="p">}</span>
+        <span class="p">)</span>
+        <span class="n">hh_final</span> <span class="o">=</span> <span class="n">parallel_merging</span><span class="p">(</span><span class="n">hh_array</span><span class="p">,</span> <span class="n">log_queue</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">hll_args</span><span class="p">:</span>
+        <span class="n">log_queue</span><span class="o">.</span><span class="n">put</span><span class="p">(</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;level&quot;</span><span class="p">:</span> <span class="s2">&quot;INFO&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;parallel_add: Starting successive rounds of merging hll&quot;</span><span class="p">,</span>
+            <span class="p">}</span>
+        <span class="p">)</span>
+        <span class="n">hll_final</span> <span class="o">=</span> <span class="n">parallel_merging</span><span class="p">(</span><span class="n">hll_array</span><span class="p">,</span> <span class="n">log_queue</span><span class="p">)</span>
+
+    <span class="c1"># Send poison pill to the log_process</span>
+    <span class="n">log_queue</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
+    <span class="c1"># Wait for the log process to finish</span>
+    <span class="n">log_process</span><span class="o">.</span><span class="n">join</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="n">cms_args</span> <span class="ow">and</span> <span class="n">hh_args</span> <span class="ow">and</span> <span class="n">hll_args</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">cms_final</span><span class="p">,</span> <span class="n">hh_final</span><span class="p">,</span> <span class="n">hll_final</span>
+    <span class="k">elif</span> <span class="n">cms_args</span> <span class="ow">and</span> <span class="n">hh_args</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">cms_final</span><span class="p">,</span> <span class="n">hh_final</span>
+    <span class="k">elif</span> <span class="n">cms_args</span> <span class="ow">and</span> <span class="n">hll_args</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">cms_final</span><span class="p">,</span> <span class="n">hll_final</span>
+    <span class="k">elif</span> <span class="n">hh_args</span> <span class="ow">and</span> <span class="n">hll_args</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">hh_final</span><span class="p">,</span> <span class="n">hll_final</span>
+    <span class="k">elif</span> <span class="n">cms_args</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">cms_final</span>
+    <span class="k">elif</span> <span class="n">hh_args</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">hh_final</span>
+    <span class="k">elif</span> <span class="n">hll_args</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">hll_final</span></div>
+
+
+<span class="k">def</span> <span class="nf">_merge_worker</span><span class="p">(</span><span class="n">sketch1</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="n">sketch2</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="nb">str</span><span class="p">]):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Merge sketch2 into sketch1 when sketch1 &amp; sketch2 are in shared memory</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    sketch1 : Tuple</span>
+<span class="sd">        (sketch_type, sketch_args, shm_name) that specifies the type of sketch</span>
+<span class="sd">        &quot;hll&quot; | &quot;cms&quot;, the arguments to instantiate a new sketch using HyperLogLog() or</span>
+<span class="sd">        CountMin(), and the name of the shared memory block that the new sketch will</span>
+<span class="sd">        attach to.</span>
+<span class="sd">    sketch2 : Tuple</span>
+<span class="sd">        (sketch_type, sketch_args, shm_name) that specifies the type of sketch</span>
+<span class="sd">        &quot;hll&quot; | &quot;cms&quot;, the arguments to instantiate a new sketch using HyperLogLog() or</span>
+<span class="sd">        CountMin(), and the name of the shared memory block that the new sketch will</span>
+<span class="sd">        attach to.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    None</span>
+<span class="sd">        Side-effect causes sketch2 to merge into sketch1</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Attach existing shared memory blocks to local sketches</span>
+    <span class="n">s1</span> <span class="o">=</span> <span class="n">attach_shared_memory</span><span class="p">(</span><span class="o">*</span><span class="n">sketch1</span><span class="p">)</span>
+    <span class="n">s2</span> <span class="o">=</span> <span class="n">attach_shared_memory</span><span class="p">(</span><span class="o">*</span><span class="n">sketch2</span><span class="p">)</span>
+
+    <span class="n">s1</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">s2</span><span class="p">)</span>
+
+    <span class="c1"># Clean up</span>
+    <span class="k">del</span> <span class="n">s1</span>
+    <span class="k">del</span> <span class="n">s2</span>
+    <span class="n">gc</span><span class="o">.</span><span class="n">collect</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="kc">None</span>
+
+
+<div class="viewcode-block" id="parallel_merging"><a class="viewcode-back" href="../../sketchnu.html#sketchnu.helpers.parallel_merging">[docs]</a><span class="k">def</span> <span class="nf">parallel_merging</span><span class="p">(</span><span class="n">sketch_array</span><span class="p">:</span> <span class="n">List</span><span class="p">,</span> <span class="n">log_queue</span><span class="p">:</span> <span class="n">Queue</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Merge an array of sketches in successive rounds of pairing. This will use</span>
+<span class="sd">    at most len(sketch_array) // 2 processes. After merging, the final sketch</span>
+<span class="sd">    is returned.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    sketch_array : List</span>
+<span class="sd">        Array containing sketches to be merged together</span>
+<span class="sd">    log_queue : Queue</span>
+<span class="sd">        Log statements to a log Queue</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    CountMinLinear | CountMinLog16 | CountMinLog8 | HyperLogLog</span>
+<span class="sd">        The final sketch resulting from merging all of the sketches in the</span>
+<span class="sd">        sketch_array.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># CountMinLinear is the parent class so all are instances of it</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">sketch_array</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">CountMinLinear</span><span class="p">):</span>
+        <span class="n">sketch_type</span> <span class="o">=</span> <span class="s2">&quot;cms&quot;</span>
+        <span class="n">sketch_args</span> <span class="o">=</span> <span class="n">sketch_array</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">args</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">sketch_array</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">HeavyHitters</span><span class="p">):</span>
+        <span class="n">sketch_type</span> <span class="o">=</span> <span class="s2">&quot;hh&quot;</span>
+        <span class="n">sketch_args</span> <span class="o">=</span> <span class="n">sketch_array</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">args</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">sketch_array</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">HyperLogLog</span><span class="p">):</span>
+        <span class="n">sketch_type</span> <span class="o">=</span> <span class="s2">&quot;hll&quot;</span>
+        <span class="n">sketch_args</span> <span class="o">=</span> <span class="n">sketch_array</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">args</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;sketch_array[0] is not a HyperLogLog or Count-min sketch&quot;</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">sketch_array</span><span class="p">)):</span>
+        <span class="k">if</span> <span class="n">sketch_args</span> <span class="o">!=</span> <span class="n">sketch_array</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">args</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{i}</span><span class="s2">th sketch has arguments that are not the same as 0th sketch&quot;</span>
+            <span class="p">)</span>
+
+    <span class="n">ctx</span> <span class="o">=</span> <span class="n">get_context</span><span class="p">(</span><span class="s2">&quot;spawn&quot;</span><span class="p">)</span>
+    <span class="n">n_to_merge</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">sketch_array</span><span class="p">)</span>
+    <span class="k">while</span> <span class="n">n_to_merge</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">mergers</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_to_merge</span> <span class="o">//</span> <span class="mi">2</span><span class="p">):</span>
+            <span class="n">sketch1</span> <span class="o">=</span> <span class="p">(</span><span class="n">sketch_type</span><span class="p">,</span> <span class="n">sketch_args</span><span class="p">,</span> <span class="n">sketch_array</span><span class="p">[</span><span class="n">i</span> <span class="o">*</span> <span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">shm</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+            <span class="n">sketch2</span> <span class="o">=</span> <span class="p">(</span><span class="n">sketch_type</span><span class="p">,</span> <span class="n">sketch_args</span><span class="p">,</span> <span class="n">sketch_array</span><span class="p">[</span><span class="n">i</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">shm</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+            <span class="n">mergers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">Process</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">_merge_worker</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">sketch1</span><span class="p">,</span> <span class="n">sketch2</span><span class="p">)))</span>
+            <span class="n">mergers</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+
+        <span class="c1"># Wait for this round of merging to finish</span>
+        <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">mergers</span><span class="p">:</span>
+            <span class="n">p</span><span class="o">.</span><span class="n">join</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">exitcode</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;A _merge_worker had bad {p.exitcode=:}&quot;</span><span class="p">)</span>
+
+        <span class="n">new_sketch_array</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">n_to_merge</span><span class="p">,</span> <span class="mi">2</span><span class="p">):</span>
+            <span class="n">new_sketch_array</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sketch_array</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+            <span class="c1"># Try to free up memory as we go</span>
+            <span class="k">if</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">sketch_array</span><span class="p">):</span>
+                <span class="n">sketch_array</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+                <span class="n">gc</span><span class="o">.</span><span class="n">collect</span><span class="p">()</span>
+
+        <span class="n">sketch_array</span> <span class="o">=</span> <span class="n">new_sketch_array</span>
+        <span class="n">n_to_merge</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">sketch_array</span><span class="p">)</span>
+        <span class="n">log_queue</span><span class="o">.</span><span class="n">put</span><span class="p">(</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;level&quot;</span><span class="p">:</span> <span class="s2">&quot;DEBUG&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;parallel_merging: Finished round of merging. </span><span class="si">{n_to_merge}</span><span class="s2"> remaining&quot;</span><span class="p">,</span>
+            <span class="p">}</span>
+        <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">sketch_array</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Matthew Hendrey.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
