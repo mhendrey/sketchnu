@@ -4,7 +4,7 @@ HyperLogLog++
 The Basics
 ----------
 
-A sketch that estimates the number of unique elements, cardinality, that have
+A sketch that estimates the number of unique elements (cardinality) that have
 been added into the sketch.
 
 A HyperLogLog is initialized with a given precision, `p`, which specifies the
