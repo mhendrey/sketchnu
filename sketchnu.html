@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>sketchnu.hyperloglog &mdash; sketchnu 1.2.2 documentation</title><link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <title>sketchnu.hyperloglog &mdash; sketchnu 1.3.0 documentation</title><link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="_static/js/html5shiv.min.js"></script>
@@ -33,7 +33,7 @@
               <img src="_static/logo.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                1.2.2
+                1.3.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -1708,31 +1708,33 @@ block of an existing sketch that has shared_memory = True</p>
 
 <dl class="function">
 <dt id="sketchnu.helpers.parallel_add">
-<code class="sig-prename descclassname">sketchnu.helpers.</code><code class="sig-name descname">parallel_add</code><span class="sig-paren">(</span><em class="sig-param">items: Iterable, process_q_item: Callable[[...], Iterable[Union[Iterable[bytes], Dict[bytes, int]]]], n_workers: int = None, ngram: int = None, cms_args: Dict = None, hh_args: Dict = None, hll_args: Dict = None, **kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sketchnu/helpers.html#parallel_add"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sketchnu.helpers.parallel_add" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">sketchnu.helpers.</code><code class="sig-name descname">parallel_add</code><span class="sig-paren">(</span><em class="sig-param">items: Iterable</em>, <em class="sig-param">process_q_item: Generator</em>, <em class="sig-param">n_workers: int = None</em>, <em class="sig-param">ngram: int = None</em>, <em class="sig-param">cms_args: Dict = None</em>, <em class="sig-param">hh_args: Dict = None</em>, <em class="sig-param">hll_args: Dict = None</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sketchnu/helpers.html#parallel_add"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sketchnu.helpers.parallel_add" title="Permalink to this definition">¶</a></dt>
 <dd><p>Places <cite>items</cite> onto a queue to be processed by <cite>n_workers</cite> independent spawned
-processes. The function <cite>process_q_item</cite> takes a single item and returns an
-Iterable of records with each record being an either an Iterable of keys (bytes)
-or a dictionary with key=byte, value=number to times to add that key to be added
-to the sketch(s). The **kwargs are passed along to <cite>process_q_item</cite> to allow for
-any needed additional parameters. Once all items have been processed, the
-<cite>n_workers</cite> sketch(s) are merged with the final result(s) being returned.</p>
-<p><strong>Note</strong>
-If your data has duplicate keys within a q_item, you will likely see better
-performance if <cite>process_q_item</cite> does <code class="docutils literal notranslate"><span class="pre">`yield</span> <span class="pre">Counter(keys)`</span></code> instead of just
-<code class="docutils literal notranslate"><span class="pre">`yield</span> <span class="pre">keys`</span></code></p>
+processes.</p>
+<p>The generator function, <cite>process_q_item</cite>, takes a single <cite>item</cite> and yields a tuple.
+The first element is a Dict[bytes, int] | Iterable[bytes]. These are the bytes to
+be added to the sketches and their corresponding number of times to add them (if
+Dict given). The second element of the tuple is the number of records in <cite>item</cite>
+that were processed.</p>
+<p>The **kwargs are passed along to <cite>process_q_item</cite> to allow for any needed
+additional parameters.</p>
+<p>Once all <cite>items</cite> have been processed, the <cite>n_workers</cite> sketch(s) are merged with the
+final result(s) returned.</p>
 <p>You must provide at least <cite>cms_args</cite> | <cite>hh_args</cite> | <cite>hll_args</cite>. If you provide more
 than one, then the requested sketches will be processed at the same time while
 going over the data just once.</p>
+<p><strong>Note:</strong> If your data has duplicate keys within a <cite>item</cite>, you will likely see
+better performance if <cite>process_q_item</cite> does <code class="docutils literal notranslate"><span class="pre">`yield</span> <span class="pre">Counter(keys),</span> <span class="pre">n_records`</span></code>
+instead of just <code class="docutils literal notranslate"><span class="pre">`yield</span> <span class="pre">keys,</span> <span class="pre">n_records`</span></code></p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>items</strong> (<em>Iterable</em>) – A generator or list of items that will be placed onto a queue and then worked
 by one of the workers in a separate spawned process.</p></li>
-<li><p><strong>process_q_item</strong> (<em>Callable</em><em>[</em><em>..</em><em>,</em><em>Iterable</em><em>[</em><em>Union</em><em>[</em><em>Iterable</em><em>[</em><em>bytes</em><em>]</em><em>,</em><em>Dict</em><em>[</em><em>bytes</em><em>,</em><em>int</em><em>]</em><em>]</em><em>]</em><em>]</em>) – Function that turns an item from the queue into an Iterable of records with
-each record being an Iterable of keys (bytes) to be added to the sketch(s)
-or a Dict[key=bytes, value=int] to add each key multiple times to the
-sketch(s). Using a Dict is often faster if data has multiple entries for a
-given key.</p></li>
+<li><p><strong>process_q_item</strong> (<em>Generator</em>) – Generator function takes an item from the queue and yields a tuple. First
+element is a Dict[bytes,int] | Iterable[bytes] to be added to the sketch. The
+second element of the tuple is the number of records in the item. Using a Dict
+is often faster if data has multiple entries for a given key.</p></li>
 <li><p><strong>n_workers</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of workers to use. Each will update their own sketches which will then
 get merged together to achieve the final sketch(s). If None (default), then set
 to psutil.cpu_count(logical=False)</p></li>
@@ -1744,7 +1746,7 @@ then don’t create a sketch of this type.</p></li>
 then don’t create a sketch of this type.</p></li>
 <li><p><strong>hll_args</strong> (<em>Dict</em><em>, </em><em>optional</em>) – Dictionary containing arguments to instantiate a HyperLogLog. If None (default)
 then don’t create a sketch of this type.</p></li>
-<li><p><strong>**kwargs</strong> – Keyword arguments that get passed to <cite>process_q_item</cite> function</p></li>
+<li><p><strong>**kwargs</strong> – Keyword arguments that get passed to <cite>process_q_item</cite> generator function</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>

@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>sketchnu.helpers &mdash; sketchnu 1.2.2 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <title>sketchnu.helpers &mdash; sketchnu 1.3.0 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
@@ -31,7 +31,7 @@
               <img src="../../_static/logo.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                1.2.2
+                1.3.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -162,7 +162,7 @@
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">psutil</span>
 <span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">sleep</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Generator</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span>
 
 <span class="kn">from</span> <span class="nn">sketchnu.countmin</span> <span class="kn">import</span> <span class="n">CountMin</span><span class="p">,</span> <span class="n">CountMinLinear</span>
 <span class="kn">from</span> <span class="nn">sketchnu.heavyhitters</span> <span class="kn">import</span> <span class="n">HeavyHitters</span>
@@ -267,7 +267,7 @@
 <span class="k">def</span> <span class="nf">_worker</span><span class="p">(</span>
     <span class="n">worker_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
     <span class="n">sketch</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">,</span>
-    <span class="n">process_q_item</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">bytes</span><span class="p">]],</span>
+    <span class="n">process_q_item</span><span class="p">:</span> <span class="n">Generator</span><span class="p">,</span>
     <span class="n">in_queue</span><span class="p">:</span> <span class="n">Queue</span><span class="p">,</span>
     <span class="n">log_queue</span><span class="p">:</span> <span class="n">Queue</span><span class="p">,</span>
     <span class="n">ngram</span><span class="p">,</span>
@@ -289,9 +289,11 @@
 <span class="sd">        &quot;hll&quot; | &quot;cms&quot;, sketch_args are dictionary of arguments to give to HyperLogLog</span>
 <span class="sd">        or CountMin, and shm_name is the name of the shared memory block to attach the</span>
 <span class="sd">        instantiated sketch to.</span>
-<span class="sd">    process_q_item : Callable[..., Iterable[bytes]]</span>
-<span class="sd">        Function that turns an item from the queue into an Iterator of</span>
-<span class="sd">        elements (bytes) to be added to the sketch(s).</span>
+<span class="sd">    process_q_item : Generator</span>
+<span class="sd">        Generator function takes an item from the queue and yields a tuple. First</span>
+<span class="sd">        element is a Dict[bytes,int] | Iterable[bytes] to be added to the sketch. The</span>
+<span class="sd">        second element of the tuple is the number of records in the item. Using a Dict</span>
+<span class="sd">        is often faster if data has multiple entries for a given key.</span>
 <span class="sd">    in_queue : Queue</span>
 <span class="sd">        Queue containing items to be processed by the workers</span>
 <span class="sd">    log_queue : Queue</span>
@@ -321,13 +323,13 @@
         <span class="n">q_item</span> <span class="o">=</span> <span class="n">in_queue</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
         <span class="c1"># Process a queue_item</span>
         <span class="k">if</span> <span class="n">q_item</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">for</span> <span class="n">keys</span> <span class="ow">in</span> <span class="n">process_q_item</span><span class="p">(</span><span class="n">q_item</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">keys</span><span class="p">,</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">process_q_item</span><span class="p">(</span><span class="n">q_item</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
                 <span class="k">for</span> <span class="n">local_sketch</span> <span class="ow">in</span> <span class="n">local_sketches</span><span class="p">:</span>
                     <span class="k">if</span> <span class="n">ngram</span><span class="p">:</span>
                         <span class="n">local_sketch</span><span class="o">.</span><span class="n">update_ngram</span><span class="p">(</span><span class="n">keys</span><span class="p">,</span> <span class="n">ngram</span><span class="p">)</span>
                     <span class="k">else</span><span class="p">:</span>
                         <span class="n">local_sketch</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">keys</span><span class="p">)</span>
-                <span class="n">n_records</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="n">n_records</span> <span class="o">+=</span> <span class="n">n</span>
 
             <span class="n">end</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
             <span class="n">speed</span> <span class="o">=</span> <span class="n">n_records</span> <span class="o">/</span> <span class="p">(</span><span class="n">end</span> <span class="o">-</span> <span class="n">start</span><span class="p">)</span><span class="o">.</span><span class="n">total_seconds</span><span class="p">()</span>
@@ -365,7 +367,7 @@
 
 <div class="viewcode-block" id="parallel_add"><a class="viewcode-back" href="../../sketchnu.html#sketchnu.helpers.parallel_add">[docs]</a><span class="k">def</span> <span class="nf">parallel_add</span><span class="p">(</span>
     <span class="n">items</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">,</span>
-    <span class="n">process_q_item</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">bytes</span><span class="p">],</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">bytes</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]]],</span>
+    <span class="n">process_q_item</span><span class="p">:</span> <span class="n">Generator</span><span class="p">,</span>
     <span class="n">n_workers</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">ngram</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">cms_args</span><span class="p">:</span> <span class="n">Dict</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -375,33 +377,39 @@
 <span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Places `items` onto a queue to be processed by `n_workers` independent spawned</span>
-<span class="sd">    processes. The function `process_q_item` takes a single item and returns an</span>
-<span class="sd">    Iterable of records with each record being an either an Iterable of keys (bytes)</span>
-<span class="sd">    or a dictionary with key=byte, value=number to times to add that key to be added</span>
-<span class="sd">    to the sketch(s). The \*\*kwargs are passed along to `process_q_item` to allow for</span>
-<span class="sd">    any needed additional parameters. Once all items have been processed, the</span>
-<span class="sd">    `n_workers` sketch(s) are merged with the final result(s) being returned.</span>
+<span class="sd">    processes.</span>
 
-<span class="sd">    **Note**</span>
-<span class="sd">    If your data has duplicate keys within a q_item, you will likely see better</span>
-<span class="sd">    performance if `process_q_item` does ```yield Counter(keys)``` instead of just</span>
-<span class="sd">    ```yield keys```</span>
+<span class="sd">    The generator function, `process_q_item`, takes a single `item` and yields a tuple.</span>
+<span class="sd">    The first element is a Dict[bytes, int] | Iterable[bytes]. These are the bytes to</span>
+<span class="sd">    be added to the sketches and their corresponding number of times to add them (if</span>
+<span class="sd">    Dict given). The second element of the tuple is the number of records in `item`</span>
+<span class="sd">    that were processed.</span>
+
+<span class="sd">    The \*\*kwargs are passed along to `process_q_item` to allow for any needed</span>
+<span class="sd">    additional parameters.</span>
+
+<span class="sd">    Once all `items` have been processed, the `n_workers` sketch(s) are merged with the</span>
+<span class="sd">    final result(s) returned.</span>
 
 <span class="sd">    You must provide at least `cms_args` | `hh_args` | `hll_args`. If you provide more</span>
 <span class="sd">    than one, then the requested sketches will be processed at the same time while</span>
 <span class="sd">    going over the data just once.</span>
+
+<span class="sd">    **Note:** If your data has duplicate keys within a `item`, you will likely see</span>
+<span class="sd">    better performance if `process_q_item` does ```yield Counter(keys), n_records```</span>
+<span class="sd">    instead of just ```yield keys, n_records```</span>
+
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    items : Iterable</span>
 <span class="sd">        A generator or list of items that will be placed onto a queue and then worked</span>
 <span class="sd">        by one of the workers in a separate spawned process.</span>
-<span class="sd">    process_q_item : Callable[...,Iterable[Union[Iterable[bytes],Dict[bytes,int]]]]</span>
-<span class="sd">        Function that turns an item from the queue into an Iterable of records with</span>
-<span class="sd">        each record being an Iterable of keys (bytes) to be added to the sketch(s)</span>
-<span class="sd">        or a Dict[key=bytes, value=int] to add each key multiple times to the</span>
-<span class="sd">        sketch(s). Using a Dict is often faster if data has multiple entries for a</span>
-<span class="sd">        given key.</span>
+<span class="sd">    process_q_item : Generator</span>
+<span class="sd">        Generator function takes an item from the queue and yields a tuple. First</span>
+<span class="sd">        element is a Dict[bytes,int] | Iterable[bytes] to be added to the sketch. The</span>
+<span class="sd">        second element of the tuple is the number of records in the item. Using a Dict</span>
+<span class="sd">        is often faster if data has multiple entries for a given key.</span>
 <span class="sd">    n_workers : int, optional</span>
 <span class="sd">        Number of workers to use. Each will update their own sketches which will then</span>
 <span class="sd">        get merged together to achieve the final sketch(s). If None (default), then set</span>
@@ -419,7 +427,7 @@
 <span class="sd">        Dictionary containing arguments to instantiate a HyperLogLog. If None (default)</span>
 <span class="sd">        then don&#39;t create a sketch of this type.</span>
 <span class="sd">    \*\*kwargs :</span>
-<span class="sd">        Keyword arguments that get passed to `process_q_item` function</span>
+<span class="sd">        Keyword arguments that get passed to `process_q_item` generator function</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
