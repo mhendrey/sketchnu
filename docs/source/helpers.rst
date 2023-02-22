@@ -13,16 +13,16 @@ sketches at the same time. You just need to specify one or more of :code:`cms_ar
 initialize the respective sketch. Simply leave one or two as the default :code:`None`
 if you don't want that type of sketch.
 
-The :code:`parallel_add` function takes a user-defined function, :code:`process_q_item`,
-which turns an item from the queue into an iterable of records with each record being
-an iterable of elements (bytes) that are to be added to the sketch or a Dict whose keys
-are the bytes and values are the counts associated with that key. Using the Dict method
-will be faster if the average number of counts for a given key is greater than 1.
+The :code:`parallel_add` function takes a user-defined generator function,
+:code:`process_q_item`. The generator takes an item from the queue and yields a tuple.
+The first element is a Dict[bytes, int] | Iterable[bytes] to be added to the sketch(s).
+The second element of the tuple is the number of records in the item. Using a Dict is
+often faster if the data has multiple entries for a given key (bytes).
 
-When using :code:`parallel_add`, the sketches are placed into shared memory which then
-subprocess can access to parallelize the data processing, but also during the
-subsequent call to :code:`parallel_merge` which combines the different sketches into a
-single final sketch which is what is returned.
+When using :code:`parallel_add`, the sketches are placed into shared memory to allow
+the spawned processes to access the sketches during data processing. The subsequent
+call to :code:`parallel_merge` also leverages the shared memory in order to combine the
+parallel sketches into a single final sketch which is what gets returned.
 
 Usage
 -----
@@ -31,9 +31,6 @@ Let's assume that we have a bunch of text files in a directory. Each line in
 a file represents a single record. Each line (record) will be split by white
 space which will then be added to the sketches. Remember that only bytes can
 be added to a sketch, hence the :code:`word.encode('utf-8')`.
-
-The :code:`process_q_item()` method must yield records where each record is an
-iterable of bytes.
 
 ::
 
@@ -45,16 +42,17 @@ iterable of bytes.
     input_dir = Path('/path/to/text/files')
     files = input_dir.iterdir()
 
-    # Define the function that takes a queue item and yields records with each
-    # record a list of elements to be added to the sketch
+    # Define the generator function
+    # Likely faster to combine keys to add to the sketches all together as done here
     def process_q_item(filepath:str):
         with open(filepath) as f:
+            n_records = 0
+            counter = Counter()
             for line in f:
-                line = line.strip()
-                record = Counter(
-                    [w.encode('utf-8') for w in line.split()]
-                )
-                yield record
+                words = line.strip().split()
+                counter.update([w.encode("utf-8") for w in words])
+                n_records += 1
+            yield counter, n_records
     
     cms_args = {"cms_type": "linear", "width": 2**20}
     hh_args = {"width": 50, "max_key_len": 16}

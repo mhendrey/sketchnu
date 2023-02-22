@@ -42,12 +42,12 @@ data_stream2 = np.random.choice(vocab, n_data, p=zipf_p).tolist()
 
 def process_q_item_list(q_item: Iterable, batch_size: int):
     for i in range(0, len(q_item), batch_size):
-        yield q_item[i : i + batch_size]
+        yield q_item[i : i + batch_size], 1
 
 
 def process_q_item_dict(q_item: Iterable, batch_size: int):
     for i in range(0, len(q_item), batch_size):
-        yield Counter(q_item[i : i + batch_size])
+        yield Counter(q_item[i : i + batch_size]), 1
 
 
 def test_parallel_add_list(batch_size: int = 100):

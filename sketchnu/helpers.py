@@ -27,7 +27,7 @@ from multiprocessing import get_context, Queue
 import numpy as np
 import psutil
 from time import sleep
-from typing import Callable, Dict, Iterable, List, Tuple, Union
+from typing import Callable, Dict, Generator, Iterable, List, Tuple, Union
 
 from sketchnu.countmin import CountMin, CountMinLinear
 from sketchnu.heavyhitters import HeavyHitters
@@ -132,7 +132,7 @@ def _log_worker(log_queue: Queue):
 def _worker(
     worker_id: int,
     sketch: Tuple,
-    process_q_item: Callable[..., Iterable[bytes]],
+    process_q_item: Generator,
     in_queue: Queue,
     log_queue: Queue,
     ngram,
@@ -154,9 +154,11 @@ def _worker(
         "hll" | "cms", sketch_args are dictionary of arguments to give to HyperLogLog
         or CountMin, and shm_name is the name of the shared memory block to attach the
         instantiated sketch to.
-    process_q_item : Callable[..., Iterable[bytes]]
-        Function that turns an item from the queue into an Iterator of
-        elements (bytes) to be added to the sketch(s).
+    process_q_item : Generator
+        Generator function takes an item from the queue and yields a tuple. First
+        element is a Dict[bytes,int] | Iterable[bytes] to be added to the sketch. The
+        second element of the tuple is the number of records in the item. Using a Dict
+        is often faster if data has multiple entries for a given key.
     in_queue : Queue
         Queue containing items to be processed by the workers
     log_queue : Queue
@@ -186,13 +188,13 @@ def _worker(
         q_item = in_queue.get()
         # Process a queue_item
         if q_item is not None:
-            for keys in process_q_item(q_item, **kwargs):
+            for keys, n in process_q_item(q_item, **kwargs):
                 for local_sketch in local_sketches:
                     if ngram:
                         local_sketch.update_ngram(keys, ngram)
                     else:
                         local_sketch.update(keys)
-                n_records += 1
+                n_records += n
 
             end = datetime.now()
             speed = n_records / (end - start).total_seconds()
@@ -230,7 +232,7 @@ def _worker(
 
 def parallel_add(
     items: Iterable,
-    process_q_item: Callable[..., Iterable[Union[Iterable[bytes], Dict[bytes, int]]]],
+    process_q_item: Generator,
     n_workers: int = None,
     ngram: int = None,
     cms_args: Dict = None,
@@ -240,33 +242,39 @@ def parallel_add(
 ):
     """
     Places `items` onto a queue to be processed by `n_workers` independent spawned
-    processes. The function `process_q_item` takes a single item and returns an
-    Iterable of records with each record being an either an Iterable of keys (bytes)
-    or a dictionary with key=byte, value=number to times to add that key to be added
-    to the sketch(s). The \*\*kwargs are passed along to `process_q_item` to allow for
-    any needed additional parameters. Once all items have been processed, the
-    `n_workers` sketch(s) are merged with the final result(s) being returned.
+    processes.
 
-    **Note**
-    If your data has duplicate keys within a q_item, you will likely see better
-    performance if `process_q_item` does ```yield Counter(keys)``` instead of just
-    ```yield keys```
+    The generator function, `process_q_item`, takes a single `item` and yields a tuple.
+    The first element is a Dict[bytes, int] | Iterable[bytes]. These are the bytes to
+    be added to the sketches and their corresponding number of times to add them (if
+    Dict given). The second element of the tuple is the number of records in `item`
+    that were processed.
+
+    The \*\*kwargs are passed along to `process_q_item` to allow for any needed
+    additional parameters.
+
+    Once all `items` have been processed, the `n_workers` sketch(s) are merged with the
+    final result(s) returned.
 
     You must provide at least `cms_args` | `hh_args` | `hll_args`. If you provide more
     than one, then the requested sketches will be processed at the same time while
     going over the data just once.
+
+    **Note:** If your data has duplicate keys within a `item`, you will likely see
+    better performance if `process_q_item` does ```yield Counter(keys), n_records```
+    instead of just ```yield keys, n_records```
+
 
     Parameters
     ----------
     items : Iterable
         A generator or list of items that will be placed onto a queue and then worked
         by one of the workers in a separate spawned process.
-    process_q_item : Callable[...,Iterable[Union[Iterable[bytes],Dict[bytes,int]]]]
-        Function that turns an item from the queue into an Iterable of records with
-        each record being an Iterable of keys (bytes) to be added to the sketch(s)
-        or a Dict[key=bytes, value=int] to add each key multiple times to the
-        sketch(s). Using a Dict is often faster if data has multiple entries for a
-        given key.
+    process_q_item : Generator
+        Generator function takes an item from the queue and yields a tuple. First
+        element is a Dict[bytes,int] | Iterable[bytes] to be added to the sketch. The
+        second element of the tuple is the number of records in the item. Using a Dict
+        is often faster if data has multiple entries for a given key.
     n_workers : int, optional
         Number of workers to use. Each will update their own sketches which will then
         get merged together to achieve the final sketch(s). If None (default), then set
@@ -284,7 +292,7 @@ def parallel_add(
         Dictionary containing arguments to instantiate a HyperLogLog. If None (default)
         then don't create a sketch of this type.
     \*\*kwargs :
-        Keyword arguments that get passed to `process_q_item` function
+        Keyword arguments that get passed to `process_q_item` generator function
 
     Returns
     -------
