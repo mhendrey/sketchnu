@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Helper Functions &mdash; sketchnu 1.3.0 documentation</title><link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <title>Helper Functions &mdash; sketchnu 1.4.0 documentation</title><link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="_static/js/html5shiv.min.js"></script>
@@ -33,7 +33,7 @@
               <img src="_static/logo.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                1.3.0
+                1.4.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -144,13 +144,14 @@ successive rounds of merging to achieve the final sketch for each type.</p>
 <p>The main helper function, <code class="code docutils literal notranslate"><span class="pre">parallel_add</span></code>, can add the data to one or more of the
 sketches at the same time. You just need to specify one or more of <code class="code docutils literal notranslate"><span class="pre">cms_args</span></code>,
 <code class="code docutils literal notranslate"><span class="pre">hh_args</span></code>, or <code class="code docutils literal notranslate"><span class="pre">hll_args</span></code>, which provide the necessary parameters to
-initialize the respective sketch. Simply leave one or two as the default <code class="code docutils literal notranslate"><span class="pre">None</span></code>
-if you don’t want that type of sketch.</p>
-<p>The <code class="code docutils literal notranslate"><span class="pre">parallel_add</span></code> function takes a user-defined generator function,
-<code class="code docutils literal notranslate"><span class="pre">process_q_item</span></code>. The generator takes an item from the queue and yields a tuple.
-The first element is a Dict[bytes, int] | Iterable[bytes] to be added to the sketch(s).
-The second element of the tuple is the number of records in the item. Using a Dict is
-often faster if the data has multiple entries for a given key (bytes).</p>
+initialize the respective sketch(es). Simply leave one or two as the default
+<code class="code docutils literal notranslate"><span class="pre">None</span></code> if you don’t want that type of sketch.</p>
+<p>The <code class="code docutils literal notranslate"><span class="pre">parallel_add</span></code> function takes a user-defined function,
+<code class="code docutils literal notranslate"><span class="pre">process_q_item</span></code>. This function will take an item from the queue, process it as
+desired, and then add the keys to the sketch(es). The function must take the following
+arguments (q_item, *sketches, **kwargs) and return the number of records that were
+processed. If you want to add to more than one sketch, then those must be listed in
+alphabetical order since that is how <code class="code docutils literal notranslate"><span class="pre">parallel_add</span></code> will pass them.</p>
 <p>When using <code class="code docutils literal notranslate"><span class="pre">parallel_add</span></code>, the sketches are placed into shared memory to allow
 the spawned processes to access the sketches during data processing. The subsequent
 call to <code class="code docutils literal notranslate"><span class="pre">parallel_merge</span></code> also leverages the shared memory in order to combine the
@@ -160,26 +161,37 @@ parallel sketches into a single final sketch which is what gets returned.</p>
 <p>Let’s assume that we have a bunch of text files in a directory. Each line in
 a file represents a single record. Each line (record) will be split by white
 space which will then be added to the sketches. Remember that only bytes can
-be added to a sketch, hence the <code class="code docutils literal notranslate"><span class="pre">word.encode('utf-8')</span></code>.</p>
+be added to a sketch, hence the <code class="code docutils literal notranslate"><span class="pre">w.encode('utf-8')</span></code>.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">Counter</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">from</span> <span class="nn">sketchnu.helpers</span> <span class="kn">import</span> <span class="n">parallel_add</span>
 
+<span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span>
+    <span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">,</span>
+    <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">%(asctime)s</span><span class="s2"> </span><span class="si">%(name)s</span><span class="s2"> </span><span class="si">%(levelname)s</span><span class="s2">: </span><span class="si">%(message)s</span><span class="s2">&quot;</span><span class="p">,</span>
+    <span class="n">datefmt</span><span class="o">=</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2"> %H:%M:%S&quot;</span><span class="p">,</span>
+<span class="p">)</span>
 <span class="n">input_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s1">&#39;/path/to/text/files&#39;</span><span class="p">)</span>
 <span class="n">files</span> <span class="o">=</span> <span class="n">input_dir</span><span class="o">.</span><span class="n">iterdir</span><span class="p">()</span>
 
-<span class="c1"># Define the generator function</span>
-<span class="c1"># Likely faster to combine keys to add to the sketches all together as done here</span>
-<span class="k">def</span> <span class="nf">process_q_item</span><span class="p">(</span><span class="n">filepath</span><span class="p">:</span><span class="nb">str</span><span class="p">):</span>
+<span class="c1"># User defined function</span>
+<span class="c1"># Likely faster to combine keys across records to add to the sketches all together</span>
+<span class="k">def</span> <span class="nf">process_q_item</span><span class="p">(</span><span class="n">filepath</span><span class="p">:</span><span class="nb">str</span><span class="p">,</span> <span class="n">cms</span><span class="p">,</span> <span class="n">hh</span><span class="p">,</span> <span class="n">hll</span><span class="p">,</span> <span class="n">lowercase</span><span class="p">:</span><span class="nb">bool</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filepath</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
         <span class="n">n_records</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="n">counter</span> <span class="o">=</span> <span class="n">Counter</span><span class="p">()</span>
         <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">f</span><span class="p">:</span>
-            <span class="n">words</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">lowercase</span><span class="p">:</span>
+                <span class="n">words</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">words</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
             <span class="n">counter</span><span class="o">.</span><span class="n">update</span><span class="p">([</span><span class="n">w</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">words</span><span class="p">])</span>
             <span class="n">n_records</span> <span class="o">+=</span> <span class="mi">1</span>
-        <span class="k">yield</span> <span class="n">counter</span><span class="p">,</span> <span class="n">n_records</span>
+        <span class="n">cms</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">counter</span><span class="p">)</span>
+        <span class="n">hh</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">counter</span><span class="p">)</span>
+        <span class="n">hll</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">counter</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">n_records</span>
 
 <span class="n">cms_args</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;cms_type&quot;</span><span class="p">:</span> <span class="s2">&quot;linear&quot;</span><span class="p">,</span> <span class="s2">&quot;width&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="o">**</span><span class="mi">20</span><span class="p">}</span>
 <span class="n">hh_args</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;width&quot;</span><span class="p">:</span> <span class="mi">50</span><span class="p">,</span> <span class="s2">&quot;max_key_len&quot;</span><span class="p">:</span> <span class="mi">16</span><span class="p">}</span>
@@ -192,6 +204,7 @@ be added to a sketch, hence the <code class="code docutils literal notranslate">
     <span class="n">cms_args</span><span class="o">=</span><span class="n">cms_args</span><span class="p">,</span>
     <span class="n">hh_args</span><span class="o">=</span><span class="n">hh_args</span><span class="p">,</span>
     <span class="n">hll_args</span><span class="o">=</span><span class="n">hll_args</span><span class="p">,</span>
+    <span class="n">lowercase</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
 <span class="p">)</span>
 
 <span class="c1"># To see total number of elements added</span>

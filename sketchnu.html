@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>sketchnu.hyperloglog &mdash; sketchnu 1.3.0 documentation</title><link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <title>sketchnu.hyperloglog &mdash; sketchnu 1.4.0 documentation</title><link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="_static/js/html5shiv.min.js"></script>
@@ -33,7 +33,7 @@
               <img src="_static/logo.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                1.3.0
+                1.4.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -229,7 +229,7 @@ Default is False.</p>
 
 <dl class="method">
 <dt id="sketchnu.hyperloglog.HyperLogLog.add">
-<code class="sig-name descname">add</code><span class="sig-paren">(</span><em class="sig-param">key: bytes</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="_modules/sketchnu/hyperloglog.html#HyperLogLog.add"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sketchnu.hyperloglog.HyperLogLog.add" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">add</code><span class="sig-paren">(</span><em class="sig-param">key: bytes</em>, <em class="sig-param">value: int = 1</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="_modules/sketchnu/hyperloglog.html#HyperLogLog.add"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sketchnu.hyperloglog.HyperLogLog.add" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add a single key to the HyperLogLog.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -240,7 +240,11 @@ just over twice as long.</p>
 </div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>key</strong> (<em>bytes</em>) – Element to add to the HyperLogLog</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>key</strong> (<em>bytes</em>) – Element to add to the HyperLogLog</p></li>
+<li><p><strong>value</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of times to add <cite>key</cite> to the sketch. Ignored for HyperLogLog but
+included in order to have the same API as the other sketches. Default is 1</p></li>
+</ul>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p></p>
@@ -1708,14 +1712,15 @@ block of an existing sketch that has shared_memory = True</p>
 
 <dl class="function">
 <dt id="sketchnu.helpers.parallel_add">
-<code class="sig-prename descclassname">sketchnu.helpers.</code><code class="sig-name descname">parallel_add</code><span class="sig-paren">(</span><em class="sig-param">items: Iterable</em>, <em class="sig-param">process_q_item: Generator</em>, <em class="sig-param">n_workers: int = None</em>, <em class="sig-param">ngram: int = None</em>, <em class="sig-param">cms_args: Dict = None</em>, <em class="sig-param">hh_args: Dict = None</em>, <em class="sig-param">hll_args: Dict = None</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sketchnu/helpers.html#parallel_add"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sketchnu.helpers.parallel_add" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">sketchnu.helpers.</code><code class="sig-name descname">parallel_add</code><span class="sig-paren">(</span><em class="sig-param">items: Iterable, process_q_item: Callable[[...], int], n_workers: int = None, cms_args: Dict = None, hh_args: Dict = None, hll_args: Dict = None, **kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sketchnu/helpers.html#parallel_add"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sketchnu.helpers.parallel_add" title="Permalink to this definition">¶</a></dt>
 <dd><p>Places <cite>items</cite> onto a queue to be processed by <cite>n_workers</cite> independent spawned
 processes.</p>
-<p>The generator function, <cite>process_q_item</cite>, takes a single <cite>item</cite> and yields a tuple.
-The first element is a Dict[bytes, int] | Iterable[bytes]. These are the bytes to
-be added to the sketches and their corresponding number of times to add them (if
-Dict given). The second element of the tuple is the number of records in <cite>item</cite>
-that were processed.</p>
+<p>The user defined function, <cite>process_q_item</cite>, takes the arguments
+(q_item, *sketches, **kwargs). This function is given a single <cite>item</cite> from the
+queue and then should add elements to the sketch(es) as desired. The function
+should return the number of records processed. If <cite>process_q_item</cite> will add
+elements to multiple sketches, then they must be listed in alphabetic order since
+that is how <cite>parallel_add</cite> will pass them to <cite>process_q_item</cite>.</p>
 <p>The **kwargs are passed along to <cite>process_q_item</cite> to allow for any needed
 additional parameters.</p>
 <p>Once all <cite>items</cite> have been processed, the <cite>n_workers</cite> sketch(s) are merged with the
@@ -1731,15 +1736,13 @@ instead of just <code class="docutils literal notranslate"><span class="pre">`yi
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>items</strong> (<em>Iterable</em>) – A generator or list of items that will be placed onto a queue and then worked
 by one of the workers in a separate spawned process.</p></li>
-<li><p><strong>process_q_item</strong> (<em>Generator</em>) – Generator function takes an item from the queue and yields a tuple. First
-element is a Dict[bytes,int] | Iterable[bytes] to be added to the sketch. The
-second element of the tuple is the number of records in the item. Using a Dict
-is often faster if data has multiple entries for a given key.</p></li>
+<li><p><strong>process_q_item</strong> (<em>Callable</em><em>[</em><em>..</em><em>, </em><em>int</em><em>]</em>) – User defined function whose arguments are (q_item, *sketches, **kwargs) that
+takes the q_item, adds elements to the sketch(es) and returns the number of
+records that were processed. *sketches must be in alphabetic order since that is
+how they will be passed by <cite>parallel_add</cite>.</p></li>
 <li><p><strong>n_workers</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of workers to use. Each will update their own sketches which will then
 get merged together to achieve the final sketch(s). If None (default), then set
 to psutil.cpu_count(logical=False)</p></li>
-<li><p><strong>ngram</strong> (<em>int</em><em>, </em><em>optional</em>) – If nonzero, then break each key into ngrams of this size before added to the
-sketch(s)</p></li>
 <li><p><strong>cms_args</strong> (<em>Dict</em><em>, </em><em>optional</em>) – Dictionary containing arguments to instantiate a CountMin.  If None (default)
 then don’t create a sketch of this type.</p></li>
 <li><p><strong>hh_args</strong> (<em>Dict</em><em>, </em><em>optional</em>) – Dictionary containing arguments to instantiate a HeavyHitters. If None (default)

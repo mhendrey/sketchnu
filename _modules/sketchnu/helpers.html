@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>sketchnu.helpers &mdash; sketchnu 1.3.0 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <title>sketchnu.helpers &mdash; sketchnu 1.4.0 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
@@ -31,7 +31,7 @@
               <img src="../../_static/logo.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                1.3.0
+                1.4.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -267,10 +267,9 @@
 <span class="k">def</span> <span class="nf">_worker</span><span class="p">(</span>
     <span class="n">worker_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
     <span class="n">sketch</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">,</span>
-    <span class="n">process_q_item</span><span class="p">:</span> <span class="n">Generator</span><span class="p">,</span>
+    <span class="n">process_q_item</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span>
     <span class="n">in_queue</span><span class="p">:</span> <span class="n">Queue</span><span class="p">,</span>
     <span class="n">log_queue</span><span class="p">:</span> <span class="n">Queue</span><span class="p">,</span>
-    <span class="n">ngram</span><span class="p">,</span>
     <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
 <span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -289,18 +288,15 @@
 <span class="sd">        &quot;hll&quot; | &quot;cms&quot;, sketch_args are dictionary of arguments to give to HyperLogLog</span>
 <span class="sd">        or CountMin, and shm_name is the name of the shared memory block to attach the</span>
 <span class="sd">        instantiated sketch to.</span>
-<span class="sd">    process_q_item : Generator</span>
-<span class="sd">        Generator function takes an item from the queue and yields a tuple. First</span>
-<span class="sd">        element is a Dict[bytes,int] | Iterable[bytes] to be added to the sketch. The</span>
-<span class="sd">        second element of the tuple is the number of records in the item. Using a Dict</span>
-<span class="sd">        is often faster if data has multiple entries for a given key.</span>
+<span class="sd">    process_q_item : Callable[..., int]</span>
+<span class="sd">        User defined function whose arguments are (q_item, \*sketches, \*\*kwargs) that</span>
+<span class="sd">        takes the q_item, adds elements to the sketch(es) and returns the number of</span>
+<span class="sd">        records that were processed. \*sketches must be in alphabetic order since that is</span>
+<span class="sd">        how they will be passed by `parallel_add`.</span>
 <span class="sd">    in_queue : Queue</span>
 <span class="sd">        Queue containing items to be processed by the workers</span>
 <span class="sd">    log_queue : Queue</span>
 <span class="sd">        Queue to send logging statements to</span>
-<span class="sd">    ngram : int</span>
-<span class="sd">        If 0 or None, then calls sketch.add(key). Otherwise calls</span>
-<span class="sd">        sketch.add_ngram(key, ngram)</span>
 <span class="sd">    \*\*kwargs :</span>
 <span class="sd">        Keyword arguments passed to process_q_item(q_item, \*\*kwargs)</span>
 
@@ -323,13 +319,18 @@
         <span class="n">q_item</span> <span class="o">=</span> <span class="n">in_queue</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
         <span class="c1"># Process a queue_item</span>
         <span class="k">if</span> <span class="n">q_item</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">for</span> <span class="n">keys</span><span class="p">,</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">process_q_item</span><span class="p">(</span><span class="n">q_item</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-                <span class="k">for</span> <span class="n">local_sketch</span> <span class="ow">in</span> <span class="n">local_sketches</span><span class="p">:</span>
-                    <span class="k">if</span> <span class="n">ngram</span><span class="p">:</span>
-                        <span class="n">local_sketch</span><span class="o">.</span><span class="n">update_ngram</span><span class="p">(</span><span class="n">keys</span><span class="p">,</span> <span class="n">ngram</span><span class="p">)</span>
-                    <span class="k">else</span><span class="p">:</span>
-                        <span class="n">local_sketch</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">keys</span><span class="p">)</span>
-                <span class="n">n_records</span> <span class="o">+=</span> <span class="n">n</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">n_recs</span> <span class="o">=</span> <span class="n">process_q_item</span><span class="p">(</span><span class="n">q_item</span><span class="p">,</span> <span class="o">*</span><span class="n">local_sketches</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+                <span class="n">n_recs</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;WORKER </span><span class="si">{worker_id:02}</span><span class="s2"> threw exception on </span><span class="si">{q_item}</span><span class="s2">: </span><span class="si">{exc}</span><span class="s2">&quot;</span>
+                <span class="n">log_queue</span><span class="o">.</span><span class="n">put</span><span class="p">(</span>
+                    <span class="p">{</span>
+                        <span class="s2">&quot;level&quot;</span><span class="p">:</span> <span class="s2">&quot;ERROR&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="n">msg</span><span class="p">,</span>
+                    <span class="p">}</span>
+                <span class="p">)</span>
+            <span class="n">n_records</span> <span class="o">+=</span> <span class="n">n_recs</span>
 
             <span class="n">end</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
             <span class="n">speed</span> <span class="o">=</span> <span class="n">n_records</span> <span class="o">/</span> <span class="p">(</span><span class="n">end</span> <span class="o">-</span> <span class="n">start</span><span class="p">)</span><span class="o">.</span><span class="n">total_seconds</span><span class="p">()</span>
@@ -367,9 +368,8 @@
 
 <div class="viewcode-block" id="parallel_add"><a class="viewcode-back" href="../../sketchnu.html#sketchnu.helpers.parallel_add">[docs]</a><span class="k">def</span> <span class="nf">parallel_add</span><span class="p">(</span>
     <span class="n">items</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">,</span>
-    <span class="n">process_q_item</span><span class="p">:</span> <span class="n">Generator</span><span class="p">,</span>
+    <span class="n">process_q_item</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span>
     <span class="n">n_workers</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">ngram</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">cms_args</span><span class="p">:</span> <span class="n">Dict</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">hh_args</span><span class="p">:</span> <span class="n">Dict</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">hll_args</span><span class="p">:</span> <span class="n">Dict</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -379,11 +379,12 @@
 <span class="sd">    Places `items` onto a queue to be processed by `n_workers` independent spawned</span>
 <span class="sd">    processes.</span>
 
-<span class="sd">    The generator function, `process_q_item`, takes a single `item` and yields a tuple.</span>
-<span class="sd">    The first element is a Dict[bytes, int] | Iterable[bytes]. These are the bytes to</span>
-<span class="sd">    be added to the sketches and their corresponding number of times to add them (if</span>
-<span class="sd">    Dict given). The second element of the tuple is the number of records in `item`</span>
-<span class="sd">    that were processed.</span>
+<span class="sd">    The user defined function, `process_q_item`, takes the arguments</span>
+<span class="sd">    (q_item, \*sketches, \*\*kwargs). This function is given a single `item` from the</span>
+<span class="sd">    queue and then should add elements to the sketch(es) as desired. The function</span>
+<span class="sd">    should return the number of records processed. If `process_q_item` will add</span>
+<span class="sd">    elements to multiple sketches, then they must be listed in alphabetic order since</span>
+<span class="sd">    that is how `parallel_add` will pass them to `process_q_item`.</span>
 
 <span class="sd">    The \*\*kwargs are passed along to `process_q_item` to allow for any needed</span>
 <span class="sd">    additional parameters.</span>
@@ -405,18 +406,15 @@
 <span class="sd">    items : Iterable</span>
 <span class="sd">        A generator or list of items that will be placed onto a queue and then worked</span>
 <span class="sd">        by one of the workers in a separate spawned process.</span>
-<span class="sd">    process_q_item : Generator</span>
-<span class="sd">        Generator function takes an item from the queue and yields a tuple. First</span>
-<span class="sd">        element is a Dict[bytes,int] | Iterable[bytes] to be added to the sketch. The</span>
-<span class="sd">        second element of the tuple is the number of records in the item. Using a Dict</span>
-<span class="sd">        is often faster if data has multiple entries for a given key.</span>
+<span class="sd">    process_q_item : Callable[..., int]</span>
+<span class="sd">        User defined function whose arguments are (q_item, \*sketches, \*\*kwargs) that</span>
+<span class="sd">        takes the q_item, adds elements to the sketch(es) and returns the number of</span>
+<span class="sd">        records that were processed. \*sketches must be in alphabetic order since that is</span>
+<span class="sd">        how they will be passed by `parallel_add`.</span>
 <span class="sd">    n_workers : int, optional</span>
 <span class="sd">        Number of workers to use. Each will update their own sketches which will then</span>
 <span class="sd">        get merged together to achieve the final sketch(s). If None (default), then set</span>
 <span class="sd">        to psutil.cpu_count(logical=False)</span>
-<span class="sd">    ngram : int, optional</span>
-<span class="sd">        If nonzero, then break each key into ngrams of this size before added to the</span>
-<span class="sd">        sketch(s)</span>
 <span class="sd">    cms_args : Dict, optional</span>
 <span class="sd">        Dictionary containing arguments to instantiate a CountMin.  If None (default)</span>
 <span class="sd">        then don&#39;t create a sketch of this type.</span>
@@ -438,9 +436,6 @@
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;You forgot to provide any sketch arguments&quot;</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">n_workers</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">n_workers</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">psutil</span><span class="o">.</span><span class="n">cpu_count</span><span class="p">(</span><span class="n">logical</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span>
-    <span class="k">if</span> <span class="n">ngram</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">ngram</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;ngram is </span><span class="si">{ngram}</span><span class="s2">. Must be positive&quot;</span><span class="p">)</span>
 
     <span class="n">ctx</span> <span class="o">=</span> <span class="n">get_context</span><span class="p">(</span><span class="s2">&quot;spawn&quot;</span><span class="p">)</span>
     <span class="n">queue</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">Queue</span><span class="p">(</span><span class="mi">3</span> <span class="o">*</span> <span class="n">n_workers</span><span class="p">)</span>
@@ -473,19 +468,19 @@
             <span class="n">cms_array</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">CountMin</span><span class="p">(</span><span class="o">**</span><span class="n">cms_args</span><span class="p">,</span> <span class="n">shared_memory</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
             <span class="c1"># Send sketch type, its args, and shared memory block name</span>
             <span class="n">sketch</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="s2">&quot;cms&quot;</span><span class="p">,</span> <span class="n">cms_array</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">args</span><span class="p">,</span> <span class="n">cms_array</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">shm</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
-        <span class="k">if</span> <span class="n">hll_args</span><span class="p">:</span>
-            <span class="n">hll_array</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">HyperLogLog</span><span class="p">(</span><span class="o">**</span><span class="n">hll_args</span><span class="p">,</span> <span class="n">shared_memory</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
-            <span class="c1"># Send sketch type, its args, and shared memory block name</span>
-            <span class="n">sketch</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="s2">&quot;hll&quot;</span><span class="p">,</span> <span class="n">hll_array</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">args</span><span class="p">,</span> <span class="n">hll_array</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">shm</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
         <span class="k">if</span> <span class="n">hh_args</span><span class="p">:</span>
             <span class="n">hh_array</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">HeavyHitters</span><span class="p">(</span><span class="o">**</span><span class="n">hh_args</span><span class="p">,</span> <span class="n">shared_memory</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
             <span class="c1"># Send sketch type, its args, and shared memory block name</span>
             <span class="n">sketch</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="s2">&quot;hh&quot;</span><span class="p">,</span> <span class="n">hh_array</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">args</span><span class="p">,</span> <span class="n">hh_array</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">shm</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">hll_args</span><span class="p">:</span>
+            <span class="n">hll_array</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">HyperLogLog</span><span class="p">(</span><span class="o">**</span><span class="n">hll_args</span><span class="p">,</span> <span class="n">shared_memory</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+            <span class="c1"># Send sketch type, its args, and shared memory block name</span>
+            <span class="n">sketch</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="s2">&quot;hll&quot;</span><span class="p">,</span> <span class="n">hll_array</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">args</span><span class="p">,</span> <span class="n">hll_array</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">shm</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
         <span class="n">sketch</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">sketch</span><span class="p">)</span>
         <span class="n">workers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
             <span class="n">ctx</span><span class="o">.</span><span class="n">Process</span><span class="p">(</span>
                 <span class="n">target</span><span class="o">=</span><span class="n">_worker</span><span class="p">,</span>
-                <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">sketch</span><span class="p">,</span> <span class="n">process_q_item</span><span class="p">,</span> <span class="n">queue</span><span class="p">,</span> <span class="n">log_queue</span><span class="p">,</span> <span class="n">ngram</span><span class="p">),</span>
+                <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">sketch</span><span class="p">,</span> <span class="n">process_q_item</span><span class="p">,</span> <span class="n">queue</span><span class="p">,</span> <span class="n">log_queue</span><span class="p">),</span>
                 <span class="n">kwargs</span><span class="o">=</span><span class="n">kwargs</span><span class="p">,</span>
             <span class="p">)</span>
         <span class="p">)</span>
