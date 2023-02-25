@@ -40,14 +40,22 @@ data_stream1 = np.random.choice(vocab, n_data, p=zipf_p).tolist()
 data_stream2 = np.random.choice(vocab, n_data, p=zipf_p).tolist()
 
 
-def process_q_item_list(q_item: Iterable, batch_size: int):
+def process_q_item_list(q_item: Iterable, *sketches, batch_size: int = 40):
+    n_records = 0
     for i in range(0, len(q_item), batch_size):
-        yield q_item[i : i + batch_size], 1
+        for sketch in sketches:
+            sketch.update(q_item[i : i + batch_size])
+        n_records += 1
+    return n_records
 
 
-def process_q_item_dict(q_item: Iterable, batch_size: int):
+def process_q_item_dict(q_item: Iterable, *sketches, batch_size: int = 40):
+    n_records = 0
     for i in range(0, len(q_item), batch_size):
-        yield Counter(q_item[i : i + batch_size]), 1
+        for sketch in sketches:
+            sketch.update(Counter(q_item[i : i + batch_size]))
+        n_records += 1
+    return n_records
 
 
 def test_parallel_add_list(batch_size: int = 100):

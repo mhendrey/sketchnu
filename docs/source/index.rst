@@ -44,8 +44,7 @@ added into the sketch. Assumes that distribution of elements is fat-tailed.
 
 Helpers
 -------
-Functions to aid in parallelizing the creation of HyperLogLogs and/or count-min
-sketches.
+Functions to aid in parallelizing adding data into sketches.
 
 .. toctree::
    :maxdepth: 2

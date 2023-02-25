@@ -132,10 +132,9 @@ def _log_worker(log_queue: Queue):
 def _worker(
     worker_id: int,
     sketch: Tuple,
-    process_q_item: Generator,
+    process_q_item: Callable[..., int],
     in_queue: Queue,
     log_queue: Queue,
-    ngram,
     **kwargs,
 ):
     """
@@ -154,18 +153,15 @@ def _worker(
         "hll" | "cms", sketch_args are dictionary of arguments to give to HyperLogLog
         or CountMin, and shm_name is the name of the shared memory block to attach the
         instantiated sketch to.
-    process_q_item : Generator
-        Generator function takes an item from the queue and yields a tuple. First
-        element is a Dict[bytes,int] | Iterable[bytes] to be added to the sketch. The
-        second element of the tuple is the number of records in the item. Using a Dict
-        is often faster if data has multiple entries for a given key.
+    process_q_item : Callable[..., int]
+        User defined function whose arguments are (q_item, \*sketches, \*\*kwargs) that
+        takes the q_item, adds elements to the sketch(es) and returns the number of
+        records that were processed. \*sketches must be in alphabetic order since that is
+        how they will be passed by `parallel_add`.
     in_queue : Queue
         Queue containing items to be processed by the workers
     log_queue : Queue
         Queue to send logging statements to
-    ngram : int
-        If 0 or None, then calls sketch.add(key). Otherwise calls
-        sketch.add_ngram(key, ngram)
     \*\*kwargs :
         Keyword arguments passed to process_q_item(q_item, \*\*kwargs)
 
@@ -188,13 +184,18 @@ def _worker(
         q_item = in_queue.get()
         # Process a queue_item
         if q_item is not None:
-            for keys, n in process_q_item(q_item, **kwargs):
-                for local_sketch in local_sketches:
-                    if ngram:
-                        local_sketch.update_ngram(keys, ngram)
-                    else:
-                        local_sketch.update(keys)
-                n_records += n
+            try:
+                n_recs = process_q_item(q_item, *local_sketches, **kwargs)
+            except Exception as exc:
+                n_recs = 0
+                msg = f"WORKER {worker_id:02} threw exception on {q_item}: {exc}"
+                log_queue.put(
+                    {
+                        "level": "ERROR",
+                        "text": msg,
+                    }
+                )
+            n_records += n_recs
 
             end = datetime.now()
             speed = n_records / (end - start).total_seconds()
@@ -232,9 +233,8 @@ def _worker(
 
 def parallel_add(
     items: Iterable,
-    process_q_item: Generator,
+    process_q_item: Callable[..., int],
     n_workers: int = None,
-    ngram: int = None,
     cms_args: Dict = None,
     hh_args: Dict = None,
     hll_args: Dict = None,
@@ -244,11 +244,12 @@ def parallel_add(
     Places `items` onto a queue to be processed by `n_workers` independent spawned
     processes.
 
-    The generator function, `process_q_item`, takes a single `item` and yields a tuple.
-    The first element is a Dict[bytes, int] | Iterable[bytes]. These are the bytes to
-    be added to the sketches and their corresponding number of times to add them (if
-    Dict given). The second element of the tuple is the number of records in `item`
-    that were processed.
+    The user defined function, `process_q_item`, takes the arguments
+    (q_item, \*sketches, \*\*kwargs). This function is given a single `item` from the
+    queue and then should add elements to the sketch(es) as desired. The function
+    should return the number of records processed. If `process_q_item` will add
+    elements to multiple sketches, then they must be listed in alphabetic order since
+    that is how `parallel_add` will pass them to `process_q_item`.
 
     The \*\*kwargs are passed along to `process_q_item` to allow for any needed
     additional parameters.
@@ -270,18 +271,15 @@ def parallel_add(
     items : Iterable
         A generator or list of items that will be placed onto a queue and then worked
         by one of the workers in a separate spawned process.
-    process_q_item : Generator
-        Generator function takes an item from the queue and yields a tuple. First
-        element is a Dict[bytes,int] | Iterable[bytes] to be added to the sketch. The
-        second element of the tuple is the number of records in the item. Using a Dict
-        is often faster if data has multiple entries for a given key.
+    process_q_item : Callable[..., int]
+        User defined function whose arguments are (q_item, \*sketches, \*\*kwargs) that
+        takes the q_item, adds elements to the sketch(es) and returns the number of
+        records that were processed. \*sketches must be in alphabetic order since that is
+        how they will be passed by `parallel_add`.
     n_workers : int, optional
         Number of workers to use. Each will update their own sketches which will then
         get merged together to achieve the final sketch(s). If None (default), then set
         to psutil.cpu_count(logical=False)
-    ngram : int, optional
-        If nonzero, then break each key into ngrams of this size before added to the
-        sketch(s)
     cms_args : Dict, optional
         Dictionary containing arguments to instantiate a CountMin.  If None (default)
         then don't create a sketch of this type.
@@ -303,9 +301,6 @@ def parallel_add(
         raise ValueError("You forgot to provide any sketch arguments")
     if n_workers is None:
         n_workers = max(1, psutil.cpu_count(logical=False))
-    if ngram is not None:
-        if ngram <= 0:
-            raise ValueError(f"ngram is {ngram}. Must be positive")
 
     ctx = get_context("spawn")
     queue = ctx.Queue(3 * n_workers)
@@ -338,19 +333,19 @@ def parallel_add(
             cms_array.append(CountMin(**cms_args, shared_memory=True))
             # Send sketch type, its args, and shared memory block name
             sketch.append(("cms", cms_array[i].args, cms_array[i].shm.name))
-        if hll_args:
-            hll_array.append(HyperLogLog(**hll_args, shared_memory=True))
-            # Send sketch type, its args, and shared memory block name
-            sketch.append(("hll", hll_array[i].args, hll_array[i].shm.name))
         if hh_args:
             hh_array.append(HeavyHitters(**hh_args, shared_memory=True))
             # Send sketch type, its args, and shared memory block name
             sketch.append(("hh", hh_array[i].args, hh_array[i].shm.name))
+        if hll_args:
+            hll_array.append(HyperLogLog(**hll_args, shared_memory=True))
+            # Send sketch type, its args, and shared memory block name
+            sketch.append(("hll", hll_array[i].args, hll_array[i].shm.name))
         sketch = tuple(sketch)
         workers.append(
             ctx.Process(
                 target=_worker,
-                args=(i, sketch, process_q_item, queue, log_queue, ngram),
+                args=(i, sketch, process_q_item, queue, log_queue),
                 kwargs=kwargs,
             )
         )

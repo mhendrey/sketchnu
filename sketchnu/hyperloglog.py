@@ -342,7 +342,7 @@ class HyperLogLog:
         self.bias_data = bias_data[int(self.p) - 7, :]
         self.raw_estimate = raw_estimate[int(self.p) - 7, :]
 
-    def add(self, key: bytes) -> None:
+    def add(self, key: bytes, value: int = 1) -> None:
         """
         Add a single key to the HyperLogLog.
 
@@ -357,6 +357,9 @@ class HyperLogLog:
         ----------
         key : bytes
             Element to add to the HyperLogLog
+        value : int, optional
+            Number of times to add `key` to the sketch. Ignored for HyperLogLog but
+            included in order to have the same API as the other sketches. Default is 1
 
         Returns
         -------

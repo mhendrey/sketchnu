@@ -10,14 +10,15 @@ successive rounds of merging to achieve the final sketch for each type.
 The main helper function, :code:`parallel_add`, can add the data to one or more of the
 sketches at the same time. You just need to specify one or more of :code:`cms_args`,
 :code:`hh_args`, or :code:`hll_args`, which provide the necessary parameters to
-initialize the respective sketch. Simply leave one or two as the default :code:`None`
-if you don't want that type of sketch.
+initialize the respective sketch(es). Simply leave one or two as the default
+:code:`None` if you don't want that type of sketch.
 
-The :code:`parallel_add` function takes a user-defined generator function,
-:code:`process_q_item`. The generator takes an item from the queue and yields a tuple.
-The first element is a Dict[bytes, int] | Iterable[bytes] to be added to the sketch(s).
-The second element of the tuple is the number of records in the item. Using a Dict is
-often faster if the data has multiple entries for a given key (bytes).
+The :code:`parallel_add` function takes a user-defined function,
+:code:`process_q_item`. This function will take an item from the queue, process it as
+desired, and then add the keys to the sketch(es). The function must take the following
+arguments (q_item, \*sketches, \*\*kwargs) and return the number of records that were
+processed. If you want to add to more than one sketch, then those must be listed in
+alphabetical order since that is how :code:`parallel_add` will pass them.
 
 When using :code:`parallel_add`, the sketches are placed into shared memory to allow
 the spawned processes to access the sketches during data processing. The subsequent
@@ -30,7 +31,7 @@ Usage
 Let's assume that we have a bunch of text files in a directory. Each line in
 a file represents a single record. Each line (record) will be split by white
 space which will then be added to the sketches. Remember that only bytes can
-be added to a sketch, hence the :code:`word.encode('utf-8')`.
+be added to a sketch, hence the :code:`w.encode('utf-8')`.
 
 ::
 
@@ -39,20 +40,31 @@ be added to a sketch, hence the :code:`word.encode('utf-8')`.
     from pathlib import Path
     from sketchnu.helpers import parallel_add
 
+    logging.basicConfig(
+        level=logging.DEBUG,
+        format="%(asctime)s %(name)s %(levelname)s: %(message)s",
+        datefmt="%Y-%m-%d %H:%M:%S",
+    )
     input_dir = Path('/path/to/text/files')
     files = input_dir.iterdir()
 
-    # Define the generator function
-    # Likely faster to combine keys to add to the sketches all together as done here
-    def process_q_item(filepath:str):
+    # User defined function
+    # Likely faster to combine keys across records to add to the sketches all together
+    def process_q_item(filepath:str, cms, hh, hll, lowercase:bool=False) -> int:
         with open(filepath) as f:
             n_records = 0
             counter = Counter()
             for line in f:
-                words = line.strip().split()
+                if lowercase:
+                    words = line.strip().lower().split()
+                else:
+                    words = line.strip().split()
                 counter.update([w.encode("utf-8") for w in words])
                 n_records += 1
-            yield counter, n_records
+            cms.update(counter)
+            hh.update(counter)
+            hll.update(counter)
+        return n_records
     
     cms_args = {"cms_type": "linear", "width": 2**20}
     hh_args = {"width": 50, "max_key_len": 16}
@@ -65,6 +77,7 @@ be added to a sketch, hence the :code:`word.encode('utf-8')`.
         cms_args=cms_args,
         hh_args=hh_args,
         hll_args=hll_args,
+        lowercase=True,
     )
 
     # To see total number of elements added
