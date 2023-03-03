@@ -262,8 +262,8 @@ def parallel_add(
     going over the data just once.
 
     **Note:** If your data has duplicate keys within a `item`, you will likely see
-    better performance if `process_q_item` does ```yield Counter(keys), n_records```
-    instead of just ```yield keys, n_records```
+    better performance if `process_q_item` aggregates the counts per key and then call
+    the ```sketch.add(key, count)```
 
 
     Parameters
