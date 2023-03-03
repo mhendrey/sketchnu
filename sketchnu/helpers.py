@@ -244,14 +244,14 @@ def parallel_add(
     Places `items` onto a queue to be processed by `n_workers` independent spawned
     processes.
 
-    The user defined function, `process_q_item`, takes the arguments
+    The user defined function, :code:`process_q_item`, takes the arguments
     (q_item, \*sketches, \*\*kwargs). This function is given a single `item` from the
     queue and then should add elements to the sketch(es) as desired. The function
-    should return the number of records processed. If `process_q_item` will add
+    should return the number of records processed. If :code:`process_q_item` will add
     elements to multiple sketches, then they must be listed in alphabetic order since
-    that is how `parallel_add` will pass them to `process_q_item`.
+    that is how :code:`parallel_add` will pass them to :code:`process_q_item`.
 
-    The \*\*kwargs are passed along to `process_q_item` to allow for any needed
+    The \*\*kwargs are passed along to :code:`process_q_item` to allow for any needed
     additional parameters.
 
     Once all `items` have been processed, the `n_workers` sketch(s) are merged with the
@@ -262,8 +262,8 @@ def parallel_add(
     going over the data just once.
 
     **Note:** If your data has duplicate keys within a `item`, you will likely see
-    better performance if `process_q_item` aggregates the counts per key and then call
-    the ```sketch.add(key, count)```
+    better performance if :code:`process_q_item` aggregates the counts per key and then
+    call the :code`sketch.add(key, count)`
 
 
     Parameters
@@ -290,7 +290,7 @@ def parallel_add(
         Dictionary containing arguments to instantiate a HyperLogLog. If None (default)
         then don't create a sketch of this type.
     \*\*kwargs :
-        Keyword arguments that get passed to `process_q_item` generator function
+        Keyword arguments that get passed to :code:`process_q_item` function
 
     Returns
     -------
