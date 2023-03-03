@@ -429,8 +429,9 @@
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    The final sketch(s). If doing more than one sketch, then they are returned as a</span>
-<span class="sd">    tuple in alphabetical order: cms, hh, hll</span>
+<span class="sd">    sketches :</span>
+<span class="sd">        The final sketch(s). If doing more than one sketch, then they are returned as a</span>
+<span class="sd">        tuple in alphabetical order: cms, hh, hll</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="p">(</span><span class="n">cms_args</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">hh_args</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">hll_args</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;You forgot to provide any sketch arguments&quot;</span><span class="p">)</span>
