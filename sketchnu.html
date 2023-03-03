@@ -1730,7 +1730,7 @@ than one, then the requested sketches will be processed at the same time while
 going over the data just once.</p>
 <p><strong>Note:</strong> If your data has duplicate keys within a <cite>item</cite>, you will likely see
 better performance if <code class="code docutils literal notranslate"><span class="pre">process_q_item</span></code> aggregates the counts per key and then
-call the :code`sketch.add(key, count)`</p>
+calls the <code class="code docutils literal notranslate"><span class="pre">sketch.add(key,</span> <span class="pre">count)</span></code></p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
