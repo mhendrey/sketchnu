@@ -294,8 +294,9 @@ def parallel_add(
 
     Returns
     -------
-    The final sketch(s). If doing more than one sketch, then they are returned as a
-    tuple in alphabetical order: cms, hh, hll
+    sketches :
+        The final sketch(s). If doing more than one sketch, then they are returned as a
+        tuple in alphabetical order: cms, hh, hll
     """
     if (cms_args is None) and (hh_args is None) and (hll_args is None):
         raise ValueError("You forgot to provide any sketch arguments")
