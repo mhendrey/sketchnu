@@ -397,8 +397,8 @@
 <span class="sd">    going over the data just once.</span>
 
 <span class="sd">    **Note:** If your data has duplicate keys within a `item`, you will likely see</span>
-<span class="sd">    better performance if `process_q_item` does ```yield Counter(keys), n_records```</span>
-<span class="sd">    instead of just ```yield keys, n_records```</span>
+<span class="sd">    better performance if `process_q_item` aggregates the counts per key and then call</span>
+<span class="sd">    the ```sketch.add(key, count)```</span>
 
 
 <span class="sd">    Parameters</span>
