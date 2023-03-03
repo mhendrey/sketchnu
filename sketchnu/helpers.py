@@ -263,7 +263,7 @@ def parallel_add(
 
     **Note:** If your data has duplicate keys within a `item`, you will likely see
     better performance if :code:`process_q_item` aggregates the counts per key and then
-    call the :code`sketch.add(key, count)`
+    calls the :code:`sketch.add(key, count)`
 
 
     Parameters
