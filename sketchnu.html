@@ -1715,13 +1715,13 @@ block of an existing sketch that has shared_memory = True</p>
 <code class="sig-prename descclassname">sketchnu.helpers.</code><code class="sig-name descname">parallel_add</code><span class="sig-paren">(</span><em class="sig-param">items: Iterable, process_q_item: Callable[[...], int], n_workers: int = None, cms_args: Dict = None, hh_args: Dict = None, hll_args: Dict = None, **kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sketchnu/helpers.html#parallel_add"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sketchnu.helpers.parallel_add" title="Permalink to this definition">¶</a></dt>
 <dd><p>Places <cite>items</cite> onto a queue to be processed by <cite>n_workers</cite> independent spawned
 processes.</p>
-<p>The user defined function, <cite>process_q_item</cite>, takes the arguments
+<p>The user defined function, <code class="code docutils literal notranslate"><span class="pre">process_q_item</span></code>, takes the arguments
 (q_item, *sketches, **kwargs). This function is given a single <cite>item</cite> from the
 queue and then should add elements to the sketch(es) as desired. The function
-should return the number of records processed. If <cite>process_q_item</cite> will add
+should return the number of records processed. If <code class="code docutils literal notranslate"><span class="pre">process_q_item</span></code> will add
 elements to multiple sketches, then they must be listed in alphabetic order since
-that is how <cite>parallel_add</cite> will pass them to <cite>process_q_item</cite>.</p>
-<p>The **kwargs are passed along to <cite>process_q_item</cite> to allow for any needed
+that is how <code class="code docutils literal notranslate"><span class="pre">parallel_add</span></code> will pass them to <code class="code docutils literal notranslate"><span class="pre">process_q_item</span></code>.</p>
+<p>The **kwargs are passed along to <code class="code docutils literal notranslate"><span class="pre">process_q_item</span></code> to allow for any needed
 additional parameters.</p>
 <p>Once all <cite>items</cite> have been processed, the <cite>n_workers</cite> sketch(s) are merged with the
 final result(s) returned.</p>
@@ -1729,8 +1729,8 @@ final result(s) returned.</p>
 than one, then the requested sketches will be processed at the same time while
 going over the data just once.</p>
 <p><strong>Note:</strong> If your data has duplicate keys within a <cite>item</cite>, you will likely see
-better performance if <cite>process_q_item</cite> aggregates the counts per key and then call
-the <code class="docutils literal notranslate"><span class="pre">`sketch.add(key,</span> <span class="pre">count)`</span></code></p>
+better performance if <code class="code docutils literal notranslate"><span class="pre">process_q_item</span></code> aggregates the counts per key and then
+call the :code`sketch.add(key, count)`</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -1749,7 +1749,7 @@ then don’t create a sketch of this type.</p></li>
 then don’t create a sketch of this type.</p></li>
 <li><p><strong>hll_args</strong> (<em>Dict</em><em>, </em><em>optional</em>) – Dictionary containing arguments to instantiate a HyperLogLog. If None (default)
 then don’t create a sketch of this type.</p></li>
-<li><p><strong>**kwargs</strong> – Keyword arguments that get passed to <cite>process_q_item</cite> generator function</p></li>
+<li><p><strong>**kwargs</strong> – Keyword arguments that get passed to <code class="code docutils literal notranslate"><span class="pre">process_q_item</span></code> function</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
